@@ -1,6 +1,7 @@
 package com.negocore.infrastructure.config;
 
 import com.negocore.domain.api.IPasswordServicePort;
+import com.negocore.domain.api.ITokenServicePort;
 import com.negocore.domain.api.IUserServicePort;
 import com.negocore.domain.spi.IUserPersistencePort;
 import com.negocore.domain.usecase.UserService;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class BeanConfiguration {
 
     private final IUserPersistencePort userPersistencePort;
+    private final ITokenServicePort tokenServicePort;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -23,7 +25,7 @@ public class BeanConfiguration {
 
     @Bean
     public IUserServicePort userServicePort(IPasswordServicePort passwordServicePort){
-        return new UserService(userPersistencePort, passwordServicePort);
+        return new UserService(userPersistencePort, passwordServicePort, tokenServicePort );
     }
 
 }

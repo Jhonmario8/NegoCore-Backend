@@ -1,8 +1,10 @@
 package com.negocore.infrastructure.input.controller;
 
+import com.negocore.application.dto.LoginDTO;
 import com.negocore.application.dto.UserDTO;
 import com.negocore.application.dto.UserResponseDTO;
 import com.negocore.application.handler.IUserHandler;
+import com.negocore.domain.model.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,4 +26,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDTO);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginDTO loginDTO) {
+        LoginResponse userResponseDTO = iUserHandler.loginUser(loginDTO);
+        return ResponseEntity.ok(userResponseDTO);
+    }
 }

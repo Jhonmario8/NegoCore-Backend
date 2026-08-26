@@ -10,4 +10,6 @@ public class DomainConstants {
     public static final String INVALID_PHONE_NUMBER_MESSAGE = "Phone number must be a valid phone number with 10 to 15 digits, optionally starting with a + sign.";
     public static final String EMAIL_ALREADY_EXISTS = "Email already exists";
     public static final String PHONE_NUMBER_ALREADY_EXISTS = "Phone number already exists";
+    public static final String INVALID_CREDENTIALS = "Invalid credentials";
+    public static final String USER_INACTIVE = "User is inactive";
 }

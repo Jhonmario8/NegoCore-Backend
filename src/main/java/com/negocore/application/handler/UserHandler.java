@@ -1,9 +1,11 @@
 package com.negocore.application.handler;
 
+import com.negocore.application.dto.LoginDTO;
 import com.negocore.application.dto.UserDTO;
 import com.negocore.application.dto.UserResponseDTO;
 import com.negocore.application.mapper.IUserMapper;
 import com.negocore.domain.api.IUserServicePort;
+import com.negocore.domain.model.LoginResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +19,10 @@ public class UserHandler implements IUserHandler{
     @Override
     public UserResponseDTO registerUser(UserDTO userDTO) {
         return mapper.toResponseDTO(userServicePort.createUser(mapper.toDomain(userDTO)));
+    }
+
+    @Override
+    public LoginResponse loginUser(LoginDTO loginDTO) {
+        return userServicePort.login(loginDTO.getEmail(), loginDTO.getPassword());
     }
 }

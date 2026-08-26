@@ -1,6 +1,8 @@
 package com.negocore.infrastructure.exception;
 
 import com.negocore.domain.exception.BadRequestException;
+import com.negocore.domain.exception.ConflictException;
+import com.negocore.domain.exception.UnauthorizedException;
 import com.negocore.infrastructure.constants.InfrastructureConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,4 +30,15 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(ex.getMessage(), InfrastructureConstants.BAD_REQUEST));
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
+        return ResponseEntity.status(InfrastructureConstants.UNAUTHORIZED)
+                .body(new ErrorResponse(ex.getMessage(), InfrastructureConstants.UNAUTHORIZED));
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorResponse> handleConflictException(ConflictException ex) {
+        return ResponseEntity.status(InfrastructureConstants.CONFLICT)
+                .body(new ErrorResponse(ex.getMessage(), InfrastructureConstants.CONFLICT));
+    }
 }

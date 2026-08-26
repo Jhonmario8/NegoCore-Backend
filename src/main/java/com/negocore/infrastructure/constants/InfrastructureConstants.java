@@ -11,4 +11,6 @@ public class InfrastructureConstants {
     public static final String UTF_8 = "UTF-8";
     public static final int BAD_REQUEST = 400;
     public static final String MSG_INVALID_DATA = "Invalid data provided.";
+    public static final int UNAUTHORIZED = 401;
+    public static final int CONFLICT = 409;
 }
