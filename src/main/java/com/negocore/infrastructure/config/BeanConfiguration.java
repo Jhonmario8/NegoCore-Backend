@@ -1,9 +1,9 @@
 package com.negocore.infrastructure.config;
 
-import com.negocore.domain.api.IPasswordServicePort;
-import com.negocore.domain.api.ITokenServicePort;
-import com.negocore.domain.api.IUserServicePort;
+import com.negocore.domain.api.*;
+import com.negocore.domain.spi.IBusinessPersistencePort;
 import com.negocore.domain.spi.IUserPersistencePort;
+import com.negocore.domain.usecase.BusinessService;
 import com.negocore.domain.usecase.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +17,8 @@ public class BeanConfiguration {
 
     private final IUserPersistencePort userPersistencePort;
     private final ITokenServicePort tokenServicePort;
+    private final IAuthenticationServicePort authenticationServicePort;
+    private final IBusinessPersistencePort businessPersistencePort;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -28,4 +30,8 @@ public class BeanConfiguration {
         return new UserService(userPersistencePort, passwordServicePort, tokenServicePort );
     }
 
+    @Bean
+    public IBusinessServicePort businessServicePort(){
+        return new BusinessService(businessPersistencePort, authenticationServicePort);
+    }
 }

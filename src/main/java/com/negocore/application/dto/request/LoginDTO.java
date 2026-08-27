@@ -1,4 +1,4 @@
-package com.negocore.application.dto;
+package com.negocore.application.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

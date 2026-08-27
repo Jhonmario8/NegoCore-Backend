@@ -1,4 +1,4 @@
-package com.negocore.application.dto;
+package com.negocore.application.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.negocore.application.constants.ApplicationConstants;

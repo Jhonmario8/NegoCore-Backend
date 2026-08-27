@@ -1,4 +1,4 @@
-package com.negocore.application.dto;
+package com.negocore.application.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

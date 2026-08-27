@@ -1,8 +1,8 @@
 package com.negocore.application.handler;
 
-import com.negocore.application.dto.LoginDTO;
-import com.negocore.application.dto.UserDTO;
-import com.negocore.application.dto.UserResponseDTO;
+import com.negocore.application.dto.request.LoginDTO;
+import com.negocore.application.dto.request.UserDTO;
+import com.negocore.application.dto.response.UserResponseDTO;
 import com.negocore.application.mapper.IUserMapper;
 import com.negocore.domain.api.IUserServicePort;
 import com.negocore.domain.model.LoginResponse;

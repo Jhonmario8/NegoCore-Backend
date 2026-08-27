@@ -1,7 +1,7 @@
 package com.negocore.application.mapper;
 
-import com.negocore.application.dto.UserDTO;
-import com.negocore.application.dto.UserResponseDTO;
+import com.negocore.application.dto.request.UserDTO;
+import com.negocore.application.dto.response.UserResponseDTO;
 import com.negocore.domain.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
