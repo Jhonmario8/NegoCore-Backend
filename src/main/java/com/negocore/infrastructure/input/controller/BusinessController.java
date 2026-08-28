@@ -1,16 +1,16 @@
 package com.negocore.infrastructure.input.controller;
 
 import com.negocore.application.dto.request.BusinessCreateDTO;
+import com.negocore.application.dto.response.BusinessListResponseDTO;
 import com.negocore.application.dto.response.BusinessResponseDTO;
 import com.negocore.application.handler.IBusinessHandler;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/businesses")
@@ -23,6 +23,12 @@ public class BusinessController {
     public ResponseEntity<BusinessResponseDTO> createBusiness(@Valid @RequestBody BusinessCreateDTO businessCreateDTO) {
         BusinessResponseDTO businessResponseDTO = businessHandler.createBusiness(businessCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(businessResponseDTO);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<BusinessListResponseDTO>> findAllBusinesses() {
+        List<BusinessListResponseDTO> businesses = businessHandler.findAllBusiness();
+        return ResponseEntity.ok(businesses);
     }
 
 }

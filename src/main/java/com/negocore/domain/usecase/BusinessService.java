@@ -7,6 +7,7 @@ import com.negocore.domain.spi.IBusinessPersistencePort;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class BusinessService implements IBusinessServicePort {
@@ -27,5 +28,12 @@ public class BusinessService implements IBusinessServicePort {
         business.setCreatedAt(LocalDateTime.now());
 
         return businessPersistencePort.saveBusiness(business);
+    }
+
+    @Override
+    public List<Business> findAllBusinesses() {
+        Long ownerId = authenticationServicePort.getCurrentUserId();
+
+        return businessPersistencePort.findAllByOwnerId(ownerId);
     }
 }

@@ -7,6 +7,8 @@ import com.negocore.infrastructure.output.jpa.repository.IBusinessRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BusinessJpaAdapter implements IBusinessPersistencePort {
@@ -17,5 +19,10 @@ public class BusinessJpaAdapter implements IBusinessPersistencePort {
     @Override
     public Business saveBusiness(Business business) {
         return mapper.toDomain(repository.save(mapper.toEntity(business)));
+    }
+
+    @Override
+    public List<Business> findAllByOwnerId(Long ownerId) {
+        return repository.findByOwnerId(ownerId).stream().map(mapper::toDomain).toList();
     }
 }
