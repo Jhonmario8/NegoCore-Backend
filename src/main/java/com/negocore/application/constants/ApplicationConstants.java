@@ -8,4 +8,6 @@ public class ApplicationConstants {
     public static final String PHONE_NUMBER_NOT_BLANK = "phone number must not be blank";
     public static final String CURRENCY_INVALID = "currency must be one of the following: COP, USD, EUR";
     public static final String CURRENCY_REGEX = "^(COP|USD|EUR)$";
+    public static final String CATEGORY_NAME_NOT_BLANK = "category name must not be blank";
+    public static final String CATEGORY_NAME_SIZE = "category name must be between 2 and 60 characters";
 }

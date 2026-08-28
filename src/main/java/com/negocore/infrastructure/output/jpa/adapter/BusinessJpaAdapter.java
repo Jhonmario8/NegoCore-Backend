@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +25,10 @@ public class BusinessJpaAdapter implements IBusinessPersistencePort {
     @Override
     public List<Business> findAllByOwnerId(Long ownerId) {
         return repository.findByOwnerId(ownerId).stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public Optional<Business> findById(Long businessId) {
+        return repository.findById(businessId).map(mapper::toDomain);
     }
 }

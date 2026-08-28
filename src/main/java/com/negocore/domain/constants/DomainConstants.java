@@ -12,4 +12,6 @@ public class DomainConstants {
     public static final String PHONE_NUMBER_ALREADY_EXISTS = "Phone number already exists";
     public static final String INVALID_CREDENTIALS = "Invalid credentials";
     public static final String USER_INACTIVE = "User is inactive";
+    public static final String BUSINESS_NOT_FOUND = "Business not found";
+    public static final String CATEGORY_ALREADY_EXISTS = "Category already exists";
 }

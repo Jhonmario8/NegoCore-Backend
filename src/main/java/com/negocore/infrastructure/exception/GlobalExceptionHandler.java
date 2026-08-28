@@ -2,6 +2,7 @@ package com.negocore.infrastructure.exception;
 
 import com.negocore.domain.exception.BadRequestException;
 import com.negocore.domain.exception.ConflictException;
+import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.exception.UnauthorizedException;
 import com.negocore.infrastructure.constants.InfrastructureConstants;
 import org.springframework.http.ResponseEntity;
@@ -41,4 +42,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(InfrastructureConstants.CONFLICT)
                 .body(new ErrorResponse(ex.getMessage(), InfrastructureConstants.CONFLICT));
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
+        return ResponseEntity.status(InfrastructureConstants.NOT_FOUND)
+                .body(new ErrorResponse(ex.getMessage(), InfrastructureConstants.NOT_FOUND));
+    }
+
 }
