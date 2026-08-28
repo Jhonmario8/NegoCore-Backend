@@ -23,4 +23,9 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
     public Boolean existsByNameAndBusinessId(String name, Long businessId) {
         return repository.existsByBusinessIdAndName(businessId, name);
     }
+
+    @Override
+    public Boolean existsByIdAndBusinessId(Long categoryId, Long businessId) {
+        return repository.existsByIdAndBusinessId(categoryId, businessId);
+    }
 }

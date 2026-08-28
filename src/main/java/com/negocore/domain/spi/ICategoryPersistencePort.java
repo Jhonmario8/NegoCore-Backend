@@ -6,4 +6,5 @@ public interface ICategoryPersistencePort {
 
     Category saveCategory(Category category);
     Boolean existsByNameAndBusinessId(String name, Long businessId);
+    Boolean existsByIdAndBusinessId(Long categoryId, Long businessId);
 }

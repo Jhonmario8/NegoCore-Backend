@@ -14,4 +14,6 @@ public class DomainConstants {
     public static final String USER_INACTIVE = "User is inactive";
     public static final String BUSINESS_NOT_FOUND = "Business not found";
     public static final String CATEGORY_ALREADY_EXISTS = "Category already exists";
+    public static final String SKU_ALREADY_EXISTS = "SKU already exists";
+    public static String Category_NOT_FOUND = "Category not found";
 }

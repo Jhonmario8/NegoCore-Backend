@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface ICategoryRepository extends JpaRepository<CategoryEntity, Long> {
 
     Boolean existsByBusinessIdAndName(Long businessId, String name);
-
+    Boolean existsByIdAndBusinessId(Long categoryId, Long businessId);
 }

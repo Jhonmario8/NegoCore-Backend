@@ -10,4 +10,13 @@ public class ApplicationConstants {
     public static final String CURRENCY_REGEX = "^(COP|USD|EUR)$";
     public static final String CATEGORY_NAME_NOT_BLANK = "category name must not be blank";
     public static final String CATEGORY_NAME_SIZE = "category name must be between 2 and 60 characters";
+    public static final String VALIDATION_PRODUCT_NAME_NOT_BLANK = "product name must not be blank";
+    public static final String VALIDATION_COST_PRICE_NOT_NULL = "costPrice must not be null";
+    public static final String VALIDATION_SALE_PRICE_NOT_NULL = "salePrice must not be null";
+    public static final String VALIDATION_STOCK_NOT_NULL = "stock must not be null";
+    public static final String VALIDATION_COST_PRICE_MIN = "costPrice must be greater than or equal to 0";
+    public static final String VALIDATION_SALE_PRICE_MIN = "salePrice must be greater than or equal to 1";
+    public static final String VALIDATION_STOCK_MIN = "stock must be greater than or equal to 0";
+    public static final String VALIDATION_MIN_STOCK_ALERT_NOT_NULL = "minStockAlert must not be null";
+    public static final String VALIDATION_MIN_STOCK_ALERT_MIN = "minStockAlert must be greater than or equal to 0";
 }
