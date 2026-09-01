@@ -7,6 +7,8 @@ import com.negocore.infrastructure.output.jpa.repository.IProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ProductJpaAdapter implements IProductPersistencePort {
@@ -23,5 +25,10 @@ public class ProductJpaAdapter implements IProductPersistencePort {
     @Override
     public Boolean existByBusinessIdAndSku(Long businessId, String sku) {
         return repository.existsByBusinessIdAndSku(businessId, sku);
+    }
+
+    @Override
+    public Optional<Product> findById(Long productId) {
+        return repository.findById(productId).map(mapper::toDomain);
     }
 }

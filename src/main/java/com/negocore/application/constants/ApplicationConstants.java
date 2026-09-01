@@ -19,4 +19,7 @@ public class ApplicationConstants {
     public static final String VALIDATION_STOCK_MIN = "stock must be greater than or equal to 0";
     public static final String VALIDATION_MIN_STOCK_ALERT_NOT_NULL = "minStockAlert must not be null";
     public static final String VALIDATION_MIN_STOCK_ALERT_MIN = "minStockAlert must be greater than or equal to 0";
+    public static final String REASON_NOT_BLANK = "reason must not be blank";
+    public static final String REASON_MAX_SIZE = "reason must not exceed 200 characters";
+    public static final String QUANTITY_NOT_NULL = "quantity must not be null and cannot be zero";
 }

@@ -3,6 +3,7 @@ package com.negocore.infrastructure.input.controller;
 import com.negocore.application.dto.request.BusinessCreateDTO;
 import com.negocore.application.dto.request.CategoryRequestDTO;
 import com.negocore.application.dto.request.ProductRequestDTO;
+import com.negocore.application.dto.request.StockPatchDTO;
 import com.negocore.application.dto.response.BusinessListResponseDTO;
 import com.negocore.application.dto.response.BusinessResponseDTO;
 import com.negocore.application.dto.response.CategoryResponseDTO;
@@ -49,5 +50,11 @@ public class BusinessController {
     public ResponseEntity<ProductResponseDTO> createProduct(@PathVariable Long businessId, @Valid @RequestBody ProductRequestDTO productRequestDTO) {
         ProductResponseDTO productResponseDTO = productHandler.createProduct(businessId, productRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(productResponseDTO);
+    }
+
+    @PatchMapping("/{businessId}/products/{productId}/stock")
+    public ResponseEntity<ProductResponseDTO> updateStock(@PathVariable Long businessId, @PathVariable Long productId,@Valid @RequestBody StockPatchDTO stockPatchDTO) {
+        ProductResponseDTO productResponseDTO = productHandler.updateStock(businessId, productId, stockPatchDTO);
+        return ResponseEntity.ok(productResponseDTO);
     }
 }

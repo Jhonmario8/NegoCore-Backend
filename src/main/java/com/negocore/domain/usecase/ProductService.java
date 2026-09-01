@@ -3,6 +3,7 @@ package com.negocore.domain.usecase;
 import com.negocore.domain.api.IAuthenticationServicePort;
 import com.negocore.domain.api.IProductServicePort;
 import com.negocore.domain.constants.DomainConstants;
+import com.negocore.domain.exception.BadRequestException;
 import com.negocore.domain.exception.ConflictException;
 import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.Business;
@@ -42,5 +43,34 @@ public class ProductService implements IProductServicePort {
         product.setActive(true);
         product.setCreatedAt(LocalDateTime.now());
         return productPersistencePort.saveProduct(product);
+    }
+
+    @Override
+    public Product updateStock(Long businessId, Long productId, int quantity, String reason) {
+        if (quantity == 0) {
+            throw new BadRequestException(DomainConstants.QUANTITY_INVALID);
+        }
+        if (reason == null || reason.isBlank() || reason.length() > 200) {
+            throw new BadRequestException(DomainConstants.REASON_INVALID);
+        }
+
+        Long userId = authenticationServicePort.getCurrentUserId();
+        Product product = productPersistencePort.findById(productId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND));
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+        if (!product.getBusinessId().equals(businessId)) {
+            throw new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND);
+        }
+        int newStock = product.getStock() + quantity;
+        if (newStock < 0) {
+            throw new BadRequestException(DomainConstants.INSUFFICIENT_STOCK);
+        }
+        product.setStock(newStock);
+        return productPersistencePort.saveProduct(product);
+
     }
 }

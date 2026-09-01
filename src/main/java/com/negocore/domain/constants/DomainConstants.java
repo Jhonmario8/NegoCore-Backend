@@ -15,5 +15,9 @@ public class DomainConstants {
     public static final String BUSINESS_NOT_FOUND = "Business not found";
     public static final String CATEGORY_ALREADY_EXISTS = "Category already exists";
     public static final String SKU_ALREADY_EXISTS = "SKU already exists";
+    public static final String PRODUCT_NOT_FOUND = "Product not found";
+    public static final String INSUFFICIENT_STOCK = "Insufficient stock";
+    public static final String REASON_INVALID = "Reason must not be null, empty, or exceed 200 characters";
+    public static final String QUANTITY_INVALID = "Quantity must not be zero";
     public static String Category_NOT_FOUND = "Category not found";
 }
