@@ -1,14 +1,9 @@
 package com.negocore.infrastructure.input.controller;
 
-import com.negocore.application.dto.request.BusinessCreateDTO;
-import com.negocore.application.dto.request.CategoryRequestDTO;
-import com.negocore.application.dto.request.ProductRequestDTO;
-import com.negocore.application.dto.request.StockPatchDTO;
-import com.negocore.application.dto.response.BusinessListResponseDTO;
-import com.negocore.application.dto.response.BusinessResponseDTO;
-import com.negocore.application.dto.response.CategoryResponseDTO;
-import com.negocore.application.dto.response.ProductResponseDTO;
+import com.negocore.application.dto.request.*;
+import com.negocore.application.dto.response.*;
 import com.negocore.application.handler.IBusinessHandler;
+import com.negocore.application.handler.ICashRegisterHandler;
 import com.negocore.application.handler.ICategoryHandler;
 import com.negocore.application.handler.IProductHandler;
 import jakarta.validation.Valid;
@@ -27,6 +22,7 @@ public class BusinessController {
     private final IBusinessHandler businessHandler;
     private final ICategoryHandler categoryHandler;
     private final IProductHandler productHandler;
+    private final ICashRegisterHandler cashRegisterHandler;
 
     @PostMapping()
     public ResponseEntity<BusinessResponseDTO> createBusiness(@Valid @RequestBody BusinessCreateDTO businessCreateDTO) {
@@ -57,4 +53,11 @@ public class BusinessController {
         ProductResponseDTO productResponseDTO = productHandler.updateStock(businessId, productId, stockPatchDTO);
         return ResponseEntity.ok(productResponseDTO);
     }
+
+    @PostMapping("/{businessId}/cash-registers")
+    public ResponseEntity<CashRegisterResponseDTO> openCashRegister(@PathVariable Long businessId, @Valid @RequestBody CashRegisterRequestDTO cashRegisterRequestDTO) {
+        CashRegisterResponseDTO cashRegisterResponseDTO = cashRegisterHandler.openCashRegister(businessId, cashRegisterRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cashRegisterResponseDTO);
+    }
+
 }

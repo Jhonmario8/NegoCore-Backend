@@ -19,5 +19,6 @@ public class DomainConstants {
     public static final String INSUFFICIENT_STOCK = "Insufficient stock";
     public static final String REASON_INVALID = "Reason must not be null, empty, or exceed 200 characters";
     public static final String QUANTITY_INVALID = "Quantity must not be zero";
+    public static final String CASH_REGISTER_ALREADY_OPEN = "There is already an open cash register for this business";
     public static String Category_NOT_FOUND = "Category not found";
 }

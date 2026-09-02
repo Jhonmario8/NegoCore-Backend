@@ -1,14 +1,8 @@
 package com.negocore.infrastructure.config;
 
 import com.negocore.domain.api.*;
-import com.negocore.domain.spi.IBusinessPersistencePort;
-import com.negocore.domain.spi.ICategoryPersistencePort;
-import com.negocore.domain.spi.IProductPersistencePort;
-import com.negocore.domain.spi.IUserPersistencePort;
-import com.negocore.domain.usecase.BusinessService;
-import com.negocore.domain.usecase.CategoryService;
-import com.negocore.domain.usecase.ProductService;
-import com.negocore.domain.usecase.UserService;
+import com.negocore.domain.spi.*;
+import com.negocore.domain.usecase.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +19,7 @@ public class BeanConfiguration {
     private final IBusinessPersistencePort businessPersistencePort;
     private final ICategoryPersistencePort categoryPersistencePort;
     private final IProductPersistencePort productPersistencePort;
+    private final ICashRegisterPersistencePort cashRegisterPersistencePort;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -48,5 +43,10 @@ public class BeanConfiguration {
     @Bean
     public IProductServicePort productServicePort(){
         return new ProductService(productPersistencePort, businessPersistencePort, authenticationServicePort, categoryPersistencePort);
+    }
+
+    @Bean
+    public ICashRegisterServicePort cashRegisterServicePort(){
+        return new CashRegisterService(cashRegisterPersistencePort, authenticationServicePort, businessPersistencePort);
     }
 }
