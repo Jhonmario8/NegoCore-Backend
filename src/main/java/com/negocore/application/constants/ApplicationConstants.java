@@ -22,4 +22,6 @@ public class ApplicationConstants {
     public static final String REASON_NOT_BLANK = "reason must not be blank";
     public static final String REASON_MAX_SIZE = "reason must not exceed 200 characters";
     public static final String QUANTITY_NOT_NULL = "quantity must not be null and cannot be zero";
+    public static final String OPENING_AMOUNT_NOT_NULL = "openingAmount must not be null";
+    public static final String OPENING_AMOUNT_MIN = "openingAmount must be greater than or equal to 1";
 }
