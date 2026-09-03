@@ -31,4 +31,8 @@ public class ApplicationConstants {
     public static final String PAYMENT_METHOD_REQUIRED = "paymentMethod is required";
     public static final String PAID_AMOUNT_REQUIRED = "paidAmount is required";
     public static final String PAID_AMOUNT_MUST_BE_POSITIVE = "paidAmount must be a positive number or zero";
+    public static final String AMOUNT_NOT_NULL = "amount must not be null";
+    public static final String AMOUNT_POSITIVE = "amount must be greater than zero";
+    public static final String DESCRIPTION_NOT_BLANK = "description must not be blank";
+    public static final String DESCRIPTION_SIZE = "description must not exceed 200 characters";
 }
