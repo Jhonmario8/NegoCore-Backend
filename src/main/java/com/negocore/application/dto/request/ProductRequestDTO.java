@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -23,10 +25,10 @@ public class ProductRequestDTO {
     private String sku;
     @NotNull(message = ApplicationConstants.VALIDATION_COST_PRICE_NOT_NULL)
     @Min(value = 0, message = ApplicationConstants.VALIDATION_COST_PRICE_MIN)
-    private Double costPrice;
+    private BigDecimal costPrice;
     @Min(value = 1, message = ApplicationConstants.VALIDATION_SALE_PRICE_MIN)
     @NotNull(message = ApplicationConstants.VALIDATION_SALE_PRICE_NOT_NULL)
-    private Double salePrice;
+    private BigDecimal salePrice;
     @NotNull(message = ApplicationConstants.VALIDATION_STOCK_NOT_NULL)
     @Min(value = 0, message = ApplicationConstants.VALIDATION_STOCK_MIN)
     private Integer stock;

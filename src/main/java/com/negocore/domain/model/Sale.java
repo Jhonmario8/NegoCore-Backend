@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -18,8 +19,8 @@ public class Sale {
     private Long businessId;
     private Long cashRegisterId;
     private Long clientId;
-    private Double total;
-    private Double paidAmount;
+    private BigDecimal total;
+    private BigDecimal paidAmount;
     private SaleStatus status;
     private PaymentMethod paymentMethod;
     private LocalDateTime createdAt;

@@ -20,6 +20,10 @@ public class BeanConfiguration {
     private final ICategoryPersistencePort categoryPersistencePort;
     private final IProductPersistencePort productPersistencePort;
     private final ICashRegisterPersistencePort cashRegisterPersistencePort;
+    private final ISaleItemsPersistencePort saleItemsPersistencePort;
+    private final ICashMovementPersistencePort cashMovementPersistencePort;
+    private final IDebtPersistencePort debtPersistencePort;
+    private final ISalePersistencePort salePersistencePort;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -48,5 +52,10 @@ public class BeanConfiguration {
     @Bean
     public ICashRegisterServicePort cashRegisterServicePort(){
         return new CashRegisterService(cashRegisterPersistencePort, authenticationServicePort, businessPersistencePort);
+    }
+
+    @Bean
+    public ISaleServicePort saleServicePort(){
+        return new SaleService(salePersistencePort, authenticationServicePort, businessPersistencePort, cashRegisterPersistencePort, productPersistencePort, saleItemsPersistencePort, cashMovementPersistencePort, debtPersistencePort);
     }
 }

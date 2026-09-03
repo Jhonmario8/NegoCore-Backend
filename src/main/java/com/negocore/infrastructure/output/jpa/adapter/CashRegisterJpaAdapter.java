@@ -8,6 +8,8 @@ import com.negocore.infrastructure.output.jpa.repository.ICashRegisterRepository
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CashRegisterJpaAdapter implements ICashRegisterPersistencePort {
@@ -24,5 +26,10 @@ public class CashRegisterJpaAdapter implements ICashRegisterPersistencePort {
     @Override
     public Boolean existsOpenCashRegisterByBusinessIdAndStatus(Long businessId, CashRegisterStatus status) {
         return repository.existsByBusinessIdAndStatus(businessId, status );
+    }
+
+    @Override
+    public Optional<CashRegister> findOpenCashRegisterByBusinessIdAndStatus(Long businessId, CashRegisterStatus status) {
+        return repository.findByBusinessIdAndStatus(businessId, status).map(mapper::toDomain);
     }
 }

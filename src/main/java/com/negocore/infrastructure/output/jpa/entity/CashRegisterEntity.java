@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,9 +22,9 @@ public class CashRegisterEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long businessId;
-    private Double openingAmount;
-    private Double expectedAmount;
-    private Double closingAmount;
+    private BigDecimal openingAmount;
+    private BigDecimal expectedAmount;
+    private BigDecimal closingAmount;
     @Enumerated(EnumType.STRING)
     private CashRegisterStatus status;
     private LocalDateTime openingAt;

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -16,7 +17,7 @@ public class DebtPayment {
     private Long id;
     private Long debtId;
     private Long cashRegisterId;
-    private Double amount;
+    private BigDecimal amount;
     private DebtPaymentMethod paymentMethod;
     private LocalDateTime createdAt;
 }

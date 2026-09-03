@@ -2,28 +2,25 @@ package com.negocore.application.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.negocore.application.constants.ApplicationConstants;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CashRegisterRequestDTO {
+public class SaleItemRequestDTO {
 
+    @NotNull(message = ApplicationConstants.PRODUCT_ID_REQUIRED)
+    private Long productId;
 
-    @NotNull(message = ApplicationConstants.OPENING_AMOUNT_NOT_NULL)
-    @Min(value = 1, message = ApplicationConstants.OPENING_AMOUNT_MIN)
-    private BigDecimal openingAmount;
-    private BigDecimal expectedAmount;
-    private BigDecimal closingAmount;
-
+    @NotNull(message = ApplicationConstants.QUANTITY_REQUIRED)
+    @Positive(message = ApplicationConstants.QUANTITY_MUST_BE_POSITIVE)
+    private Integer quantity;
 
 }

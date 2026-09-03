@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -18,8 +19,8 @@ public class Debt {
     private Long businessId;
     private Long clientId;
     private Long saleId;
-    private Double totalAmount;
-    private Double paidAmount;
+    private BigDecimal totalAmount;
+    private BigDecimal paidAmount;
     private DebtStatus status;
     private LocalDate dueDate;
     private LocalDateTime createdAt;

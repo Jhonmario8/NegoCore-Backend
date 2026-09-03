@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -33,7 +34,7 @@ public class ExpenseEntity {
     @Column(name = "description", nullable = false, length = 200)
     private String description;
     @Column(name = "amount", nullable = false)
-    private Double amount;
+    private BigDecimal amount;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 }

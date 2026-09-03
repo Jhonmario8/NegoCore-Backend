@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,7 +31,7 @@ public class SaleItemEntity {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
     @Column(name = "unit_price", nullable = false)
-    private Double unitPrice;
+    private BigDecimal unitPrice;
     @Column(name = "subtotal", nullable = false)
-    private Double subtotal;
+    private BigDecimal subtotal;
 }

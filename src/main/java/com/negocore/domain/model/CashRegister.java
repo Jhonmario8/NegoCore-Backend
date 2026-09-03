@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -15,9 +16,9 @@ public class CashRegister {
 
     private Long id;
     private Long businessId;
-    private Double openingAmount;
-    private Double expectedAmount;
-    private Double closingAmount;
+    private BigDecimal openingAmount;
+    private BigDecimal expectedAmount;
+    private BigDecimal closingAmount;
     private CashRegisterStatus status;
     private LocalDateTime openingAt;
     private LocalDateTime closingAt;

@@ -2,10 +2,7 @@ package com.negocore.infrastructure.input.controller;
 
 import com.negocore.application.dto.request.*;
 import com.negocore.application.dto.response.*;
-import com.negocore.application.handler.IBusinessHandler;
-import com.negocore.application.handler.ICashRegisterHandler;
-import com.negocore.application.handler.ICategoryHandler;
-import com.negocore.application.handler.IProductHandler;
+import com.negocore.application.handler.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +20,7 @@ public class BusinessController {
     private final ICategoryHandler categoryHandler;
     private final IProductHandler productHandler;
     private final ICashRegisterHandler cashRegisterHandler;
+    private final ISaleHandler saleHandler;
 
     @PostMapping()
     public ResponseEntity<BusinessResponseDTO> createBusiness(@Valid @RequestBody BusinessCreateDTO businessCreateDTO) {
@@ -49,7 +47,7 @@ public class BusinessController {
     }
 
     @PatchMapping("/{businessId}/products/{productId}/stock")
-    public ResponseEntity<ProductResponseDTO> updateStock(@PathVariable Long businessId, @PathVariable Long productId,@Valid @RequestBody StockPatchDTO stockPatchDTO) {
+    public ResponseEntity<ProductResponseDTO> updateStock(@PathVariable Long businessId, @PathVariable Long productId, @Valid @RequestBody StockPatchDTO stockPatchDTO) {
         ProductResponseDTO productResponseDTO = productHandler.updateStock(businessId, productId, stockPatchDTO);
         return ResponseEntity.ok(productResponseDTO);
     }
@@ -60,4 +58,9 @@ public class BusinessController {
         return ResponseEntity.status(HttpStatus.CREATED).body(cashRegisterResponseDTO);
     }
 
+    @PostMapping("/{businessId}/sales")
+    public ResponseEntity<SaleResponseDTO> registerSale(@PathVariable Long businessId, @Valid @RequestBody SaleRequestDTO saleRequestDTO) {
+        SaleResponseDTO saleResponseDTO = saleHandler.registerSale(businessId, saleRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saleResponseDTO);
+    }
 }

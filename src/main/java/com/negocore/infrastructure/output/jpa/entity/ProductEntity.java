@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -30,8 +31,8 @@ public class ProductEntity {
     private Long categoryId;
     private String name;
     private String sku;
-    private Double costPrice;
-    private Double salePrice;
+    private BigDecimal costPrice;
+    private BigDecimal salePrice;
     private Integer stock;
     private Integer minStockAlert;
     private Boolean active;

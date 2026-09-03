@@ -24,4 +24,11 @@ public class ApplicationConstants {
     public static final String QUANTITY_NOT_NULL = "quantity must not be null and cannot be zero";
     public static final String OPENING_AMOUNT_NOT_NULL = "openingAmount must not be null";
     public static final String OPENING_AMOUNT_MIN = "openingAmount must be greater than or equal to 1";
+    public static final String PRODUCT_ID_REQUIRED = "productId is required";
+    public static final String QUANTITY_MUST_BE_POSITIVE = "quantity must be a positive integer";
+    public static final String QUANTITY_REQUIRED = "quantity is required";
+    public static final String SALE_ITEMS_REQUIRED = "saleItems is required";
+    public static final String PAYMENT_METHOD_REQUIRED = "paymentMethod is required";
+    public static final String PAID_AMOUNT_REQUIRED = "paidAmount is required";
+    public static final String PAID_AMOUNT_MUST_BE_POSITIVE = "paidAmount must be a positive number or zero";
 }

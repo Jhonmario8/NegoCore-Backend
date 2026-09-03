@@ -20,5 +20,11 @@ public class DomainConstants {
     public static final String REASON_INVALID = "Reason must not be null, empty, or exceed 200 characters";
     public static final String QUANTITY_INVALID = "Quantity must not be zero";
     public static final String CASH_REGISTER_ALREADY_OPEN = "There is already an open cash register for this business";
+    public static final String CASH_REGISTER_NOT_OPEN = "There is no open cash register for this business";
+    public static final String DUPLICATE_PRODUCT = "Duplicate product in sale items";
+    public static final String CLIENT_REQUIRED_FOR_PARTIAL_PAYMENT = "Client is required for partial payment";
+    public static final String INVALID_PAID_AMOUNT = "Paid amount must be greater than or equal to zero";
+    public static final String SALE_ITEMS_REQUIRED = "Sale items are required";
+    public static final String SALE_CASH_MOVEMENT_DESCRIPTION = "Sale payment for sale ID: ";
     public static String Category_NOT_FOUND = "Category not found";
 }

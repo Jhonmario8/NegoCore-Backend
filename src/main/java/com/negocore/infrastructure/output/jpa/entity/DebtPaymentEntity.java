@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -32,7 +33,7 @@ public class DebtPaymentEntity {
     @Column(name = "cash_register_id")
     private Long cashRegisterId;
     @Column(name = "amount", nullable = false)
-    private Double amount;
+    private BigDecimal amount;
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false)
     private DebtPaymentMethod paymentMethod;

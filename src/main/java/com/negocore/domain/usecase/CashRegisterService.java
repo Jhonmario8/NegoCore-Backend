@@ -11,6 +11,7 @@ import com.negocore.domain.spi.IBusinessPersistencePort;
 import com.negocore.domain.spi.ICashRegisterPersistencePort;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class CashRegisterService implements ICashRegisterServicePort {
     private final IBusinessPersistencePort businessPersistencePort;
 
     @Override
-    public CashRegister openCashRegister(Long businessId, Double openingAmount) {
+    public CashRegister openCashRegister(Long businessId, BigDecimal openingAmount) {
         Long userId = authenticationServicePort.getCurrentUserId();
         Business business = businessPersistencePort.findById(businessId)
                 .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));

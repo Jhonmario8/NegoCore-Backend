@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -35,9 +36,9 @@ public class DebtEntity {
     @Column(name = "sale_id")
     private Long saleId;
     @Column(name = "total_amount", nullable = false)
-    private Double totalAmount;
+    private BigDecimal totalAmount;
     @Column(name = "paid_amount", nullable = false)
-    private Double paidAmount;
+    private BigDecimal paidAmount;
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private DebtStatus status;

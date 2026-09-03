@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -36,9 +37,9 @@ public class SaleEntity {
     @Column(name = "client_id")
     private Long clientId;
     @Column(name = "total", nullable = false)
-    private Double total;
+    private BigDecimal total;
     @Column(name = "paid_amount", nullable = false)
-    private Double paidAmount;
+    private BigDecimal paidAmount;
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private SaleStatus status;

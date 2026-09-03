@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -33,7 +34,7 @@ public class CashMovementEntity {
     @Column(name = "type", nullable = false)
     private CashMovementType type;
     @Column(name = "amount", nullable = false)
-    private Double amount;
+    private BigDecimal amount;
     @Column(name = "description", length = 200)
     private String description;
     @Column(name = "reference_id")
