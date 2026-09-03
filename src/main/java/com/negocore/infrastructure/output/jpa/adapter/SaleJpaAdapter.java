@@ -7,6 +7,8 @@ import com.negocore.infrastructure.output.jpa.repository.ISaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class SaleJpaAdapter implements ISalePersistencePort {
@@ -17,5 +19,10 @@ public class SaleJpaAdapter implements ISalePersistencePort {
     @Override
     public Sale saveSale(Sale sale) {
         return mapper.toDomain(repository.save(mapper.toEntity(sale)));
+    }
+
+    @Override
+    public Optional<Sale> findById(Long saleId) {
+        return repository.findById(saleId).map(mapper::toDomain);
     }
 }

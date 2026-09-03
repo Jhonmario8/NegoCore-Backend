@@ -7,5 +7,5 @@ import java.util.List;
 public interface ISaleItemsPersistencePort {
 
     void saveAll(List<SaleItem> saleItems);
-
+    List<SaleItem> findAllBySaleId(Long saleId);
 }

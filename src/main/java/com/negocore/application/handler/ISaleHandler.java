@@ -6,5 +6,5 @@ import com.negocore.application.dto.response.SaleResponseDTO;
 public interface ISaleHandler {
 
     SaleResponseDTO registerSale(Long businessId, SaleRequestDTO saleRequestDTO);
-
+    SaleResponseDTO cancelSale(Long businessId, Long saleId);
 }

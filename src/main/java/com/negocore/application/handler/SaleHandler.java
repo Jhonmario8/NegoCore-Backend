@@ -19,4 +19,9 @@ public class SaleHandler implements ISaleHandler {
     public SaleResponseDTO registerSale(Long businessId, SaleRequestDTO saleRequestDTO) {
         return saleMapper.toResponseDto(saleServicePort.registerSale(businessId, saleMapper.toDomain(saleRequestDTO)));
     }
+
+    @Override
+    public SaleResponseDTO cancelSale(Long businessId, Long saleId) {
+        return saleMapper.toResponseDto(saleServicePort.cancelSale(businessId, saleId));
+    }
 }

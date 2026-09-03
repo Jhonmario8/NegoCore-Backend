@@ -63,4 +63,10 @@ public class BusinessController {
         SaleResponseDTO saleResponseDTO = saleHandler.registerSale(businessId, saleRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(saleResponseDTO);
     }
+
+    @PostMapping("/{businessId}/sales/{saleId}/cancel")
+    public ResponseEntity<SaleResponseDTO> cancelSale(@PathVariable Long businessId, @PathVariable Long saleId) {
+        SaleResponseDTO saleResponseDTO = saleHandler.cancelSale(businessId, saleId);
+        return ResponseEntity.ok(saleResponseDTO);
+    }
 }

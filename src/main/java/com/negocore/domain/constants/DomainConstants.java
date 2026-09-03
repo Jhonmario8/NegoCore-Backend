@@ -26,5 +26,8 @@ public class DomainConstants {
     public static final String INVALID_PAID_AMOUNT = "Paid amount must be greater than or equal to zero";
     public static final String SALE_ITEMS_REQUIRED = "Sale items are required";
     public static final String SALE_CASH_MOVEMENT_DESCRIPTION = "Sale payment for sale ID: ";
+    public static final String SALE_NOT_FOUND = "Sale not found";
+    public static final String SALE_ALREADY_CANCELED = "Sale is already canceled";
+    public static final String SALE_CANNOT_BE_CANCELED_WITH_PAYMENTS = "Sale cannot be canceled because it has associated payments";
     public static String Category_NOT_FOUND = "Category not found";
 }

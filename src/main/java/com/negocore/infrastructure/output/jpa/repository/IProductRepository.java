@@ -11,4 +11,6 @@ public interface IProductRepository extends JpaRepository<ProductEntity, Long> {
 
     boolean existsByBusinessIdAndSku(Long businessId, String sku);
     List<ProductEntity> findAllByIdInAndBusinessId(List<Long> productIds, Long businessId);
+
+    List<ProductEntity> findAllByIdIn(List<Long> productIds);
 }

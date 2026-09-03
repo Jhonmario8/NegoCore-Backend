@@ -11,4 +11,6 @@ public interface IProductPersistencePort {
     Boolean existByBusinessIdAndSku(Long businessId, String sku);
     Optional<Product> findById(Long productId);
     List<Product> findAllByIdsAndBusinessId(List<Long> productIds, Long businessId);
+    List<Product> findAllByIds(List<Long> productIds);
+    void saveAll(List<Product> products);
 }

@@ -33,6 +33,7 @@ public class SaleService implements ISaleServicePort {
     private final ISaleItemsPersistencePort saleItemsPersistencePort;
     private final ICashMovementPersistencePort cashMovementPersistencePort;
     private final IDebtPersistencePort debtPersistencePort;
+    private final IDebtPaymentPersistencePort debtPaymentPersistencePort;
 
     @Override
     @Transactional
@@ -189,5 +190,74 @@ public class SaleService implements ISaleServicePort {
                 saleItems
         );
 
+    }
+
+    @Override
+    @Transactional
+    public SaleResponse cancelSale(Long businessId, Long saleId) {
+
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        Sale sale = salePersistencePort.findById(saleId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.SALE_NOT_FOUND));
+
+        if (!sale.getBusinessId().equals(businessId)) {
+            throw new NotFoundException(DomainConstants.SALE_NOT_FOUND);
+        }
+
+        if (sale.getStatus() != SaleStatus.PAID && sale.getStatus() != SaleStatus.PARTIAL) {
+            throw new ConflictException(DomainConstants.SALE_ALREADY_CANCELED);
+        }
+
+        List<SaleItem> saleItems = saleItemsPersistencePort.findAllBySaleId(saleId);
+
+        Debt debt = debtPersistencePort.findBySaleId(saleId).orElse(null);
+
+        if (debt != null && debtPaymentPersistencePort.existsByDebtId(debt.getId())) {
+            throw new ConflictException(DomainConstants.SALE_CANNOT_BE_CANCELED_WITH_PAYMENTS);
+        }
+
+        List<Long> productIds = saleItems.stream()
+                .map(SaleItem::getProductId)
+                .toList();
+
+        List<Product> products = productPersistencePort.findAllByIds(productIds);
+
+        Map<Long, Product> productsById = products.stream()
+                .collect(Collectors.toMap(
+                        Product::getId,
+                        Function.identity()
+                ));
+
+        for (SaleItem saleItem : saleItems) {
+
+            Product product = productsById.get(saleItem.getProductId());
+
+            product.setStock(product.getStock() + saleItem.getQuantity());
+        }
+
+        productPersistencePort.saveAll(products);
+
+
+        if (debt != null) {
+            debt.setStatus(DebtStatus.CANCELLED);
+            debtPersistencePort.save(debt);
+        }
+
+
+        sale.setStatus(SaleStatus.CANCELLED);
+        Sale savedSale = salePersistencePort.saveSale(sale);
+
+        return new SaleResponse(
+                savedSale,
+                saleItems
+        );
     }
 }

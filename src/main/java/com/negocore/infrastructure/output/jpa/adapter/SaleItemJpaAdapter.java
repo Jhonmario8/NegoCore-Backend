@@ -13,11 +13,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SaleItemJpaAdapter implements ISaleItemsPersistencePort {
 
-    private final ISaleItemRepository Repository;
+    private final ISaleItemRepository repository;
     private final ISaleItemEntityMapper mapper;
 
     @Override
     public void saveAll(List<SaleItem> saleItems) {
-        Repository.saveAll(saleItems.stream().map(mapper::toEntity).toList());
+        repository.saveAll(saleItems.stream().map(mapper::toEntity).toList());
     }
+
+    @Override
+    public List<SaleItem> findAllBySaleId(Long saleId) {
+        return repository.findAllBySaleId(saleId).stream().map(mapper::toDomain).toList();
+    }
+
+
 }

@@ -6,6 +6,6 @@ import com.negocore.domain.model.SaleResponse;
 public interface ISaleServicePort {
 
     SaleResponse registerSale(Long businessId , SaleRequest saleRequest);
-
+    SaleResponse cancelSale(Long businessId, Long saleId);
 
 }
