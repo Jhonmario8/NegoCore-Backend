@@ -38,4 +38,11 @@ public class ApplicationConstants {
     public static final String CLOSING_AMOUNT_NOT_NULL = "closingAmount must not be null";
     public static final String CLOSING_AMOUNT_MIN = "closingAmount must be greater than or equal to 1";
 
+    public static final String CLIENT_NAME_NOT_BLANK = "client name must not be blank";
+    public static final String CLIENT_NAME_SIZE = "client name must be between 2 and 100 characters";
+    public static final String PHONE_REGEX = "^[0-9]{10}$";
+
+    public static final String CLIENT_PHONE_INVALID = "client phone must be a valid 10-digit number";
+    public static final String CLIENT_EMAIL_INVALID = "client email must be a valid email address";
+    public static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 }

@@ -22,6 +22,7 @@ public class BusinessController {
     private final ICashRegisterHandler cashRegisterHandler;
     private final ISaleHandler saleHandler;
     private final IExpenseHandler expenseHandler;
+    private final IClientHandler clientHandler;
 
     @PostMapping()
     public ResponseEntity<BusinessResponseDTO> createBusiness(@Valid @RequestBody BusinessCreateDTO businessCreateDTO) {
@@ -84,4 +85,11 @@ public class BusinessController {
         CashRegisterClosedResponseDTO cashRegisterClosedResponseDTO = cashRegisterHandler.closeCashRegister(businessId, cashRegisterId, cashRegisterCloseRequestDTO);
         return ResponseEntity.ok(cashRegisterClosedResponseDTO);
     }
+
+    @PostMapping("/{businessId}/clients")
+    public ResponseEntity<ClientResponseDTO> registerClient(@PathVariable Long businessId, @Valid @RequestBody ClientRequestDTO clientRequestDTO) {
+        ClientResponseDTO clientResponseDTO = clientHandler.registerClient(businessId, clientRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientResponseDTO);
+    }
+
 }
