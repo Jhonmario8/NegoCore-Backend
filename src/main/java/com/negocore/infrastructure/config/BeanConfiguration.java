@@ -72,4 +72,9 @@ public class BeanConfiguration {
         return new ClientService(clientPersistencePort, businessPersistencePort, authenticationServicePort);
     }
 
+    @Bean
+    public IDebtServicePort debtServicePort() {
+        return new DebtService(debtPersistencePort, authenticationServicePort, businessPersistencePort, debtPaymentPersistencePort, cashRegisterPersistencePort, cashMovementPersistencePort);
+    }
+
 }

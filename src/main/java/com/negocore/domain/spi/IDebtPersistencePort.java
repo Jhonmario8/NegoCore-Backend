@@ -8,4 +8,5 @@ public interface IDebtPersistencePort {
 
     Debt save(Debt debt);
     Optional<Debt> findBySaleId(Long saleId);
+    Optional<Debt> findById(Long debtId);
 }

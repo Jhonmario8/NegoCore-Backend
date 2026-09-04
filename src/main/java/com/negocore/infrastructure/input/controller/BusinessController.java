@@ -23,6 +23,7 @@ public class BusinessController {
     private final ISaleHandler saleHandler;
     private final IExpenseHandler expenseHandler;
     private final IClientHandler clientHandler;
+    private final IDebtHandler debtHandler;
 
     @PostMapping()
     public ResponseEntity<BusinessResponseDTO> createBusiness(@Valid @RequestBody BusinessCreateDTO businessCreateDTO) {
@@ -92,4 +93,9 @@ public class BusinessController {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientResponseDTO);
     }
 
+    @PostMapping("/{businessId}/clients/{clientId}/payments")
+    public ResponseEntity<DebtResponseDTO> createDebt(@PathVariable Long businessId, @PathVariable Long clientId, @Valid @RequestBody DebtCreateRequestDTO debtCreateRequestDTO) {
+        DebtResponseDTO debtResponseDTO = debtHandler.createDebt(businessId, clientId, debtCreateRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(debtResponseDTO);
+    }
 }

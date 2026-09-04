@@ -25,4 +25,9 @@ public class DebtJpaAdapter implements IDebtPersistencePort {
     public Optional<Debt> findBySaleId(Long saleId) {
         return repository.findBySaleId(saleId).map(mapper::toDomain);
     }
+
+    @Override
+    public Optional<Debt> findById(Long debtId) {
+        return repository.findById(debtId).map(mapper::toDomain);
+    }
 }

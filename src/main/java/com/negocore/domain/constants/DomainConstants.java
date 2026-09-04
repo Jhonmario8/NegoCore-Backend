@@ -31,5 +31,8 @@ public class DomainConstants {
     public static final String SALE_CANNOT_BE_CANCELED_WITH_PAYMENTS = "Sale cannot be canceled because it has associated payments";
     public static final String CASH_REGISTER_NOT_FOUND = "Cash register not found";
     public static final String CASH_REGISTER_ALREADY_CLOSED = "Cash register is already closed";
+    public static final String DEBT_NOT_FOUND = "Debt not found";
+    public static final String DEBT_AMOUNT_EXCEEDS_TOTAL = "Debt amount exceeds total debt amount";
+    public static final String CASH_MOVEMENT_DEBT_PAYMENT = "Debt payment received";
     public static String Category_NOT_FOUND = "Category not found";
 }
