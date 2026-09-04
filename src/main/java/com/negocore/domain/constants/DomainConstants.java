@@ -29,5 +29,7 @@ public class DomainConstants {
     public static final String SALE_NOT_FOUND = "Sale not found";
     public static final String SALE_ALREADY_CANCELED = "Sale is already canceled";
     public static final String SALE_CANNOT_BE_CANCELED_WITH_PAYMENTS = "Sale cannot be canceled because it has associated payments";
+    public static final String CASH_REGISTER_NOT_FOUND = "Cash register not found";
+    public static final String CASH_REGISTER_ALREADY_CLOSED = "Cash register is already closed";
     public static String Category_NOT_FOUND = "Category not found";
 }

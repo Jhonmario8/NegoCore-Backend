@@ -32,4 +32,9 @@ public class CashRegisterJpaAdapter implements ICashRegisterPersistencePort {
     public Optional<CashRegister> findOpenCashRegisterByBusinessIdAndStatus(Long businessId, CashRegisterStatus status) {
         return repository.findByBusinessIdAndStatus(businessId, status).map(mapper::toDomain);
     }
+
+    @Override
+    public Optional<CashRegister> findById(Long id) {
+        return repository.findById(id).map(mapper::toDomain);
+    }
 }

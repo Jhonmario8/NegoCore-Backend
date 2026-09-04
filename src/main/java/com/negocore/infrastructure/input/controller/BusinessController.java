@@ -54,7 +54,7 @@ public class BusinessController {
     }
 
     @PostMapping("/{businessId}/cash-registers")
-    public ResponseEntity<CashRegisterResponseDTO> openCashRegister(@PathVariable Long businessId, @Valid @RequestBody CashRegisterRequestDTO cashRegisterRequestDTO) {
+    public ResponseEntity<CashRegisterResponseDTO> openCashRegister(@PathVariable Long businessId, @Valid @RequestBody CashRegisterOpenRequestDTO cashRegisterRequestDTO) {
         CashRegisterResponseDTO cashRegisterResponseDTO = cashRegisterHandler.openCashRegister(businessId, cashRegisterRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(cashRegisterResponseDTO);
     }
@@ -77,4 +77,11 @@ public class BusinessController {
         return ResponseEntity.status(HttpStatus.CREATED).body(expenseResponseDTO);
     }
 
+    @PostMapping("/{businessId}/cash-registers/{cashRegisterId}/close")
+    public ResponseEntity<CashRegisterClosedResponseDTO> closeCashRegister(@PathVariable Long businessId,
+                                                                           @PathVariable Long cashRegisterId,
+                                                                           @Valid @RequestBody CashRegisterCloseRequestDTO cashRegisterCloseRequestDTO) {
+        CashRegisterClosedResponseDTO cashRegisterClosedResponseDTO = cashRegisterHandler.closeCashRegister(businessId, cashRegisterId, cashRegisterCloseRequestDTO);
+        return ResponseEntity.ok(cashRegisterClosedResponseDTO);
+    }
 }

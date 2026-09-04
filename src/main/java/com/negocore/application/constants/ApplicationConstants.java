@@ -35,4 +35,7 @@ public class ApplicationConstants {
     public static final String AMOUNT_POSITIVE = "amount must be greater than zero";
     public static final String DESCRIPTION_NOT_BLANK = "description must not be blank";
     public static final String DESCRIPTION_SIZE = "description must not exceed 200 characters";
+    public static final String CLOSING_AMOUNT_NOT_NULL = "closingAmount must not be null";
+    public static final String CLOSING_AMOUNT_MIN = "closingAmount must be greater than or equal to 1";
+
 }

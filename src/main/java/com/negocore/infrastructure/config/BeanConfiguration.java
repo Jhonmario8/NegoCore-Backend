@@ -54,7 +54,7 @@ public class BeanConfiguration {
 
     @Bean
     public ICashRegisterServicePort cashRegisterServicePort(){
-        return new CashRegisterService(cashRegisterPersistencePort, authenticationServicePort, businessPersistencePort);
+        return new CashRegisterService(cashRegisterPersistencePort, authenticationServicePort, businessPersistencePort, cashMovementPersistencePort);
     }
 
     @Bean
