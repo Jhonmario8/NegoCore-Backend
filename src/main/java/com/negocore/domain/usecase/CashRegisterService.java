@@ -6,6 +6,7 @@ import com.negocore.domain.constants.DomainConstants;
 import com.negocore.domain.exception.ConflictException;
 import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.*;
+import com.negocore.domain.spi.IAuditLogsPersistencePort;
 import com.negocore.domain.spi.IBusinessPersistencePort;
 import com.negocore.domain.spi.ICashMovementPersistencePort;
 import com.negocore.domain.spi.ICashRegisterPersistencePort;
@@ -23,6 +24,8 @@ public class CashRegisterService implements ICashRegisterServicePort {
     private final IAuthenticationServicePort authenticationServicePort;
     private final IBusinessPersistencePort businessPersistencePort;
     private final ICashMovementPersistencePort cashMovementPersistencePort;
+    private final IAuditLogsPersistencePort auditLogsPersistencePort;
+
     @Override
     public CashRegister openCashRegister(Long businessId, BigDecimal openingAmount) {
         Long userId = authenticationServicePort.getCurrentUserId();
@@ -82,6 +85,15 @@ public class CashRegisterService implements ICashRegisterServicePort {
         cashRegister.setStatus(CashRegisterStatus.CLOSED);
         cashRegisterPersistencePort.save(cashRegister);
 
+        AuditLog auditLog = new AuditLog();
+        auditLog.setBusinessId(businessId);
+        auditLog.setUserId(userId);
+        auditLog.setAction(DomainConstants.CASH_CLOSED);
+        auditLog.setEntity(DomainConstants.CASH_REGISTER_ENTITY);
+        auditLog.setEntityId(cashRegister.getId());
+        auditLog.setDetails(DomainConstants.CASH_CLOSED_DETAILS + cashRegister.getId());
+        auditLog.setCreatedAt(LocalDateTime.now());
+        auditLogsPersistencePort.save(auditLog);
 
         return new CashRegisterResponse(
                 cashRegister.getExpectedAmount(),

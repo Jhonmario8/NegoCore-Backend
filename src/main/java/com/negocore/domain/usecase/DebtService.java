@@ -25,6 +25,7 @@ public class DebtService implements IDebtServicePort {
     private final IDebtPaymentPersistencePort debtPaymentPersistencePort;
     private final ICashRegisterPersistencePort cashRegisterPersistencePort;
     private final ICashMovementPersistencePort cashMovementPersistencePort;
+    private final IAuditLogsPersistencePort auditLogsPersistencePort;
 
     @Override
     @Transactional
@@ -80,6 +81,17 @@ public class DebtService implements IDebtServicePort {
                 cashMovementPersistencePort.save(cashMovement);
             }
         }
+
+        AuditLog auditLog = new AuditLog();
+        auditLog.setBusinessId(businessId);
+        auditLog.setUserId(userId);
+        auditLog.setAction(DomainConstants.DEBT_PAYMENT_REGISTERED);
+        auditLog.setEntity(DomainConstants.DEBT_ENTITY);
+        auditLog.setEntityId(debtId);
+        auditLog.setDetails(DomainConstants.DEBT_PAYMENT_REGISTERED_DETAILS + savedPayment.getId());
+        auditLog.setCreatedAt(LocalDateTime.now());
+        auditLogsPersistencePort.save(auditLog);
+
         return new DebtPaymentResponse(savedPayment, debt.getStatus());
     }
 }

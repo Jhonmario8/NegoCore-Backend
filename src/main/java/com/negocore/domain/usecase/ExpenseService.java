@@ -5,10 +5,7 @@ import com.negocore.domain.api.IExpenseServicePort;
 import com.negocore.domain.constants.DomainConstants;
 import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.*;
-import com.negocore.domain.spi.IBusinessPersistencePort;
-import com.negocore.domain.spi.ICashMovementPersistencePort;
-import com.negocore.domain.spi.ICashRegisterPersistencePort;
-import com.negocore.domain.spi.IExpensePersistencePort;
+import com.negocore.domain.spi.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +20,7 @@ public class ExpenseService implements IExpenseServicePort {
     private final ICashRegisterPersistencePort cashRegisterPersistencePort;
     private final IBusinessPersistencePort businessPersistencePort;
     private final ICashMovementPersistencePort cashMovementPersistencePort;
-
+    private final IAuditLogsPersistencePort auditLogsPersistencePort;
 
     @Override
     @Transactional
@@ -55,6 +52,17 @@ public class ExpenseService implements IExpenseServicePort {
             cashMovement.setReferenceId(saveExpense.getId());
             cashMovementPersistencePort.save(cashMovement);
         }
+
+        AuditLog auditLog = new AuditLog();
+        auditLog.setBusinessId(businessId);
+        auditLog.setUserId(userId);
+        auditLog.setAction(DomainConstants.EXPENSE_CREATED);
+        auditLog.setEntity(DomainConstants.EXPENSE_ENTITY);
+        auditLog.setEntityId(saveExpense.getId());
+        auditLog.setDetails(DomainConstants.EXPENSE_CREATED_DETAILS + saveExpense.getId());
+        auditLog.setCreatedAt(LocalDateTime.now());
+        auditLogsPersistencePort.save(auditLog);
+
         return saveExpense;
     }
 }

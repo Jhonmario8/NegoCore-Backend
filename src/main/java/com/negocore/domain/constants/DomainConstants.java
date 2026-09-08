@@ -42,5 +42,17 @@ public class DomainConstants {
     public static final String SALE_CREATED_DETAILS = "A new sale has been created with ID: ";
     public static final String SALE_CANCELLED = "SALE_CANCELLED";
     public static final String SALE_CANCELLED_DETAILS = "The sale with ID:  has been; canceled";
+    public static final String EXPENSE_CREATED = "EXPENSE_CREATED";
+    public static final String EXPENSE_ENTITY = "EXPENSE";
+    public static final String EXPENSE_CREATED_DETAILS = "A new expense has been created with ID; ";
+    public static final String CASH_CLOSED = "CASH_CLOSED";
+    public static final String CASH_REGISTER_ENTITY = "CASH_REGISTER";
+    public static final String CASH_CLOSED_DETAILS = "The cash register with ID:  has; been closed";
+    public static final String DEBT_PAYMENT_REGISTERED = "DEBT_PAYMENT_REGISTERED";
+    public static final String DEBT_ENTITY = "DEBT";
+    public static final String DEBT_PAYMENT_REGISTERED_DETAILS = "A new debt payment has been registered with ID: ";
+    public static final String AUDIT_FROM_AFTER_TO = "The 'from' date cannot be after the 'to' date";
+    public static final String AUDIT_INVALID_PAGE = "Page number must be greater than or equal to 0";
+    public static final String AUDIT_INVALID_SIZE = "Size must be greater than 0 and less than or equal to 100";
     public static String Category_NOT_FOUND = "Category not found";
 }

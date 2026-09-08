@@ -27,6 +27,7 @@ public class BusinessController {
     private final IClientHandler clientHandler;
     private final IDebtHandler debtHandler;
     private final IBalanceReportHandler balanceReportHandler;
+    private final IAuditLogHandler auditLogHandler;
 
     @PostMapping()
     public ResponseEntity<BusinessResponseDTO> createBusiness(@Valid @RequestBody BusinessCreateDTO businessCreateDTO) {
@@ -118,6 +119,47 @@ public class BusinessController {
                         businessId,
                         from,
                         to
+                )
+        );
+    }
+    @GetMapping("/{businessId}/audit-logs")
+    public ResponseEntity<AuditLogPageResponseDTO> findAuditLogs(
+            @PathVariable Long businessId,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate from,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate to,
+
+            @RequestParam(required = false)
+            String action,
+
+            @RequestParam(required = false)
+            String entity,
+
+            @RequestParam(required = false)
+            Long entityId,
+
+            @RequestParam(required = false)
+            Integer page,
+
+            @RequestParam(required = false)
+            Integer size
+    ) {
+
+        return ResponseEntity.ok(
+                auditLogHandler.findAuditLogs(
+                        businessId,
+                        from,
+                        to,
+                        action,
+                        entity,
+                        entityId,
+                        page,
+                        size
                 )
         );
     }

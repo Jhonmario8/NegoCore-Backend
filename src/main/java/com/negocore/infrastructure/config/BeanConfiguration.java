@@ -55,7 +55,7 @@ public class BeanConfiguration {
 
     @Bean
     public ICashRegisterServicePort cashRegisterServicePort(){
-        return new CashRegisterService(cashRegisterPersistencePort, authenticationServicePort, businessPersistencePort, cashMovementPersistencePort);
+        return new CashRegisterService(cashRegisterPersistencePort, authenticationServicePort, businessPersistencePort, cashMovementPersistencePort, auditLogsPersistencePort);
     }
 
     @Bean
@@ -65,7 +65,7 @@ public class BeanConfiguration {
 
     @Bean
     public IExpenseServicePort expenseServicePort(){
-        return new ExpenseService(expensePersistencePort, authenticationServicePort, cashRegisterPersistencePort, businessPersistencePort, cashMovementPersistencePort);
+        return new ExpenseService(expensePersistencePort, authenticationServicePort, cashRegisterPersistencePort, businessPersistencePort, cashMovementPersistencePort, auditLogsPersistencePort);
     }
 
     @Bean
@@ -75,11 +75,15 @@ public class BeanConfiguration {
 
     @Bean
     public IDebtServicePort debtServicePort() {
-        return new DebtService(debtPersistencePort, authenticationServicePort, businessPersistencePort, debtPaymentPersistencePort, cashRegisterPersistencePort, cashMovementPersistencePort);
+        return new DebtService(debtPersistencePort, authenticationServicePort, businessPersistencePort, debtPaymentPersistencePort, cashRegisterPersistencePort, cashMovementPersistencePort, auditLogsPersistencePort);
     }
 
     @Bean
     public IBalanceReportServicePort balanceReportServicePort() {
         return new BalanceReportService(authenticationServicePort, businessPersistencePort, salePersistencePort, expensePersistencePort);
+    }
+
+    @Bean IAuditLogServicePort auditLogServicePort() {
+        return new AuditLogService(authenticationServicePort, businessPersistencePort, auditLogsPersistencePort);
     }
 }

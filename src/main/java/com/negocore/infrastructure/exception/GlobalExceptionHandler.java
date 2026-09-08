@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,4 +50,14 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(ex.getMessage(), InfrastructureConstants.NOT_FOUND));
     }
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatchException(
+            MethodArgumentTypeMismatchException ex
+    ) {
+        return ResponseEntity.badRequest()
+                .body(new ErrorResponse(
+                        InfrastructureConstants.MSG_INVALID_DATA,
+                        InfrastructureConstants.BAD_REQUEST
+                ));
+    }
 }
