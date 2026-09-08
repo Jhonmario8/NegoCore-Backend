@@ -2,6 +2,7 @@ package com.negocore.domain.usecase;
 
 import com.negocore.domain.api.IAuthenticationServicePort;
 import com.negocore.domain.api.IBusinessServicePort;
+import com.negocore.domain.constants.DomainConstants;
 import com.negocore.domain.model.Business;
 import com.negocore.domain.spi.IBusinessPersistencePort;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class BusinessService implements IBusinessServicePort {
     public Business createBusiness(Business business) {
 
         if (business.getCurrency() == null || business.getCurrency().isBlank()) {
-            business.setCurrency("COP");
+            business.setCurrency(DomainConstants.DEFAULT_CURRENCY);
         }
 
         Long currentUserId = authenticationServicePort.getCurrentUserId();

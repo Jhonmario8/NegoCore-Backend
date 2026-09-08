@@ -7,6 +7,9 @@ import com.negocore.infrastructure.output.jpa.repository.IExpenseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class ExpenseJpaAdapter implements IExpensePersistencePort {
@@ -17,5 +20,10 @@ public class ExpenseJpaAdapter implements IExpensePersistencePort {
     @Override
     public Expense save(Expense expense) {
         return mapper.toDomain(expenseRepository.save(mapper.toEntity(expense)));
+    }
+
+    @Override
+    public BigDecimal sumAmountByBusinessIdAndCreatedAtBetween(Long businessId, LocalDateTime from, LocalDateTime to) {
+        return expenseRepository.sumAmountByBusinessIdAndCreatedAtRange(businessId, from, to);
     }
 }

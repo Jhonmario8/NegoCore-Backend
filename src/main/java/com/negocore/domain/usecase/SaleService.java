@@ -34,6 +34,7 @@ public class SaleService implements ISaleServicePort {
     private final ICashMovementPersistencePort cashMovementPersistencePort;
     private final IDebtPersistencePort debtPersistencePort;
     private final IDebtPaymentPersistencePort debtPaymentPersistencePort;
+    private final IAuditLogsPersistencePort auditLogsPersistencePort;
 
     @Override
     @Transactional
@@ -185,6 +186,16 @@ public class SaleService implements ISaleServicePort {
                 .toList();
         saleItemsPersistencePort.saveAll(saleItems);
 
+        AuditLog auditLog = new AuditLog();
+        auditLog.setBusinessId(businessId);
+        auditLog.setUserId(userId);
+        auditLog.setAction(DomainConstants.SALE_CREATED);
+        auditLog.setEntity(DomainConstants.SALE_ENTITY);
+        auditLog.setEntityId(savedSale.getId());
+        auditLog.setDetails(DomainConstants.SALE_CREATED_DETAILS + savedSale.getId());
+        auditLog.setCreatedAt(LocalDateTime.now());
+        auditLogsPersistencePort.save(auditLog);
+
         return new SaleResponse(
                 savedSale,
                 saleItems
@@ -254,6 +265,16 @@ public class SaleService implements ISaleServicePort {
 
         sale.setStatus(SaleStatus.CANCELLED);
         Sale savedSale = salePersistencePort.saveSale(sale);
+
+        AuditLog auditLog = new AuditLog();
+        auditLog.setBusinessId(businessId);
+        auditLog.setUserId(userId);
+        auditLog.setAction(DomainConstants.SALE_CANCELLED);
+        auditLog.setEntity(DomainConstants.SALE_ENTITY);
+        auditLog.setEntityId(savedSale.getId());
+        auditLog.setDetails(DomainConstants.SALE_CANCELLED_DETAILS + savedSale.getId());
+        auditLog.setCreatedAt(LocalDateTime.now());
+        auditLogsPersistencePort.save(auditLog);
 
         return new SaleResponse(
                 savedSale,

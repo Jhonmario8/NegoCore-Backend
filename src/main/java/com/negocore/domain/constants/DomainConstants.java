@@ -34,5 +34,13 @@ public class DomainConstants {
     public static final String DEBT_NOT_FOUND = "Debt not found";
     public static final String DEBT_AMOUNT_EXCEEDS_TOTAL = "Debt amount exceeds total debt amount";
     public static final String CASH_MOVEMENT_DEBT_PAYMENT = "Debt payment received";
+    public static final String DEFAULT_CURRENCY = "COP";
+    public static final String REPORT_DATES_REQUIRED = "Both 'from' and 'to' dates are required for the report";
+    public static final String REPORT_FROM_AFTER_TO = "The 'from' date cannot be after the 'to' date";
+    public static final String SALE_CREATED = "SALE_CREATED";
+    public static final String SALE_ENTITY = "SALE";
+    public static final String SALE_CREATED_DETAILS = "A new sale has been created with ID: ";
+    public static final String SALE_CANCELLED = "SALE_CANCELLED";
+    public static final String SALE_CANCELLED_DETAILS = "The sale with ID:  has been; canceled";
     public static String Category_NOT_FOUND = "Category not found";
 }

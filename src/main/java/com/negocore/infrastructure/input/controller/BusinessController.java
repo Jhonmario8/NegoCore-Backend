@@ -5,10 +5,12 @@ import com.negocore.application.dto.response.*;
 import com.negocore.application.handler.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -24,6 +26,7 @@ public class BusinessController {
     private final IExpenseHandler expenseHandler;
     private final IClientHandler clientHandler;
     private final IDebtHandler debtHandler;
+    private final IBalanceReportHandler balanceReportHandler;
 
     @PostMapping()
     public ResponseEntity<BusinessResponseDTO> createBusiness(@Valid @RequestBody BusinessCreateDTO businessCreateDTO) {
@@ -97,5 +100,25 @@ public class BusinessController {
     public ResponseEntity<DebtResponseDTO> createDebt(@PathVariable Long businessId, @PathVariable Long clientId, @Valid @RequestBody DebtCreateRequestDTO debtCreateRequestDTO) {
         DebtResponseDTO debtResponseDTO = debtHandler.createDebt(businessId, clientId, debtCreateRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(debtResponseDTO);
+    }
+
+    @GetMapping("/{businessId}/reports/balance")
+    public ResponseEntity<BalanceReportResponseDTO> getBalanceReport(
+            @PathVariable Long businessId,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate from,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate to
+    ) {
+
+        return ResponseEntity.ok(
+                balanceReportHandler.getBalanceReport(
+                        businessId,
+                        from,
+                        to
+                )
+        );
     }
 }
