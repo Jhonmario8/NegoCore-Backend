@@ -49,7 +49,7 @@ public class SaleService implements ISaleServicePort {
         if (!business.getOwnerId().equals(userId)) {
             throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
         }
-        CashRegister cashRegister = cashRegisterPersistencePort.findOpenCashRegisterByBusinessIdAndStatus(businessId, CashRegisterStatus.OPEN)
+        CashRegister cashRegister = cashRegisterPersistencePort.findCashRegisterByBusinessIdAndStatus(businessId, CashRegisterStatus.OPEN)
                 .orElseThrow(() -> new ConflictException(DomainConstants.CASH_REGISTER_NOT_OPEN));
 
         if (saleRequest.saleItems() == null || saleRequest.saleItems().isEmpty()) {
@@ -278,6 +278,67 @@ public class SaleService implements ISaleServicePort {
 
         return new SaleResponse(
                 savedSale,
+                saleItems
+        );
+    }
+
+    @Override
+    public List<Sale> findSales(
+            Long businessId,
+            SaleStatus status,
+            Long clientId,
+            LocalDateTime from,
+            LocalDateTime to
+    ) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() ->
+                        new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND)
+                );
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        if (from != null && to != null && from.isAfter(to)) {
+            throw new BadRequestException(DomainConstants.INVALID_DATE_RANGE);
+        }
+
+        return salePersistencePort.findAllByFilters(
+                businessId,
+                status,
+                clientId,
+                from,
+                to
+        );
+    }
+
+    @Override
+    public SaleResponse findSaleById(Long businessId, Long saleId) {
+
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() ->
+                        new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND)
+                );
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        Sale sale = salePersistencePort
+                .findByIdAndBusinessId(saleId, businessId)
+                .orElseThrow(() ->
+                        new NotFoundException(DomainConstants.SALE_NOT_FOUND)
+                );
+
+        List<SaleItem> saleItems =
+                saleItemsPersistencePort.findAllBySaleId(saleId);
+
+        return new SaleResponse(
+                sale,
                 saleItems
         );
     }

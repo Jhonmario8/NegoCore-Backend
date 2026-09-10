@@ -101,4 +101,56 @@ public class CashRegisterService implements ICashRegisterServicePort {
                 difference
         );
     }
+
+    @Override
+    public CashRegister findCurrentCashRegister(Long businessId) {
+
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() ->
+                        new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND)
+                );
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        return cashRegisterPersistencePort
+                .findCashRegisterByBusinessIdAndStatus(
+                        businessId,
+                        CashRegisterStatus.OPEN
+                )
+                .orElseThrow(() ->
+                        new NotFoundException(
+                                DomainConstants.CASH_REGISTER_NOT_FOUND
+                        )
+                );
+    }
+
+    @Override
+    public List<CashMovement> findCashMovementsByCashRegisterId(Long businessId, Long cashRegisterId) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() ->
+                        new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND)
+                );
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        CashRegister cashRegister = cashRegisterPersistencePort.findById(cashRegisterId)
+                .orElseThrow(() ->
+                        new NotFoundException(DomainConstants.CASH_REGISTER_NOT_FOUND)
+                );
+
+        if (!cashRegister.getBusinessId().equals(businessId)) {
+            throw new NotFoundException(DomainConstants.CASH_REGISTER_NOT_FOUND);
+        }
+
+        return cashMovementPersistencePort.findByCashRegisterId(cashRegisterId);
+    }
+
 }

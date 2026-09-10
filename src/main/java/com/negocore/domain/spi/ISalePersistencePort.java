@@ -5,6 +5,7 @@ import com.negocore.domain.model.SaleStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface ISalePersistencePort {
@@ -27,4 +28,13 @@ public interface ISalePersistencePort {
             SaleStatus status
     );
 
+    List<Sale> findAllByFilters(
+            Long businessId,
+            SaleStatus status,
+            Long clientId,
+            LocalDateTime from,
+            LocalDateTime to
+    );
+
+    Optional<Sale> findByIdAndBusinessId(Long saleId, Long businessId);
 }

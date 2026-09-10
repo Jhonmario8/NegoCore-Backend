@@ -3,6 +3,8 @@ package com.negocore.infrastructure.input.controller;
 import com.negocore.application.dto.request.*;
 import com.negocore.application.dto.response.*;
 import com.negocore.application.handler.*;
+import com.negocore.domain.model.DebtStatus;
+import com.negocore.domain.model.SaleStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,6 +30,7 @@ public class BusinessController {
     private final IDebtHandler debtHandler;
     private final IBalanceReportHandler balanceReportHandler;
     private final IAuditLogHandler auditLogHandler;
+    private final IProviderHandler providerHandler;
 
     @PostMapping()
     public ResponseEntity<BusinessResponseDTO> createBusiness(@Valid @RequestBody BusinessCreateDTO businessCreateDTO) {
@@ -97,9 +100,12 @@ public class BusinessController {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientResponseDTO);
     }
 
-    @PostMapping("/{businessId}/clients/{clientId}/payments")
-    public ResponseEntity<DebtResponseDTO> createDebt(@PathVariable Long businessId, @PathVariable Long clientId, @Valid @RequestBody DebtCreateRequestDTO debtCreateRequestDTO) {
-        DebtResponseDTO debtResponseDTO = debtHandler.createDebt(businessId, clientId, debtCreateRequestDTO);
+    @PostMapping("/{businessId}/debts/{debtId}/payments")
+    public ResponseEntity<DebtResponseDTO> createDebtPayment(
+            @PathVariable Long businessId,
+            @PathVariable Long debtId,
+            @Valid @RequestBody DebtCreateRequestDTO debtCreateRequestDTO) {
+        DebtResponseDTO debtResponseDTO = debtHandler.createDebt(businessId, debtId, debtCreateRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(debtResponseDTO);
     }
 
@@ -163,4 +169,166 @@ public class BusinessController {
                 )
         );
     }
+
+    @GetMapping("/{businessId}/categories")
+    public ResponseEntity<List<CategoryResponseDTO>> getCategoriesByBusinessId(@PathVariable Long businessId) {
+        return ResponseEntity.ok(categoryHandler.getCategoriesByBusinessId(businessId));
+    }
+
+    @GetMapping("/{businessId}/products")
+    public ResponseEntity<List<ProductResponseDTO>> findProducts(
+            @PathVariable Long businessId,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Boolean lowStock
+    ) {
+        return ResponseEntity.ok(
+                productHandler.findProducts(
+                        businessId,
+                        categoryId,
+                        lowStock
+                )
+        );
+    }
+
+    @GetMapping("/{businessId}/products/{productId}")
+    public ResponseEntity<ProductResponseDTO> findProductById(
+            @PathVariable Long businessId,
+            @PathVariable Long productId
+    ) {
+        return ResponseEntity.ok(
+                productHandler.findProductById(
+                        businessId,
+                        productId
+                )
+        );
+    }
+
+    @GetMapping("/{businessId}/clients")
+    public ResponseEntity<List<ClientResponseDTO>> getClientsByBusinessId(@PathVariable Long businessId) {
+        return ResponseEntity.ok(clientHandler.getClientsByBusinessId(businessId));
+    }
+
+    @GetMapping("/{businessId}/sales")
+    public ResponseEntity<List<SaleListResponseDTO>> findSales(
+            @PathVariable Long businessId,
+
+            @RequestParam(required = false)
+            SaleStatus status,
+
+            @RequestParam(required = false)
+            Long clientId,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate from,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate to
+    ) {
+        return ResponseEntity.ok(
+                saleHandler.findSales(
+                        businessId,
+                        status,
+                        clientId,
+                        from,
+                        to
+                )
+        );
+    }
+
+    @GetMapping("/{businessId}/sales/{saleId}")
+    public ResponseEntity<SaleResponseDTO> findSaleById(
+            @PathVariable Long businessId,
+            @PathVariable Long saleId
+    ) {
+        return ResponseEntity.ok(
+                saleHandler.findSaleById(
+                        businessId,
+                        saleId
+                )
+        );
+    }
+
+    @GetMapping("/{businessId}/cash-registers/current")
+    public ResponseEntity<CashRegisterResponseDTO> findCurrentCashRegister(
+            @PathVariable Long businessId
+    ) {
+        return ResponseEntity.ok(
+                cashRegisterHandler.findCurrentCashRegister(businessId)
+        );
+    }
+
+    @GetMapping("/{businessId}/cash-registers/{cashRegisterId}/cash-movements")
+    public ResponseEntity<List<CashMovementResponseDTO>> findCashMovementsByCashRegisterId(
+            @PathVariable Long businessId,
+            @PathVariable Long cashRegisterId
+    ) {
+        return ResponseEntity.ok(
+                cashRegisterHandler.findCashMovementsByCashRegisterId(businessId, cashRegisterId)
+        );
+    }
+
+    @GetMapping("/{businessId}/expenses")
+    public ResponseEntity<List<ExpenseResponseDTO>> findExpenses(
+            @PathVariable Long businessId,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate from,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate to
+    ) {
+
+        return ResponseEntity.ok(
+                expenseHandler.findExpenses(
+                        businessId,
+                        from,
+                        to
+                )
+        );
+    }
+
+    @GetMapping("/{businessId}/debts")
+    public ResponseEntity<List<DebtListResponseDTO>> findDebts(
+            @PathVariable Long businessId,
+            @RequestParam(required = false) DebtStatus status,
+            @RequestParam(required = false) Long clientId
+    ) {
+
+        return ResponseEntity.ok(
+                debtHandler.findDebts(
+                        businessId,
+                        status,
+                        clientId
+                )
+        );
+    }
+
+    @PostMapping("/{businessId}/providers")
+    public ResponseEntity<ProviderResponseDTO> createProvider(
+            @PathVariable Long businessId,
+            @Valid @RequestBody ProviderCreateRequestDTO providerCreateRequestDTO
+    ) {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(
+                        providerHandler.createProvider(
+                                businessId,
+                                providerCreateRequestDTO
+                        )
+                );
+    }
+
+    @GetMapping("/{businessId}/providers")
+    public ResponseEntity<List<ProviderResponseDTO>> findAllByBusinessId(
+            @PathVariable Long businessId
+    ) {
+
+        return ResponseEntity.ok(
+                providerHandler.findAllByBusinessId(businessId)
+        );
+    }
+
 }

@@ -28,6 +28,7 @@ public class BeanConfiguration {
     private final IExpensePersistencePort expensePersistencePort;
     private final IClientPersistencePort clientPersistencePort;
     private final IAuditLogsPersistencePort auditLogsPersistencePort;
+    private final IProviderPersistencePort providerPersistencePort;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -85,5 +86,9 @@ public class BeanConfiguration {
 
     @Bean IAuditLogServicePort auditLogServicePort() {
         return new AuditLogService(authenticationServicePort, businessPersistencePort, auditLogsPersistencePort);
+    }
+
+    @Bean IProviderServicePort providerServicePort() {
+        return new ProviderService(providerPersistencePort, businessPersistencePort, authenticationServicePort);
     }
 }

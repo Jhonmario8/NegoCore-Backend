@@ -54,5 +54,8 @@ public class DomainConstants {
     public static final String AUDIT_FROM_AFTER_TO = "The 'from' date cannot be after the 'to' date";
     public static final String AUDIT_INVALID_PAGE = "Page number must be greater than or equal to 0";
     public static final String AUDIT_INVALID_SIZE = "Size must be greater than 0 and less than or equal to 100";
+    public static final String INVALID_DATE_RANGE = "The 'from' date cannot be after the 'to' date";
+    public static final String DEBT_ALREADY_PAID =  "Debt is already paid";
+    public static final String DEBT_CANCELLED = "Debt is cancelled";
     public static String Category_NOT_FOUND = "Category not found";
 }

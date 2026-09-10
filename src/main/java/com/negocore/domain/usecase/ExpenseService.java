@@ -3,6 +3,7 @@ package com.negocore.domain.usecase;
 import com.negocore.domain.api.IAuthenticationServicePort;
 import com.negocore.domain.api.IExpenseServicePort;
 import com.negocore.domain.constants.DomainConstants;
+import com.negocore.domain.exception.BadRequestException;
 import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.*;
 import com.negocore.domain.spi.*;
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -34,7 +36,7 @@ public class ExpenseService implements IExpenseServicePort {
         }
 
         Optional<CashRegister> cashRegister = cashRegisterPersistencePort
-                .findOpenCashRegisterByBusinessIdAndStatus(businessId, CashRegisterStatus.OPEN);
+                .findCashRegisterByBusinessIdAndStatus(businessId, CashRegisterStatus.OPEN);
 
         cashRegister.ifPresent(openCashRegister -> expense.setCashRegisterId(openCashRegister.getId()));
         expense.setBusinessId(businessId);
@@ -65,4 +67,40 @@ public class ExpenseService implements IExpenseServicePort {
 
         return saveExpense;
     }
+
+    @Override
+    public List<Expense> findExpenses(
+            Long businessId,
+            LocalDateTime from,
+            LocalDateTime to
+    ) {
+
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() ->
+                        new NotFoundException(
+                                DomainConstants.BUSINESS_NOT_FOUND
+                        )
+                );
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(
+                    DomainConstants.BUSINESS_NOT_FOUND
+            );
+        }
+
+        if (from != null && to != null && from.isAfter(to)) {
+            throw new BadRequestException(
+                    DomainConstants.INVALID_DATE_RANGE
+            );
+        }
+
+        return expensePersistencePort.findAllByFilters(
+                businessId,
+                from,
+                to
+        );
+    }
+
 }

@@ -29,7 +29,7 @@ public class CashRegisterJpaAdapter implements ICashRegisterPersistencePort {
     }
 
     @Override
-    public Optional<CashRegister> findOpenCashRegisterByBusinessIdAndStatus(Long businessId, CashRegisterStatus status) {
+    public Optional<CashRegister> findCashRegisterByBusinessIdAndStatus(Long businessId, CashRegisterStatus status) {
         return repository.findByBusinessIdAndStatus(businessId, status).map(mapper::toDomain);
     }
 

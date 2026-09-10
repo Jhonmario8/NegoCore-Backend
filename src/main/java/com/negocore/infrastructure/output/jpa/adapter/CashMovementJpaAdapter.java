@@ -29,4 +29,12 @@ public class CashMovementJpaAdapter implements ICashMovementPersistencePort {
                 .map(mapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public List<CashMovement> findByCashRegisterId(Long cashRegisterId) {
+        return repository.findByCashRegisterId(cashRegisterId)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
 }

@@ -1,8 +1,10 @@
 package com.negocore.application.mapper;
 
 import com.negocore.application.dto.request.DebtCreateRequestDTO;
+import com.negocore.application.dto.response.DebtListResponseDTO;
 import com.negocore.application.dto.response.DebtPaymentDTO;
 import com.negocore.application.dto.response.DebtResponseDTO;
+import com.negocore.domain.model.Debt;
 import com.negocore.domain.model.DebtCreateRequest;
 import com.negocore.domain.model.DebtPayment;
 import com.negocore.domain.model.DebtPaymentResponse;
@@ -20,4 +22,6 @@ public interface IDebtMapper {
     DebtResponseDTO toResponseDTO(DebtPaymentResponse debtPaymentResponse);
 
     DebtPaymentDTO toPaymentDTO(DebtPayment debtPayment);
+
+    DebtListResponseDTO toListResponseDTO(Debt debt);
 }

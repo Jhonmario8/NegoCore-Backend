@@ -51,4 +51,22 @@ public class ProductJpaAdapter implements IProductPersistencePort {
     public void saveAll(List<Product> products) {
         repository.saveAll(products.stream().map(mapper::toEntity).toList());
     }
+
+    @Override
+    public Optional<Product> findByIdAndBusinessId(Long productId, Long businessId) {
+        return repository.findByIdAndBusinessId(productId, businessId)
+                .map(mapper::toDomain);
+    }
+
+    @Override
+    public List<Product> findAllByBusinessId(
+            Long businessId,
+            Long categoryId,
+            Boolean lowStock
+    ) {
+        return repository.findAllByBusinessId(businessId, categoryId, lowStock)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
 }

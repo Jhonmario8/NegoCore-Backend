@@ -9,4 +9,5 @@ public interface ICashMovementPersistencePort {
 
     CashMovement save(CashMovement cashMovement);
     List<CashMovement> findByCashRegisterIdAndTypeIn(Long cashRegisterId, List<CashMovementType> types);
+    List<CashMovement> findByCashRegisterId(Long cashRegisterId);
 }

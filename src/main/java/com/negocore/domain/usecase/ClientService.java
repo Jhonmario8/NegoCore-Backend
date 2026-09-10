@@ -11,6 +11,7 @@ import com.negocore.domain.spi.IClientPersistencePort;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class ClientService implements IClientServicePort {
@@ -29,5 +30,10 @@ public class ClientService implements IClientServicePort {
         client.setBusinessId(businessId);
         client.setCreatedAt(LocalDateTime.now());
         return clientPersistencePort.save(client);
+    }
+
+    @Override
+    public List<Client> getClientsByBusinessId(Long businessId) {
+        return clientPersistencePort.findAllByBusinessId(businessId);
     }
 }

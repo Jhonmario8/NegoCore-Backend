@@ -13,4 +13,6 @@ public interface IProductPersistencePort {
     List<Product> findAllByIdsAndBusinessId(List<Long> productIds, Long businessId);
     List<Product> findAllByIds(List<Long> productIds);
     void saveAll(List<Product> products);
+    List<Product> findAllByBusinessId(Long businessId, Long categoryId, Boolean lowStock);
+    Optional<Product> findByIdAndBusinessId(Long productId, Long businessId);
 }

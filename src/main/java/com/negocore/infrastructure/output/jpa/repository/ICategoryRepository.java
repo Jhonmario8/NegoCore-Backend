@@ -4,9 +4,12 @@ import com.negocore.infrastructure.output.jpa.entity.CategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ICategoryRepository extends JpaRepository<CategoryEntity, Long> {
 
     Boolean existsByBusinessIdAndName(Long businessId, String name);
     Boolean existsByIdAndBusinessId(Long categoryId, Long businessId);
+    List<CategoryEntity> findAllByBusinessId(Long businessId);
 }

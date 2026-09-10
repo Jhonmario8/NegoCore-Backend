@@ -4,6 +4,7 @@ import com.negocore.domain.api.IAuthenticationServicePort;
 import com.negocore.domain.api.IDebtServicePort;
 import com.negocore.domain.constants.DomainConstants;
 import com.negocore.domain.exception.BadRequestException;
+import com.negocore.domain.exception.ConflictException;
 import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.*;
 import com.negocore.domain.spi.*;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,6 +41,17 @@ public class DebtService implements IDebtServicePort {
         Debt debt = debtPersistencePort.findById(debtId)
                 .orElseThrow(() -> new NotFoundException(DomainConstants.DEBT_NOT_FOUND));
 
+        if (!debt.getBusinessId().equals(businessId)) {
+            throw new NotFoundException(DomainConstants.DEBT_NOT_FOUND);
+        }
+
+        if (debt.getStatus() == DebtStatus.PAID) {
+            throw new ConflictException(DomainConstants.DEBT_ALREADY_PAID);
+        }
+        if (debt.getStatus() == DebtStatus.CANCELLED) {
+            throw new ConflictException(DomainConstants.DEBT_CANCELLED);
+        }
+
         BigDecimal pendingAmount = debt.getTotalAmount()
                 .subtract(debt.getPaidAmount());
 
@@ -47,11 +60,8 @@ public class DebtService implements IDebtServicePort {
                     DomainConstants.DEBT_AMOUNT_EXCEEDS_TOTAL
             );
         }
-        if (!debt.getBusinessId().equals(businessId)){
-            throw new NotFoundException(DomainConstants.DEBT_NOT_FOUND);
-        }
         Optional<CashRegister> cashRegister = cashRegisterPersistencePort
-                .findOpenCashRegisterByBusinessIdAndStatus(businessId, CashRegisterStatus.OPEN);
+                .findCashRegisterByBusinessIdAndStatus(businessId, CashRegisterStatus.OPEN);
 
         DebtPayment payment = new DebtPayment();
         payment.setDebtId(debtId);
@@ -94,4 +104,34 @@ public class DebtService implements IDebtServicePort {
 
         return new DebtPaymentResponse(savedPayment, debt.getStatus());
     }
+
+    @Override
+    public List<Debt> findDebts(
+            Long businessId,
+            DebtStatus status,
+            Long clientId
+    ) {
+
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() ->
+                        new NotFoundException(
+                                DomainConstants.BUSINESS_NOT_FOUND
+                        )
+                );
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(
+                    DomainConstants.BUSINESS_NOT_FOUND
+            );
+        }
+
+        return debtPersistencePort.findAllByFilters(
+                businessId,
+                status,
+                clientId
+        );
+    }
+
 }

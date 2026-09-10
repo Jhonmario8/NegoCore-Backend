@@ -11,5 +11,5 @@ import java.util.List;
 public interface ICashMovementRepository extends JpaRepository<CashMovementEntity, Long> {
 
     List<CashMovementEntity> findByCashRegisterIdAndTypeIn(Long cashRegisterId, List<CashMovementType> types);
-
+    List<CashMovementEntity> findByCashRegisterId(Long cashRegisterId);
 }

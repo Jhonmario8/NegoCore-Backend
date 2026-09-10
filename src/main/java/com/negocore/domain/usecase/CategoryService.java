@@ -12,6 +12,7 @@ import com.negocore.domain.spi.ICategoryPersistencePort;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -39,5 +40,10 @@ public class CategoryService implements ICategoryServicePort {
         category.setCreatedAt(LocalDateTime.now());
 
         return categoryPersistencePort.saveCategory(category);
+    }
+
+    @Override
+    public List<Category> getCategoriesByBusinessId(Long businessId) {
+        return categoryPersistencePort.findAllByBusinessId(businessId);
     }
 }

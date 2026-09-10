@@ -9,6 +9,7 @@ public interface ICashRegisterPersistencePort {
 
     CashRegister save(CashRegister cashRegister);
     Boolean existsOpenCashRegisterByBusinessIdAndStatus(Long businessId, CashRegisterStatus status);
-    Optional<CashRegister> findOpenCashRegisterByBusinessIdAndStatus(Long businessId, CashRegisterStatus status);
+    Optional<CashRegister> findCashRegisterByBusinessIdAndStatus(Long businessId, CashRegisterStatus status);
     Optional<CashRegister> findById(Long id);
+
 }

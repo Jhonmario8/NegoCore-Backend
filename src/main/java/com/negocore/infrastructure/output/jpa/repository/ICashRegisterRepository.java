@@ -13,4 +13,5 @@ public interface ICashRegisterRepository extends JpaRepository<CashRegisterEntit
     Boolean existsByBusinessIdAndStatus(Long businessId, CashRegisterStatus status);
     Optional<CashRegisterEntity> findByBusinessIdAndStatus(Long businessId, CashRegisterStatus status);
 
+
 }

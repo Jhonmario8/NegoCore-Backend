@@ -14,6 +14,7 @@ import com.negocore.domain.spi.IProductPersistencePort;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class ProductService implements IProductServicePort {
@@ -73,4 +74,52 @@ public class ProductService implements IProductServicePort {
         return productPersistencePort.saveProduct(product);
 
     }
+
+    @Override
+    public List<Product> findProducts(
+            Long businessId,
+            Long categoryId,
+            Boolean lowStock
+    ) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() ->
+                        new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND)
+                );
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        if (categoryId != null &&
+                !categoryPersistencePort.existsByIdAndBusinessId(categoryId, businessId)) {
+            throw new NotFoundException(DomainConstants.Category_NOT_FOUND);
+        }
+
+        return productPersistencePort.findAllByBusinessId(
+                businessId,
+                categoryId,
+                lowStock
+        );
+    }
+    @Override
+    public Product findProductById(Long businessId, Long productId) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() ->
+                        new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND)
+                );
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        return productPersistencePort.findByIdAndBusinessId(productId, businessId)
+                .orElseThrow(() ->
+                        new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND)
+                );
+    }
+
 }
