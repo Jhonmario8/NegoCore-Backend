@@ -32,8 +32,6 @@ public class SaleEntity {
     private Long id;
     @Column(name = "business_id", nullable = false)
     private Long businessId;
-    @Column(name = "cash_register_id", nullable = false)
-    private Long cashRegisterId;
     @Column(name = "client_id")
     private Long clientId;
     @Column(name = "total", nullable = false)

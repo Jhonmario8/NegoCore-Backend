@@ -10,19 +10,29 @@ import com.negocore.domain.model.Business;
 import com.negocore.domain.model.Product;
 import com.negocore.domain.spi.IBusinessPersistencePort;
 import com.negocore.domain.spi.ICategoryPersistencePort;
+import com.negocore.domain.spi.IProductImageStoragePort;
 import com.negocore.domain.spi.IProductPersistencePort;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class ProductService implements IProductServicePort {
+
+    private static final long MAX_IMAGE_SIZE_BYTES = 3L * 1024 * 1024;
+    private static final Map<String, String> ALLOWED_IMAGE_TYPES = Map.of(
+            "image/png", "png",
+            "image/jpeg", "jpg",
+            "image/webp", "webp"
+    );
 
     private final IProductPersistencePort productPersistencePort;
     private final IBusinessPersistencePort businessPersistencePort;
     private final IAuthenticationServicePort authenticationServicePort;
     private final ICategoryPersistencePort categoryPersistencePort;
+    private final IProductImageStoragePort productImageStoragePort;
 
     @Override
     public Product createProduct(Long businessId, Product product) {
@@ -120,6 +130,41 @@ public class ProductService implements IProductServicePort {
                 .orElseThrow(() ->
                         new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND)
                 );
+    }
+
+    @Override
+    public Product uploadProductImage(
+            Long businessId,
+            Long productId,
+            String contentType,
+            long size,
+            byte[] content
+    ) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        Product product = productPersistencePort.findByIdAndBusinessId(productId, businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND));
+
+        String extension = ALLOWED_IMAGE_TYPES.get(contentType);
+        if (extension == null) {
+            throw new BadRequestException(DomainConstants.INVALID_IMAGE_TYPE);
+        }
+
+        if (size > MAX_IMAGE_SIZE_BYTES) {
+            throw new BadRequestException(DomainConstants.IMAGE_TOO_LARGE);
+        }
+
+        String imageUrl = productImageStoragePort.store(businessId, productId, extension, content);
+
+        product.setImageUrl(imageUrl);
+        return productPersistencePort.saveProduct(product);
     }
 
 }

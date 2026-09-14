@@ -18,10 +18,10 @@ public class ExpenseResponseDTO {
 
     private Long id;
     private Long businessId;
-    private Long cashRegisterId;
     private String category;
     private String description;
     private BigDecimal amount;
+    private Boolean paid;
     private LocalDateTime createdAt;
 
 }

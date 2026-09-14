@@ -27,14 +27,14 @@ public class ExpenseEntity {
     private Long id;
     @Column(name = "business_id", nullable = false)
     private Long businessId;
-    @Column(name = "cash_register_id")
-    private Long cashRegisterId;
     @Column(name = "category", length = 60)
     private String category;
     @Column(name = "description", nullable = false, length = 200)
     private String description;
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
+    @Column(name = "paid", nullable = false, columnDefinition = "boolean default true")
+    private Boolean paid;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 }

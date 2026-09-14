@@ -19,9 +19,7 @@ public class BeanConfiguration {
     private final IBusinessPersistencePort businessPersistencePort;
     private final ICategoryPersistencePort categoryPersistencePort;
     private final IProductPersistencePort productPersistencePort;
-    private final ICashRegisterPersistencePort cashRegisterPersistencePort;
     private final ISaleItemsPersistencePort saleItemsPersistencePort;
-    private final ICashMovementPersistencePort cashMovementPersistencePort;
     private final IDebtPersistencePort debtPersistencePort;
     private final ISalePersistencePort salePersistencePort;
     private final IDebtPaymentPersistencePort debtPaymentPersistencePort;
@@ -29,6 +27,11 @@ public class BeanConfiguration {
     private final IClientPersistencePort clientPersistencePort;
     private final IAuditLogsPersistencePort auditLogsPersistencePort;
     private final IProviderPersistencePort providerPersistencePort;
+    private final IPurchasePersistencePort purchasePersistencePort;
+    private final IPurchaseItemsPersistencePort purchaseItemsPersistencePort;
+    private final IPayablePersistencePort payablePersistencePort;
+    private final IPayablePaymentPersistencePort payablePaymentPersistencePort;
+    private final IProductImageStoragePort productImageStoragePort;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -51,22 +54,18 @@ public class BeanConfiguration {
     }
     @Bean
     public IProductServicePort productServicePort(){
-        return new ProductService(productPersistencePort, businessPersistencePort, authenticationServicePort, categoryPersistencePort);
+        return new ProductService(productPersistencePort, businessPersistencePort, authenticationServicePort, categoryPersistencePort, productImageStoragePort);
     }
 
-    @Bean
-    public ICashRegisterServicePort cashRegisterServicePort(){
-        return new CashRegisterService(cashRegisterPersistencePort, authenticationServicePort, businessPersistencePort, cashMovementPersistencePort, auditLogsPersistencePort);
-    }
 
     @Bean
     public ISaleServicePort saleServicePort(){
-        return new SaleService(salePersistencePort, authenticationServicePort, businessPersistencePort, cashRegisterPersistencePort, productPersistencePort, saleItemsPersistencePort, cashMovementPersistencePort, debtPersistencePort, debtPaymentPersistencePort, auditLogsPersistencePort);
+        return new SaleService(salePersistencePort, authenticationServicePort, businessPersistencePort, productPersistencePort, saleItemsPersistencePort, debtPersistencePort, debtPaymentPersistencePort, auditLogsPersistencePort);
     }
 
     @Bean
     public IExpenseServicePort expenseServicePort(){
-        return new ExpenseService(expensePersistencePort, authenticationServicePort, cashRegisterPersistencePort, businessPersistencePort, cashMovementPersistencePort, auditLogsPersistencePort);
+        return new ExpenseService(expensePersistencePort, authenticationServicePort, businessPersistencePort, providerPersistencePort, payablePersistencePort, auditLogsPersistencePort);
     }
 
     @Bean
@@ -76,7 +75,7 @@ public class BeanConfiguration {
 
     @Bean
     public IDebtServicePort debtServicePort() {
-        return new DebtService(debtPersistencePort, authenticationServicePort, businessPersistencePort, debtPaymentPersistencePort, cashRegisterPersistencePort, cashMovementPersistencePort, auditLogsPersistencePort);
+        return new DebtService(debtPersistencePort, authenticationServicePort, businessPersistencePort, debtPaymentPersistencePort, auditLogsPersistencePort);
     }
 
     @Bean
@@ -90,5 +89,30 @@ public class BeanConfiguration {
 
     @Bean IProviderServicePort providerServicePort() {
         return new ProviderService(providerPersistencePort, businessPersistencePort, authenticationServicePort);
+    }
+
+    @Bean
+    public IPurchaseServicePort purchaseServicePort() {
+        return new PurchaseService(
+                purchasePersistencePort,
+                purchaseItemsPersistencePort,
+                authenticationServicePort,
+                businessPersistencePort,
+                providerPersistencePort,
+                productPersistencePort,
+                payablePersistencePort,
+                auditLogsPersistencePort
+        );
+    }
+
+    @Bean
+    public IPayableServicePort payableServicePort() {
+        return new PayableService(
+                payablePersistencePort,
+                payablePaymentPersistencePort,
+                authenticationServicePort,
+                businessPersistencePort,
+                auditLogsPersistencePort
+        );
     }
 }

@@ -16,7 +16,6 @@ public class DebtPayment {
 
     private Long id;
     private Long debtId;
-    private Long cashRegisterId;
     private BigDecimal amount;
     private DebtPaymentMethod paymentMethod;
     private LocalDateTime createdAt;

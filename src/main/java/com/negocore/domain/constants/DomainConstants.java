@@ -58,4 +58,27 @@ public class DomainConstants {
     public static final String DEBT_ALREADY_PAID =  "Debt is already paid";
     public static final String DEBT_CANCELLED = "Debt is cancelled";
     public static String Category_NOT_FOUND = "Category not found";
+
+    public static final String PROVIDER_NOT_FOUND = "Provider not found";
+    public static final String PURCHASE_ITEMS_REQUIRED = "Purchase items are required";
+    public static final String PURCHASE_NOT_FOUND = "Purchase not found";
+    public static final String PURCHASE_CREATED = "PURCHASE_CREATED";
+    public static final String PURCHASE_ENTITY = "PURCHASE";
+    public static final String PURCHASE_CREATED_DETAILS = "A new purchase has been created with ID: ";
+
+    public static final String PAYABLE_NOT_FOUND = "Payable not found";
+    public static final String PAYABLE_ALREADY_PAID = "Payable is already paid";
+    public static final String PAYABLE_CANCELLED = "Payable is cancelled";
+    public static final String PAYABLE_AMOUNT_EXCEEDS_TOTAL = "Payable amount exceeds total payable amount";
+    public static final String PAYABLE_PAYMENT_REGISTERED = "PAYABLE_PAYMENT_REGISTERED";
+    public static final String PAYABLE_ENTITY = "PAYABLE";
+    public static final String PAYABLE_PAYMENT_REGISTERED_DETAILS = "A new payable payment has been registered with ID: ";
+
+    public static final String PAYEE_TYPE_REQUIRED = "payeeType is required when expense is not fully paid";
+    public static final String PROVIDER_ID_REQUIRED_FOR_PROVIDER_PAYEE = "providerId is required when payeeType is PROVIDER";
+    public static final String PAYEE_NAME_REQUIRED_FOR_OTHER_PAYEE = "payeeName is required when payeeType is OTHER";
+
+    public static final String INVALID_IMAGE_TYPE = "Image type must be png, jpeg or webp";
+    public static final String IMAGE_TOO_LARGE = "Image size must not exceed 3MB";
+    public static final String IMAGE_FILE_READ_ERROR = "Could not read the uploaded file";
 }

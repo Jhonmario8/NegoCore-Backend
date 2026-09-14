@@ -20,7 +20,6 @@ public class SaleListResponseDTO {
 
     private Long id;
     private Long businessId;
-    private Long cashRegisterId;
     private Long clientId;
     private BigDecimal total;
     private BigDecimal paidAmount;

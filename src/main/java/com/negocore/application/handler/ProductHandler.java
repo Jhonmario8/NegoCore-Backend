@@ -5,9 +5,13 @@ import com.negocore.application.dto.request.StockPatchDTO;
 import com.negocore.application.dto.response.ProductResponseDTO;
 import com.negocore.application.mapper.IProductMapper;
 import com.negocore.domain.api.IProductServicePort;
+import com.negocore.domain.constants.DomainConstants;
+import com.negocore.domain.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -71,6 +75,30 @@ public class ProductHandler implements IProductHandler {
                 productServicePort.findProductById(
                         businessId,
                         productId
+                )
+        );
+    }
+
+    @Override
+    public ProductResponseDTO uploadProductImage(
+            Long businessId,
+            Long productId,
+            MultipartFile file
+    ) {
+        byte[] content;
+        try {
+            content = file.getBytes();
+        } catch (IOException e) {
+            throw new BadRequestException(DomainConstants.IMAGE_FILE_READ_ERROR);
+        }
+
+        return mapper.toResponse(
+                productServicePort.uploadProductImage(
+                        businessId,
+                        productId,
+                        file.getContentType(),
+                        file.getSize(),
+                        content
                 )
         );
     }

@@ -25,8 +25,6 @@ public class DebtService implements IDebtServicePort {
     private final IAuthenticationServicePort authenticationServicePort;
     private final IBusinessPersistencePort businessPersistencePort;
     private final IDebtPaymentPersistencePort debtPaymentPersistencePort;
-    private final ICashRegisterPersistencePort cashRegisterPersistencePort;
-    private final ICashMovementPersistencePort cashMovementPersistencePort;
     private final IAuditLogsPersistencePort auditLogsPersistencePort;
 
     @Override
@@ -60,15 +58,13 @@ public class DebtService implements IDebtServicePort {
                     DomainConstants.DEBT_AMOUNT_EXCEEDS_TOTAL
             );
         }
-        Optional<CashRegister> cashRegister = cashRegisterPersistencePort
-                .findCashRegisterByBusinessIdAndStatus(businessId, CashRegisterStatus.OPEN);
+
 
         DebtPayment payment = new DebtPayment();
         payment.setDebtId(debtId);
         payment.setAmount(debtCreateRequest.amount());
         payment.setPaymentMethod(debtCreateRequest.paymentMethod());
         payment.setCreatedAt(LocalDateTime.now());
-        cashRegister.ifPresent(register -> payment.setCashRegisterId(register.getId()));
         DebtPayment savedPayment = debtPaymentPersistencePort.save(payment);
 
         debt.setPaidAmount(debt.getPaidAmount().add(debtCreateRequest.amount()));
@@ -77,20 +73,8 @@ public class DebtService implements IDebtServicePort {
         } else {
             debt.setStatus(DebtStatus.PARTIAL);
         }
-
-        if (debtCreateRequest.paymentMethod() == DebtPaymentMethod.CASH) {
-
-            if (cashRegister.isPresent()){
-                CashMovement cashMovement = new CashMovement();
-                cashMovement.setCashRegisterId(cashRegister.get().getId());
-                cashMovement.setType(CashMovementType.MANUAL_IN);
-                cashMovement.setAmount(debtCreateRequest.amount());
-                cashMovement.setDescription(DomainConstants.CASH_MOVEMENT_DEBT_PAYMENT);
-                cashMovement.setReferenceId(savedPayment.getId());
-                cashMovement.setCreatedAt(LocalDateTime.now());
-                cashMovementPersistencePort.save(cashMovement);
-            }
-        }
+        debtPersistencePort.save(debt);
+       
 
         AuditLog auditLog = new AuditLog();
         auditLog.setBusinessId(businessId);

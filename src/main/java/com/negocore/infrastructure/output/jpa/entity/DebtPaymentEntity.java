@@ -30,8 +30,6 @@ public class DebtPaymentEntity {
     private Long id;
     @Column(name = "debt_id", nullable = false)
     private Long debtId;
-    @Column(name = "cash_register_id")
-    private Long cashRegisterId;
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
     @Enumerated(EnumType.STRING)

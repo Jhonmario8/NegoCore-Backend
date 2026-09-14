@@ -13,4 +13,12 @@ public interface IProductServicePort {
     List<Product> findProducts(Long businessId, Long categoryId, Boolean lowStock);
 
     Product findProductById(Long businessId, Long productId);
+
+    Product uploadProductImage(
+            Long businessId,
+            Long productId,
+            String contentType,
+            long size,
+            byte[] content
+    );
 }

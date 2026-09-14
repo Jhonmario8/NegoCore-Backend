@@ -17,6 +17,11 @@ spring:
         format_sql: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
   security:
     jwt:
       secret: ${NEGOCORE_JWT_KEY}

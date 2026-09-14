@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +34,12 @@ public class ProviderJpaAdapter implements IProviderPersistencePort {
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Optional<Provider> findByIdAndBusinessId(Long providerId, Long businessId) {
+
+        return repository.findByIdAndBusinessId(providerId, businessId)
+                .map(mapper::toDomain);
     }
 }

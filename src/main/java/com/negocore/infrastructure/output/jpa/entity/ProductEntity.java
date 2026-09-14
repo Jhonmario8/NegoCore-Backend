@@ -36,5 +36,6 @@ public class ProductEntity {
     private Integer stock;
     private Integer minStockAlert;
     private Boolean active;
+    private String imageUrl;
     private LocalDateTime createdAt;
 }

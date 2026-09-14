@@ -28,10 +28,8 @@ public class SaleService implements ISaleServicePort {
     private final ISalePersistencePort salePersistencePort;
     private final IAuthenticationServicePort authenticationServicePort;
     private final IBusinessPersistencePort businessPersistencePort;
-    private final ICashRegisterPersistencePort cashRegisterPersistencePort;
     private final IProductPersistencePort productPersistencePort;
     private final ISaleItemsPersistencePort saleItemsPersistencePort;
-    private final ICashMovementPersistencePort cashMovementPersistencePort;
     private final IDebtPersistencePort debtPersistencePort;
     private final IDebtPaymentPersistencePort debtPaymentPersistencePort;
     private final IAuditLogsPersistencePort auditLogsPersistencePort;
@@ -49,8 +47,6 @@ public class SaleService implements ISaleServicePort {
         if (!business.getOwnerId().equals(userId)) {
             throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
         }
-        CashRegister cashRegister = cashRegisterPersistencePort.findCashRegisterByBusinessIdAndStatus(businessId, CashRegisterStatus.OPEN)
-                .orElseThrow(() -> new ConflictException(DomainConstants.CASH_REGISTER_NOT_OPEN));
 
         if (saleRequest.saleItems() == null || saleRequest.saleItems().isEmpty()) {
             throw new BadRequestException(DomainConstants.SALE_ITEMS_REQUIRED);
@@ -133,7 +129,6 @@ public class SaleService implements ISaleServicePort {
 
         Sale sale = new Sale();
         sale.setBusinessId(businessId);
-        sale.setCashRegisterId(cashRegister.getId());
         sale.setClientId(saleRequest.clientId());
         sale.setTotal(totalAmount);
         sale.setStatus(status);
@@ -143,15 +138,6 @@ public class SaleService implements ISaleServicePort {
 
         Sale savedSale = salePersistencePort.saveSale(sale);
 
-        CashMovement cashMovement = new CashMovement();
-        cashMovement.setCashRegisterId(cashRegister.getId());
-        cashMovement.setType(CashMovementType.SALE);
-        cashMovement.setAmount(saleRequest.paidAmount());
-        cashMovement.setDescription(DomainConstants.SALE_CASH_MOVEMENT_DESCRIPTION + savedSale.getId());
-        cashMovement.setReferenceId(savedSale.getId());
-        cashMovement.setCreatedAt(LocalDateTime.now());
-
-        cashMovementPersistencePort.save(cashMovement);
 
         if (status == SaleStatus.PARTIAL){
             Debt debt = new Debt();

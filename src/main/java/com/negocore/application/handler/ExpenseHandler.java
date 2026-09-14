@@ -21,7 +21,9 @@ public class ExpenseHandler implements IExpenseHandler{
 
     @Override
     public ExpenseResponseDTO registerExpense(Long businessId, ExpenseRequestDTO expenseRequestDTO) {
-        return mapper.toResponseDTO(expenseServicePort.registerExpense(businessId, mapper.toDomain(expenseRequestDTO)));
+        return mapper.toResponseDTO(
+                expenseServicePort.registerExpense(businessId, mapper.toDomain(expenseRequestDTO))
+        );
     }
 
     @Override

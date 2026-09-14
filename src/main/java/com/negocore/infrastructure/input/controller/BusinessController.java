@@ -4,13 +4,18 @@ import com.negocore.application.dto.request.*;
 import com.negocore.application.dto.response.*;
 import com.negocore.application.handler.*;
 import com.negocore.domain.model.DebtStatus;
+import com.negocore.domain.model.PayableStatus;
+import com.negocore.domain.model.PayeeType;
+import com.negocore.domain.model.PurchaseStatus;
 import com.negocore.domain.model.SaleStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,7 +28,7 @@ public class BusinessController {
     private final IBusinessHandler businessHandler;
     private final ICategoryHandler categoryHandler;
     private final IProductHandler productHandler;
-    private final ICashRegisterHandler cashRegisterHandler;
+
     private final ISaleHandler saleHandler;
     private final IExpenseHandler expenseHandler;
     private final IClientHandler clientHandler;
@@ -31,6 +36,8 @@ public class BusinessController {
     private final IBalanceReportHandler balanceReportHandler;
     private final IAuditLogHandler auditLogHandler;
     private final IProviderHandler providerHandler;
+    private final IPurchaseHandler purchaseHandler;
+    private final IPayableHandler payableHandler;
 
     @PostMapping()
     public ResponseEntity<BusinessResponseDTO> createBusiness(@Valid @RequestBody BusinessCreateDTO businessCreateDTO) {
@@ -62,11 +69,6 @@ public class BusinessController {
         return ResponseEntity.ok(productResponseDTO);
     }
 
-    @PostMapping("/{businessId}/cash-registers")
-    public ResponseEntity<CashRegisterResponseDTO> openCashRegister(@PathVariable Long businessId, @Valid @RequestBody CashRegisterOpenRequestDTO cashRegisterRequestDTO) {
-        CashRegisterResponseDTO cashRegisterResponseDTO = cashRegisterHandler.openCashRegister(businessId, cashRegisterRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(cashRegisterResponseDTO);
-    }
 
     @PostMapping("/{businessId}/sales")
     public ResponseEntity<SaleResponseDTO> registerSale(@PathVariable Long businessId, @Valid @RequestBody SaleRequestDTO saleRequestDTO) {
@@ -86,13 +88,6 @@ public class BusinessController {
         return ResponseEntity.status(HttpStatus.CREATED).body(expenseResponseDTO);
     }
 
-    @PostMapping("/{businessId}/cash-registers/{cashRegisterId}/close")
-    public ResponseEntity<CashRegisterClosedResponseDTO> closeCashRegister(@PathVariable Long businessId,
-                                                                           @PathVariable Long cashRegisterId,
-                                                                           @Valid @RequestBody CashRegisterCloseRequestDTO cashRegisterCloseRequestDTO) {
-        CashRegisterClosedResponseDTO cashRegisterClosedResponseDTO = cashRegisterHandler.closeCashRegister(businessId, cashRegisterId, cashRegisterCloseRequestDTO);
-        return ResponseEntity.ok(cashRegisterClosedResponseDTO);
-    }
 
     @PostMapping("/{businessId}/clients")
     public ResponseEntity<ClientResponseDTO> registerClient(@PathVariable Long businessId, @Valid @RequestBody ClientRequestDTO clientRequestDTO) {
@@ -250,24 +245,8 @@ public class BusinessController {
         );
     }
 
-    @GetMapping("/{businessId}/cash-registers/current")
-    public ResponseEntity<CashRegisterResponseDTO> findCurrentCashRegister(
-            @PathVariable Long businessId
-    ) {
-        return ResponseEntity.ok(
-                cashRegisterHandler.findCurrentCashRegister(businessId)
-        );
-    }
 
-    @GetMapping("/{businessId}/cash-registers/{cashRegisterId}/cash-movements")
-    public ResponseEntity<List<CashMovementResponseDTO>> findCashMovementsByCashRegisterId(
-            @PathVariable Long businessId,
-            @PathVariable Long cashRegisterId
-    ) {
-        return ResponseEntity.ok(
-                cashRegisterHandler.findCashMovementsByCashRegisterId(businessId, cashRegisterId)
-        );
-    }
+
 
     @GetMapping("/{businessId}/expenses")
     public ResponseEntity<List<ExpenseResponseDTO>> findExpenses(
@@ -328,6 +307,99 @@ public class BusinessController {
 
         return ResponseEntity.ok(
                 providerHandler.findAllByBusinessId(businessId)
+        );
+    }
+
+    @PostMapping("/{businessId}/purchases")
+    public ResponseEntity<PurchaseResponseDTO> registerPurchase(
+            @PathVariable Long businessId,
+            @Valid @RequestBody PurchaseRequestDTO purchaseRequestDTO
+    ) {
+        PurchaseResponseDTO purchaseResponseDTO = purchaseHandler.registerPurchase(businessId, purchaseRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(purchaseResponseDTO);
+    }
+
+    @GetMapping("/{businessId}/purchases")
+    public ResponseEntity<List<PurchaseListResponseDTO>> findPurchases(
+            @PathVariable Long businessId,
+
+            @RequestParam(required = false)
+            Long providerId,
+
+            @RequestParam(required = false)
+            PurchaseStatus status,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate from,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate to
+    ) {
+        return ResponseEntity.ok(
+                purchaseHandler.findPurchases(
+                        businessId,
+                        providerId,
+                        status,
+                        from,
+                        to
+                )
+        );
+    }
+
+    @GetMapping("/{businessId}/purchases/{purchaseId}")
+    public ResponseEntity<PurchaseResponseDTO> findPurchaseById(
+            @PathVariable Long businessId,
+            @PathVariable Long purchaseId
+    ) {
+        return ResponseEntity.ok(
+                purchaseHandler.findPurchaseById(businessId, purchaseId)
+        );
+    }
+
+    @PostMapping("/{businessId}/payables/{payableId}/payments")
+    public ResponseEntity<PayablePaymentResponseDTO> createPayablePayment(
+            @PathVariable Long businessId,
+            @PathVariable Long payableId,
+            @Valid @RequestBody PayablePaymentRequestDTO payablePaymentRequestDTO
+    ) {
+        PayablePaymentResponseDTO payablePaymentResponseDTO =
+                payableHandler.createPayablePayment(businessId, payableId, payablePaymentRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(payablePaymentResponseDTO);
+    }
+
+    @GetMapping("/{businessId}/payables")
+    public ResponseEntity<List<PayableListResponseDTO>> findPayables(
+            @PathVariable Long businessId,
+
+            @RequestParam(required = false)
+            PayableStatus status,
+
+            @RequestParam(required = false)
+            PayeeType payeeType,
+
+            @RequestParam(required = false)
+            Long providerId
+    ) {
+        return ResponseEntity.ok(
+                payableHandler.findPayables(
+                        businessId,
+                        status,
+                        payeeType,
+                        providerId
+                )
+        );
+    }
+
+    @PostMapping(value = "/{businessId}/products/{productId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductResponseDTO> uploadProductImage(
+            @PathVariable Long businessId,
+            @PathVariable Long productId,
+            @RequestParam("file") MultipartFile file
+    ) {
+        return ResponseEntity.ok(
+                productHandler.uploadProductImage(businessId, productId, file)
         );
     }
 
