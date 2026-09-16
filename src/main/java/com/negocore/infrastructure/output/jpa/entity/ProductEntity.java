@@ -37,5 +37,8 @@ public class ProductEntity {
     private Integer minStockAlert;
     private Boolean active;
     private String imageUrl;
+    @Column(name = "image_data", columnDefinition = "bytea")
+    private byte[] imageData;
+    private String imageContentType;
     private LocalDateTime createdAt;
 }

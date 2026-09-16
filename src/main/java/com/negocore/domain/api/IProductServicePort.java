@@ -1,6 +1,7 @@
 package com.negocore.domain.api;
 
 import com.negocore.domain.model.Product;
+import com.negocore.domain.model.ProductImage;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface IProductServicePort {
             long size,
             byte[] content
     );
+
+    ProductImage getProductImage(Long businessId, Long productId);
 }

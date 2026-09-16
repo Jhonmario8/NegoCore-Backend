@@ -6,11 +6,13 @@ import com.negocore.application.handler.*;
 import com.negocore.domain.model.DebtStatus;
 import com.negocore.domain.model.PayableStatus;
 import com.negocore.domain.model.PayeeType;
+import com.negocore.domain.model.ProductImage;
 import com.negocore.domain.model.PurchaseStatus;
 import com.negocore.domain.model.SaleStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -414,6 +416,15 @@ public class BusinessController {
         return ResponseEntity.ok(
                 productHandler.uploadProductImage(businessId, productId, file)
         );
+    }
+
+    @GetMapping("/{businessId}/products/{productId}/image")
+    public ResponseEntity<byte[]> getProductImage(@PathVariable Long businessId, @PathVariable Long productId) {
+        ProductImage image = productHandler.getProductImage(businessId, productId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(image.contentType()))
+                .cacheControl(CacheControl.noCache())
+                .body(image.data());
     }
 
 }

@@ -25,6 +25,8 @@ public class Product {
     private Integer minStockAlert;
     private Boolean active;
     private String imageUrl;
+    private byte[] imageData;
+    private String imageContentType;
     private LocalDateTime createdAt;
 
 }
