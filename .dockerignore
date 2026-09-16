@@ -1,0 +1,10 @@
+build/
+.gradle/
+.idea/
+out/
+bin/
+uploads/
+*.iml
+.git/
+.gitattributes
+HELP.md
