@@ -15,5 +15,8 @@ public class BusinessListResponseDTO {
     private String name;
     private String currency;
     private Boolean active;
+    private String address;
+    private String phone;
+    private String email;
 
 }

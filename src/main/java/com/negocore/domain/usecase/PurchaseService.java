@@ -68,11 +68,17 @@ public class PurchaseService implements IPurchaseServicePort {
                         Function.identity()
                 ));
 
-        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal itemsTotal = BigDecimal.ZERO;
         for (PurchaseItemRequest item : purchaseRequest.purchaseItems()) {
             BigDecimal subtotal = item.unitCost().multiply(BigDecimal.valueOf(item.quantity()));
-            total = total.add(subtotal);
+            itemsTotal = itemsTotal.add(subtotal);
         }
+
+        BigDecimal shippingCost = purchaseRequest.shippingCost() != null
+                ? purchaseRequest.shippingCost()
+                : BigDecimal.ZERO;
+
+        BigDecimal total = itemsTotal.add(shippingCost);
 
         if (purchaseRequest.paidAmount() == null
                 || purchaseRequest.paidAmount().compareTo(BigDecimal.ZERO) < 0
@@ -95,6 +101,7 @@ public class PurchaseService implements IPurchaseServicePort {
         purchase.setBusinessId(businessId);
         purchase.setProviderId(provider.getId());
         purchase.setTotal(total);
+        purchase.setShippingCost(shippingCost);
         purchase.setPaidAmount(purchaseRequest.paidAmount());
         purchase.setStatus(status);
         purchase.setPaymentMethod(purchaseRequest.paymentMethod());

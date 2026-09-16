@@ -33,4 +33,7 @@ public class PurchaseRequestDTO {
     @NotNull(message = ApplicationConstants.PAID_AMOUNT_REQUIRED)
     @PositiveOrZero(message = ApplicationConstants.PAID_AMOUNT_MUST_BE_POSITIVE)
     private BigDecimal paidAmount;
+
+    @PositiveOrZero(message = ApplicationConstants.SHIPPING_COST_MUST_BE_POSITIVE)
+    private BigDecimal shippingCost;
 }

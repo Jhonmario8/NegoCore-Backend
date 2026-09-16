@@ -11,12 +11,12 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
 
-    private String ErrorResponse;
+    private String message;
     private int status;
     private Map<String, String> errors;
 
     public ErrorResponse(String message, int status) {
-        this.ErrorResponse = message;
+        this.message = message;
         this.status = status;
     }
 

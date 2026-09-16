@@ -35,6 +35,8 @@ public class PurchaseEntity {
     private Long providerId;
     @Column(name = "total", nullable = false)
     private BigDecimal total;
+    @Column(name = "shipping_cost")
+    private BigDecimal shippingCost;
     @Column(name = "paid_amount", nullable = false)
     private BigDecimal paidAmount;
     @Enumerated(EnumType.STRING)

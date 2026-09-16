@@ -38,6 +38,7 @@ public class BusinessController {
     private final IProviderHandler providerHandler;
     private final IPurchaseHandler purchaseHandler;
     private final IPayableHandler payableHandler;
+    private final IQuoteHandler quoteHandler;
 
     @PostMapping()
     public ResponseEntity<BusinessResponseDTO> createBusiness(@Valid @RequestBody BusinessCreateDTO businessCreateDTO) {
@@ -49,6 +50,12 @@ public class BusinessController {
     public ResponseEntity<List<BusinessListResponseDTO>> findAllBusinesses() {
         List<BusinessListResponseDTO> businesses = businessHandler.findAllBusiness();
         return ResponseEntity.ok(businesses);
+    }
+
+    @PatchMapping("/{businessId}")
+    public ResponseEntity<BusinessResponseDTO> updateBusiness(@PathVariable Long businessId, @Valid @RequestBody BusinessUpdateDTO businessUpdateDTO) {
+        BusinessResponseDTO businessResponseDTO = businessHandler.updateBusiness(businessId, businessUpdateDTO);
+        return ResponseEntity.ok(businessResponseDTO);
     }
 
     @PostMapping("/{businessId}/categories")
@@ -69,6 +76,12 @@ public class BusinessController {
         return ResponseEntity.ok(productResponseDTO);
     }
 
+
+    @PostMapping("/{businessId}/quotes")
+    public ResponseEntity<QuoteResponseDTO> generateQuote(@PathVariable Long businessId, @Valid @RequestBody QuoteRequestDTO quoteRequestDTO) {
+        QuoteResponseDTO quoteResponseDTO = quoteHandler.generateQuote(businessId, quoteRequestDTO);
+        return ResponseEntity.ok(quoteResponseDTO);
+    }
 
     @PostMapping("/{businessId}/sales")
     public ResponseEntity<SaleResponseDTO> registerSale(@PathVariable Long businessId, @Valid @RequestBody SaleRequestDTO saleRequestDTO) {

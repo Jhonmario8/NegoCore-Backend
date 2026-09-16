@@ -18,6 +18,7 @@ public class DebtListResponseDTO {
 
     private Long id;
     private Long clientId;
+    private Long saleId;
     private BigDecimal totalAmount;
     private BigDecimal paidAmount;
     private DebtStatus status;

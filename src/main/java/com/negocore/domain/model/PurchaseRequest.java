@@ -10,6 +10,7 @@ public record PurchaseRequest(
         Long providerId,
         List<PurchaseItemRequest> purchaseItems,
         PaymentMethod paymentMethod,
-        BigDecimal paidAmount
+        BigDecimal paidAmount,
+        BigDecimal shippingCost
 ) {
 }

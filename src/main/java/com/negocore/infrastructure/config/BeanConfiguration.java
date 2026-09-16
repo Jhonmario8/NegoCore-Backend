@@ -106,6 +106,16 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public IQuoteServicePort quoteServicePort() {
+        return new QuoteService(
+                authenticationServicePort,
+                businessPersistencePort,
+                productPersistencePort,
+                userPersistencePort
+        );
+    }
+
+    @Bean
     public IPayableServicePort payableServicePort() {
         return new PayableService(
                 payablePersistencePort,

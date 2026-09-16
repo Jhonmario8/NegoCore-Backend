@@ -9,4 +9,6 @@ public interface IBusinessServicePort {
     Business createBusiness(Business business);
 
     List<Business> findAllBusinesses();
+
+    Business updateBusiness(Long businessId, Business businessChanges);
 }

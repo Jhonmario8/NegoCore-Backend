@@ -51,4 +51,9 @@ public class ApplicationConstants {
     public static final String PURCHASE_ITEMS_REQUIRED = "purchaseItems is required";
     public static final String UNIT_COST_REQUIRED = "unitCost is required";
     public static final String UNIT_COST_MIN = "unitCost must be greater than or equal to 0";
+    public static final String SHIPPING_COST_MUST_BE_POSITIVE = "shippingCost must be greater than or equal to 0";
+    public static final String CLIENT_NAME_SIZE_QUOTE = "clientName must not exceed 100 characters";
+    public static final String VALIDITY_DAYS_MIN = "validityDays must be greater than or equal to 1";
+    public static final String QUOTE_ITEMS_REQUIRED = "items is required";
+    public static final String UNIT_PRICE_MIN = "unitPrice must be greater than or equal to 0";
 }

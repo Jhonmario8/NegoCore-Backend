@@ -81,4 +81,8 @@ public class DomainConstants {
     public static final String INVALID_IMAGE_TYPE = "Image type must be png, jpeg or webp";
     public static final String IMAGE_TOO_LARGE = "Image size must not exceed 3MB";
     public static final String IMAGE_FILE_READ_ERROR = "Could not read the uploaded file";
+
+    public static final String USER_NOT_FOUND = "User not found";
+    public static final String QUOTE_ITEMS_REQUIRED = "Quote items are required";
+    public static final int DEFAULT_QUOTE_VALIDITY_DAYS = 15;
 }

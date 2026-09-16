@@ -26,6 +26,11 @@ public class UserJpaAdapter implements IUserPersistencePort {
         return repository.findByEmail(email).map(mapper::toDomain);
     }
 
+    @Override
+    public Optional<User> findById(Long id) {
+        return repository.findById(id).map(mapper::toDomain);
+    }
+
 
     @Override
     public Boolean existsByPhoneNumber(String phoneNumber) {

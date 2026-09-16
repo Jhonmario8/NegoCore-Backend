@@ -22,6 +22,7 @@ public class PurchaseListResponseDTO {
     private Long businessId;
     private Long providerId;
     private BigDecimal total;
+    private BigDecimal shippingCost;
     private BigDecimal paidAmount;
     private PurchaseStatus status;
     private PaymentMethod paymentMethod;

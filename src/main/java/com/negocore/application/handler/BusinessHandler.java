@@ -1,6 +1,7 @@
 package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.BusinessCreateDTO;
+import com.negocore.application.dto.request.BusinessUpdateDTO;
 import com.negocore.application.dto.response.BusinessListResponseDTO;
 import com.negocore.application.dto.response.BusinessResponseDTO;
 import com.negocore.application.mapper.IBusinessMapper;
@@ -25,5 +26,10 @@ public class BusinessHandler implements IBusinessHandler{
     @Override
     public List<BusinessListResponseDTO> findAllBusiness() {
         return businessServicePort.findAllBusinesses().stream().map(mapper::toListResponse).toList();
+    }
+
+    @Override
+    public BusinessResponseDTO updateBusiness(Long businessId, BusinessUpdateDTO businessUpdateDTO) {
+        return mapper.toResponse(businessServicePort.updateBusiness(businessId, mapper.toDomain(businessUpdateDTO)));
     }
 }

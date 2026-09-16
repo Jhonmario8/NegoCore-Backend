@@ -1,6 +1,7 @@
 package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.BusinessCreateDTO;
+import com.negocore.application.dto.request.BusinessUpdateDTO;
 import com.negocore.application.dto.response.BusinessListResponseDTO;
 import com.negocore.application.dto.response.BusinessResponseDTO;
 
@@ -11,5 +12,7 @@ public interface IBusinessHandler {
     BusinessResponseDTO createBusiness(BusinessCreateDTO businessDTO);
 
     List<BusinessListResponseDTO> findAllBusiness();
+
+    BusinessResponseDTO updateBusiness(Long businessId, BusinessUpdateDTO businessUpdateDTO);
 
 }
