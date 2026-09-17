@@ -1,6 +1,7 @@
 package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.ProviderCreateRequestDTO;
+import com.negocore.application.dto.request.ProviderUpdateDTO;
 import com.negocore.application.dto.response.ProviderResponseDTO;
 import com.negocore.application.mapper.IProviderMapper;
 import com.negocore.domain.api.IProviderServicePort;
@@ -42,6 +43,17 @@ public class ProviderHandler implements IProviderHandler {
                 .stream()
                 .map(providerMapper::toResponseDTO)
                 .toList();
+    }
+
+    @Override
+    public ProviderResponseDTO updateProvider(
+            Long businessId,
+            Long providerId,
+            ProviderUpdateDTO providerUpdateDTO
+    ) {
+        Provider provider = providerMapper.toDomain(providerUpdateDTO);
+        Provider updatedProvider = providerService.updateProvider(businessId, providerId, provider);
+        return providerMapper.toResponseDTO(updatedProvider);
     }
 
 }

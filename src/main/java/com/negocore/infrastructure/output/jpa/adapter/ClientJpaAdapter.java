@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,5 +28,11 @@ public class ClientJpaAdapter implements IClientPersistencePort {
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Optional<Client> findByIdAndBusinessId(Long clientId, Long businessId) {
+        return repository.findByIdAndBusinessId(clientId, businessId)
+                .map(mapper::toDomain);
     }
 }

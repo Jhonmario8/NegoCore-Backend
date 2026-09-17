@@ -36,4 +36,32 @@ public class ClientService implements IClientServicePort {
     public List<Client> getClientsByBusinessId(Long businessId) {
         return clientPersistencePort.findAllByBusinessId(businessId);
     }
+
+    @Override
+    public Client updateClient(Long businessId, Long clientId, Client clientChanges) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        Client client = clientPersistencePort.findByIdAndBusinessId(clientId, businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.CLIENT_NOT_FOUND));
+
+        if (clientChanges.getName() != null) {
+            client.setName(clientChanges.getName());
+        }
+        if (clientChanges.getPhone() != null) {
+            client.setPhone(clientChanges.getPhone());
+        }
+        if (clientChanges.getEmail() != null) {
+            client.setEmail(clientChanges.getEmail());
+        }
+        if (clientChanges.getAddress() != null) {
+            client.setAddress(clientChanges.getAddress());
+        }
+
+        return clientPersistencePort.save(client);
+    }
 }

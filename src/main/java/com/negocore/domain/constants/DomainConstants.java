@@ -60,6 +60,7 @@ public class DomainConstants {
     public static String Category_NOT_FOUND = "Category not found";
 
     public static final String PROVIDER_NOT_FOUND = "Provider not found";
+    public static final String CLIENT_NOT_FOUND = "Client not found";
     public static final String PURCHASE_ITEMS_REQUIRED = "Purchase items are required";
     public static final String PURCHASE_NOT_FOUND = "Purchase not found";
     public static final String PURCHASE_CREATED = "PURCHASE_CREATED";

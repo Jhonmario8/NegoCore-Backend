@@ -1,6 +1,7 @@
 package com.negocore.application.mapper;
 
 import com.negocore.application.dto.request.ProductRequestDTO;
+import com.negocore.application.dto.request.ProductUpdateDTO;
 import com.negocore.application.dto.response.ProductResponseDTO;
 import com.negocore.domain.model.Product;
 import org.mapstruct.Mapper;
@@ -10,6 +11,8 @@ import org.mapstruct.MappingConstants;
 public interface IProductMapper {
 
     Product toDomain(ProductRequestDTO productRequestDTO);
+
+    Product toDomain(ProductUpdateDTO productUpdateDTO);
 
     ProductResponseDTO toResponse(Product product);
 }

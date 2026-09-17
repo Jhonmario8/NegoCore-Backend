@@ -85,6 +85,28 @@ public class ProductService implements IProductServicePort {
     }
 
     @Override
+    public Product updateProduct(Long businessId, Long productId, Product productChanges) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        Product product = productPersistencePort.findByIdAndBusinessId(productId, businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND));
+
+        if (productChanges.getName() != null) {
+            product.setName(productChanges.getName());
+        }
+        if (productChanges.getSalePrice() != null) {
+            product.setSalePrice(productChanges.getSalePrice());
+        }
+
+        return productPersistencePort.saveProduct(product);
+    }
+
+    @Override
     public List<Product> findProducts(
             Long businessId,
             Long categoryId,

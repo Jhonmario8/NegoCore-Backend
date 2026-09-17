@@ -8,4 +8,5 @@ public interface IClientServicePort {
 
     Client registerClient(Long businessId, Client client);
     List<Client> getClientsByBusinessId(Long businessId);
+    Client updateClient(Long businessId, Long clientId, Client clientChanges);
 }

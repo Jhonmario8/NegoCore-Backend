@@ -9,4 +9,6 @@ public interface IProviderServicePort {
     Provider createProvider(Long businessId,Provider provider);
 
     List<Provider> findAllByBusinessId(Long businessId);
+
+    Provider updateProvider(Long businessId, Long providerId, Provider providerChanges);
 }

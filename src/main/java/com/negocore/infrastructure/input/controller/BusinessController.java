@@ -78,6 +78,12 @@ public class BusinessController {
         return ResponseEntity.ok(productResponseDTO);
     }
 
+    @PatchMapping("/{businessId}/products/{productId}")
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long businessId, @PathVariable Long productId, @Valid @RequestBody ProductUpdateDTO productUpdateDTO) {
+        ProductResponseDTO productResponseDTO = productHandler.updateProduct(businessId, productId, productUpdateDTO);
+        return ResponseEntity.ok(productResponseDTO);
+    }
+
 
     @PostMapping("/{businessId}/quotes")
     public ResponseEntity<QuoteResponseDTO> generateQuote(@PathVariable Long businessId, @Valid @RequestBody QuoteRequestDTO quoteRequestDTO) {
@@ -218,6 +224,12 @@ public class BusinessController {
         return ResponseEntity.ok(clientHandler.getClientsByBusinessId(businessId));
     }
 
+    @PatchMapping("/{businessId}/clients/{clientId}")
+    public ResponseEntity<ClientResponseDTO> updateClient(@PathVariable Long businessId, @PathVariable Long clientId, @Valid @RequestBody ClientUpdateDTO clientUpdateDTO) {
+        ClientResponseDTO clientResponseDTO = clientHandler.updateClient(businessId, clientId, clientUpdateDTO);
+        return ResponseEntity.ok(clientResponseDTO);
+    }
+
     @GetMapping("/{businessId}/sales")
     public ResponseEntity<List<SaleListResponseDTO>> findSales(
             @PathVariable Long businessId,
@@ -322,6 +334,17 @@ public class BusinessController {
 
         return ResponseEntity.ok(
                 providerHandler.findAllByBusinessId(businessId)
+        );
+    }
+
+    @PatchMapping("/{businessId}/providers/{providerId}")
+    public ResponseEntity<ProviderResponseDTO> updateProvider(
+            @PathVariable Long businessId,
+            @PathVariable Long providerId,
+            @Valid @RequestBody ProviderUpdateDTO providerUpdateDTO
+    ) {
+        return ResponseEntity.ok(
+                providerHandler.updateProvider(businessId, providerId, providerUpdateDTO)
         );
     }
 

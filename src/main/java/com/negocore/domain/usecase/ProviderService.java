@@ -66,4 +66,34 @@ public class ProviderService implements IProviderServicePort {
         return providerPersistencePort.findAllByBusinessId(businessId);
     }
 
+    @Override
+    public Provider updateProvider(Long businessId, Long providerId, Provider providerChanges) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        Provider provider = providerPersistencePort.findByIdAndBusinessId(providerId, businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.PROVIDER_NOT_FOUND));
+
+        if (providerChanges.getName() != null) {
+            provider.setName(providerChanges.getName());
+        }
+        if (providerChanges.getPhone() != null) {
+            provider.setPhone(providerChanges.getPhone());
+        }
+        if (providerChanges.getEmail() != null) {
+            provider.setEmail(providerChanges.getEmail());
+        }
+        if (providerChanges.getAddress() != null) {
+            provider.setAddress(providerChanges.getAddress());
+        }
+
+        return providerPersistencePort.save(provider);
+    }
+
 }

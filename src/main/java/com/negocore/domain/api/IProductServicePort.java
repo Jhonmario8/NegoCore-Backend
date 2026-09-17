@@ -11,6 +11,8 @@ public interface IProductServicePort {
 
     Product updateStock(Long businessId, Long productId, int quantity, String reason);
 
+    Product updateProduct(Long businessId, Long productId, Product productChanges);
+
     List<Product> findProducts(Long businessId, Long categoryId, Boolean lowStock);
 
     Product findProductById(Long businessId, Long productId);

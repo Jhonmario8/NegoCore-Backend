@@ -1,6 +1,7 @@
 package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.ProductRequestDTO;
+import com.negocore.application.dto.request.ProductUpdateDTO;
 import com.negocore.application.dto.request.StockPatchDTO;
 import com.negocore.application.dto.response.ProductResponseDTO;
 import com.negocore.application.mapper.IProductMapper;
@@ -47,6 +48,21 @@ public class ProductHandler implements IProductHandler {
                         productId,
                         stockPatchDTO.getQuantity(),
                         stockPatchDTO.getReason()
+                )
+        );
+    }
+
+    @Override
+    public ProductResponseDTO updateProduct(
+            Long businessId,
+            Long productId,
+            ProductUpdateDTO productUpdateDTO
+    ) {
+        return mapper.toResponse(
+                productServicePort.updateProduct(
+                        businessId,
+                        productId,
+                        mapper.toDomain(productUpdateDTO)
                 )
         );
     }

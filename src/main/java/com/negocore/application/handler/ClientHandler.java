@@ -1,6 +1,7 @@
 package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.ClientRequestDTO;
+import com.negocore.application.dto.request.ClientUpdateDTO;
 import com.negocore.application.dto.response.ClientResponseDTO;
 import com.negocore.application.mapper.IClientMapper;
 import com.negocore.domain.api.IClientServicePort;
@@ -27,5 +28,12 @@ public class ClientHandler implements IClientHandler {
                 .stream()
                 .map(mapper::toResponse)
                 .toList();
+    }
+
+    @Override
+    public ClientResponseDTO updateClient(Long businessId, Long clientId, ClientUpdateDTO clientUpdateDTO) {
+        return mapper.toResponse(
+                clientServicePort.updateClient(businessId, clientId, mapper.toDomain(clientUpdateDTO))
+        );
     }
 }
