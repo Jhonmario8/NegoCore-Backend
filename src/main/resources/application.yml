@@ -2,6 +2,9 @@ server:
   port: ${PORT:8080}
 
 spring:
+  flyway:
+    enabled: false
+
   datasource:
     url: ${NC_DB_URL}
     username: ${NC_DB_USERNAME}
