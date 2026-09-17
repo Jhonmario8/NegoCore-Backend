@@ -1,6 +1,7 @@
 package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.DebtCreateRequestDTO;
+import com.negocore.application.dto.request.LoanRequestDTO;
 import com.negocore.application.dto.response.DebtListResponseDTO;
 import com.negocore.application.dto.response.DebtResponseDTO;
 import com.negocore.domain.model.DebtStatus;
@@ -15,4 +16,5 @@ public interface IDebtHandler {
             DebtStatus status,
             Long clientId
     );
+    DebtListResponseDTO registerLoan(Long businessId, LoanRequestDTO loanRequestDTO);
 }

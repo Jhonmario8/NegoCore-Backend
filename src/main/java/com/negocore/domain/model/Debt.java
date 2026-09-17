@@ -18,6 +18,7 @@ public class Debt {
     private Long id;
     private Long businessId;
     private Long clientId;
+    private String debtorName;
     private Long saleId;
     private BigDecimal totalAmount;
     private BigDecimal paidAmount;

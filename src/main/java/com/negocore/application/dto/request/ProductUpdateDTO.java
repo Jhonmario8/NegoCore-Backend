@@ -22,4 +22,6 @@ public class ProductUpdateDTO {
     @Min(value = 1, message = ApplicationConstants.VALIDATION_SALE_PRICE_MIN)
     private BigDecimal salePrice;
 
+    private Long categoryId;
+
 }

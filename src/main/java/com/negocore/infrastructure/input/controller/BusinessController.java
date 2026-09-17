@@ -116,6 +116,15 @@ public class BusinessController {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientResponseDTO);
     }
 
+    @PostMapping("/{businessId}/debts")
+    public ResponseEntity<DebtListResponseDTO> registerLoan(
+            @PathVariable Long businessId,
+            @Valid @RequestBody LoanRequestDTO loanRequestDTO
+    ) {
+        DebtListResponseDTO debtListResponseDTO = debtHandler.registerLoan(businessId, loanRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(debtListResponseDTO);
+    }
+
     @PostMapping("/{businessId}/debts/{debtId}/payments")
     public ResponseEntity<DebtResponseDTO> createDebtPayment(
             @PathVariable Long businessId,

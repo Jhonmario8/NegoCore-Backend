@@ -60,7 +60,7 @@ public class ProductService implements IProductServicePort {
         if (quantity == 0) {
             throw new BadRequestException(DomainConstants.QUANTITY_INVALID);
         }
-        if (reason == null || reason.isBlank() || reason.length() > 200) {
+        if (reason != null && reason.length() > 200) {
             throw new BadRequestException(DomainConstants.REASON_INVALID);
         }
 
@@ -101,6 +101,12 @@ public class ProductService implements IProductServicePort {
         }
         if (productChanges.getSalePrice() != null) {
             product.setSalePrice(productChanges.getSalePrice());
+        }
+        if (productChanges.getCategoryId() != null) {
+            if (!categoryPersistencePort.existsByIdAndBusinessId(productChanges.getCategoryId(), businessId)) {
+                throw new NotFoundException(DomainConstants.Category_NOT_FOUND);
+            }
+            product.setCategoryId(productChanges.getCategoryId());
         }
 
         return productPersistencePort.saveProduct(product);

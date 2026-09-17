@@ -17,4 +17,5 @@ public interface IDebtServicePort {
             DebtStatus status,
             Long clientId
     );
+    Debt registerLoan(Long businessId, Debt loan);
 }

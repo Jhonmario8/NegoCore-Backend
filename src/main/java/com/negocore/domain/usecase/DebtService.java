@@ -26,6 +26,7 @@ public class DebtService implements IDebtServicePort {
     private final IBusinessPersistencePort businessPersistencePort;
     private final IDebtPaymentPersistencePort debtPaymentPersistencePort;
     private final IAuditLogsPersistencePort auditLogsPersistencePort;
+    private final IClientPersistencePort clientPersistencePort;
 
     @Override
     @Transactional
@@ -116,6 +117,46 @@ public class DebtService implements IDebtServicePort {
                 status,
                 clientId
         );
+    }
+
+    @Override
+    public Debt registerLoan(Long businessId, Debt loan) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        if (loan.getClientId() != null) {
+            clientPersistencePort.findByIdAndBusinessId(loan.getClientId(), businessId)
+                    .orElseThrow(() -> new NotFoundException(DomainConstants.CLIENT_NOT_FOUND));
+            loan.setDebtorName(null);
+        } else if (loan.getDebtorName() == null || loan.getDebtorName().isBlank()) {
+            throw new BadRequestException(DomainConstants.DEBTOR_NAME_REQUIRED_FOR_NO_CLIENT);
+        }
+
+        loan.setBusinessId(businessId);
+        loan.setPaidAmount(BigDecimal.ZERO);
+        loan.setStatus(DebtStatus.PENDING);
+        if (loan.getDueDate() == null) {
+            loan.setDueDate(LocalDateTime.now().plusDays(30).toLocalDate());
+        }
+        loan.setCreatedAt(LocalDateTime.now());
+
+        Debt savedLoan = debtPersistencePort.save(loan);
+
+        AuditLog auditLog = new AuditLog();
+        auditLog.setBusinessId(businessId);
+        auditLog.setUserId(userId);
+        auditLog.setAction(DomainConstants.DEBT_CREATED);
+        auditLog.setEntity(DomainConstants.DEBT_ENTITY);
+        auditLog.setEntityId(savedLoan.getId());
+        auditLog.setDetails(DomainConstants.DEBT_CREATED_DETAILS + savedLoan.getId());
+        auditLog.setCreatedAt(LocalDateTime.now());
+        auditLogsPersistencePort.save(auditLog);
+
+        return savedLoan;
     }
 
 }

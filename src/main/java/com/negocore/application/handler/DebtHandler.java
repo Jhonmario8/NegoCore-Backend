@@ -1,10 +1,12 @@
 package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.DebtCreateRequestDTO;
+import com.negocore.application.dto.request.LoanRequestDTO;
 import com.negocore.application.dto.response.DebtListResponseDTO;
 import com.negocore.application.dto.response.DebtResponseDTO;
 import com.negocore.application.mapper.IDebtMapper;
 import com.negocore.domain.api.IDebtServicePort;
+import com.negocore.domain.model.Debt;
 import com.negocore.domain.model.DebtStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,5 +40,15 @@ public class DebtHandler implements IDebtHandler {
                 .stream()
                 .map(debtMapper::toListResponseDTO)
                 .toList();
+    }
+
+    @Override
+    public DebtListResponseDTO registerLoan(Long businessId, LoanRequestDTO loanRequestDTO) {
+        Debt loan = new Debt();
+        loan.setClientId(loanRequestDTO.getClientId());
+        loan.setDebtorName(loanRequestDTO.getDebtorName());
+        loan.setTotalAmount(loanRequestDTO.getAmount());
+        loan.setDueDate(loanRequestDTO.getDueDate());
+        return debtMapper.toListResponseDTO(debtService.registerLoan(businessId, loan));
     }
 }

@@ -74,7 +74,7 @@ public class BeanConfiguration {
 
     @Bean
     public IDebtServicePort debtServicePort() {
-        return new DebtService(debtPersistencePort, authenticationServicePort, businessPersistencePort, debtPaymentPersistencePort, auditLogsPersistencePort);
+        return new DebtService(debtPersistencePort, authenticationServicePort, businessPersistencePort, debtPaymentPersistencePort, auditLogsPersistencePort, clientPersistencePort);
     }
 
     @Bean

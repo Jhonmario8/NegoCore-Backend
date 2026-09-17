@@ -31,8 +31,10 @@ public class DebtEntity {
     private Long id;
     @Column(name = "business_id", nullable = false)
     private Long businessId;
-    @Column(name = "client_id", nullable = false)
+    @Column(name = "client_id")
     private Long clientId;
+    @Column(name = "debtor_name", length = 100)
+    private String debtorName;
     @Column(name = "sale_id")
     private Long saleId;
     @Column(name = "total_amount", nullable = false)
