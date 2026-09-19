@@ -96,6 +96,11 @@ public class ProductHandler implements IProductHandler {
     }
 
     @Override
+    public void deleteProduct(Long businessId, Long productId) {
+        productServicePort.deleteProduct(businessId, productId);
+    }
+
+    @Override
     public ProductResponseDTO uploadProductImage(
             Long businessId,
             Long productId,

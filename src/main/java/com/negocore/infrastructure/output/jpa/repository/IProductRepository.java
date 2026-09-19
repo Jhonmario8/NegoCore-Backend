@@ -24,12 +24,14 @@ public interface IProductRepository extends JpaRepository<ProductEntity, Long> {
         SELECT p
         FROM ProductEntity p
         WHERE p.businessId = :businessId
+          AND p.active = true
           AND (:categoryId IS NULL OR p.categoryId = :categoryId)
           AND (
               :lowStock IS NULL
               OR :lowStock = false
               OR p.stock <= p.minStockAlert
           )
+        ORDER BY p.stock DESC
         """)
     List<ProductEntity> findAllByBusinessId(
             @Param("businessId") Long businessId,

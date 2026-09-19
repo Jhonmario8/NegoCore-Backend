@@ -88,7 +88,8 @@ public class SaleService implements ISaleServicePort {
                 );
             }
 
-            BigDecimal subtotal = product.getSalePrice()
+            BigDecimal unitPrice = item.unitPrice() != null ? item.unitPrice() : product.getSalePrice();
+            BigDecimal subtotal = unitPrice
                     .multiply(BigDecimal.valueOf(item.quantity()));
 
             totalAmount = totalAmount.add(subtotal);
@@ -156,15 +157,15 @@ public class SaleService implements ISaleServicePort {
                 .stream()
                 .map(item -> {
                     Product product = productsById.get(item.productId());
+                    BigDecimal unitPrice = item.unitPrice() != null ? item.unitPrice() : product.getSalePrice();
 
                     SaleItem saleItem = new SaleItem();
                     saleItem.setSaleId(savedSale.getId());
                     saleItem.setProductId(product.getId());
                     saleItem.setQuantity(item.quantity());
-                    saleItem.setUnitPrice(product.getSalePrice());
+                    saleItem.setUnitPrice(unitPrice);
                     saleItem.setSubtotal(
-                            product.getSalePrice()
-                                    .multiply(BigDecimal.valueOf(item.quantity()))
+                            unitPrice.multiply(BigDecimal.valueOf(item.quantity()))
                     );
 
                     return saleItem;

@@ -82,6 +82,12 @@ public class BusinessController {
         return ResponseEntity.ok(productResponseDTO);
     }
 
+    @DeleteMapping("/{businessId}/products/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long businessId, @PathVariable Long productId) {
+        productHandler.deleteProduct(businessId, productId);
+        return ResponseEntity.noContent().build();
+    }
+
 
     @PostMapping("/{businessId}/quotes")
     public ResponseEntity<QuoteResponseDTO> generateQuote(@PathVariable Long businessId, @Valid @RequestBody QuoteRequestDTO quoteRequestDTO) {

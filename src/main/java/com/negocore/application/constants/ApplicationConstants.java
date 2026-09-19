@@ -26,6 +26,7 @@ public class ApplicationConstants {
     public static final String OPENING_AMOUNT_MIN = "openingAmount must be greater than or equal to 1";
     public static final String PRODUCT_ID_REQUIRED = "productId is required";
     public static final String QUANTITY_MUST_BE_POSITIVE = "quantity must be a positive integer";
+    public static final String UNIT_PRICE_MUST_BE_POSITIVE = "unitPrice must be greater than 0";
     public static final String QUANTITY_REQUIRED = "quantity is required";
     public static final String SALE_ITEMS_REQUIRED = "saleItems is required";
     public static final String PAYMENT_METHOD_REQUIRED = "paymentMethod is required";

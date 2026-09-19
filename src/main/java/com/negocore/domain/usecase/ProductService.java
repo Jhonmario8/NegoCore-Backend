@@ -161,6 +161,23 @@ public class ProductService implements IProductServicePort {
     }
 
     @Override
+    public void deleteProduct(Long businessId, Long productId) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        Product product = productPersistencePort.findByIdAndBusinessId(productId, businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND));
+
+        product.setActive(false);
+        productPersistencePort.saveProduct(product);
+    }
+
+    @Override
     public Product uploadProductImage(
             Long businessId,
             Long productId,

@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,5 +24,8 @@ public class SaleItemRequestDTO {
     @NotNull(message = ApplicationConstants.QUANTITY_REQUIRED)
     @Positive(message = ApplicationConstants.QUANTITY_MUST_BE_POSITIVE)
     private Integer quantity;
+
+    @Positive(message = ApplicationConstants.UNIT_PRICE_MUST_BE_POSITIVE)
+    private BigDecimal unitPrice;
 
 }

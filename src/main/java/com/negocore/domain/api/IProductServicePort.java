@@ -16,6 +16,8 @@ public interface IProductServicePort {
 
     Product findProductById(Long businessId, Long productId);
 
+    void deleteProduct(Long businessId, Long productId);
+
     Product uploadProductImage(
             Long businessId,
             Long productId,

@@ -24,5 +24,7 @@ public interface IProductHandler {
 
     ProductResponseDTO findProductById(Long businessId, Long productId);
 
+    void deleteProduct(Long businessId, Long productId);
+
     ProductResponseDTO uploadProductImage(Long businessId, Long productId, MultipartFile file);
 }
