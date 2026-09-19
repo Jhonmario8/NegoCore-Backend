@@ -31,6 +31,7 @@ public class BeanConfiguration {
     private final IPurchaseItemsPersistencePort purchaseItemsPersistencePort;
     private final IPayablePersistencePort payablePersistencePort;
     private final IPayablePaymentPersistencePort payablePaymentPersistencePort;
+    private final IImageStoragePort imageStoragePort;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -53,7 +54,7 @@ public class BeanConfiguration {
     }
     @Bean
     public IProductServicePort productServicePort(){
-        return new ProductService(productPersistencePort, businessPersistencePort, authenticationServicePort, categoryPersistencePort);
+        return new ProductService(productPersistencePort, businessPersistencePort, authenticationServicePort, categoryPersistencePort, imageStoragePort);
     }
 
 

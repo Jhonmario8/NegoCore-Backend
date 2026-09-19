@@ -52,6 +52,11 @@ dependencies {
     implementation 'org.flywaydb:flyway-database-postgresql'
 
     // ==========================
+    // Cloudinary
+    // ==========================
+    implementation 'com.cloudinary:cloudinary-http5:2.3.0'
+
+    // ==========================
     // MapStruct
     // ==========================
     implementation 'org.mapstruct:mapstruct:1.6.3'

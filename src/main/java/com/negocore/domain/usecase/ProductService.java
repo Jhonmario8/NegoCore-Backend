@@ -8,9 +8,9 @@ import com.negocore.domain.exception.ConflictException;
 import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.Business;
 import com.negocore.domain.model.Product;
-import com.negocore.domain.model.ProductImage;
 import com.negocore.domain.spi.IBusinessPersistencePort;
 import com.negocore.domain.spi.ICategoryPersistencePort;
+import com.negocore.domain.spi.IImageStoragePort;
 import com.negocore.domain.spi.IProductPersistencePort;
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +32,7 @@ public class ProductService implements IProductServicePort {
     private final IBusinessPersistencePort businessPersistencePort;
     private final IAuthenticationServicePort authenticationServicePort;
     private final ICategoryPersistencePort categoryPersistencePort;
+    private final IImageStoragePort imageStoragePort;
 
     @Override
     public Product createProduct(Long businessId, Product product) {
@@ -188,22 +189,11 @@ public class ProductService implements IProductServicePort {
             throw new BadRequestException(DomainConstants.IMAGE_TOO_LARGE);
         }
 
-        product.setImageData(content);
-        product.setImageContentType(contentType);
-        product.setImageUrl("/businesses/" + businessId + "/products/" + productId + "/image");
+        String publicId = "product_" + businessId + "_" + productId;
+        String url = imageStoragePort.upload(content, publicId);
+
+        product.setImageUrl(url);
         return productPersistencePort.saveProduct(product);
-    }
-
-    @Override
-    public ProductImage getProductImage(Long businessId, Long productId) {
-        Product product = productPersistencePort.findByIdAndBusinessId(productId, businessId)
-                .orElseThrow(() -> new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND));
-
-        if (product.getImageData() == null) {
-            throw new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND);
-        }
-
-        return new ProductImage(product.getImageData(), product.getImageContentType());
     }
 
 }
