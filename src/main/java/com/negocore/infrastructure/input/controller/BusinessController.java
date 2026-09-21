@@ -4,6 +4,7 @@ import com.negocore.application.dto.request.*;
 import com.negocore.application.dto.response.*;
 import com.negocore.application.handler.*;
 import com.negocore.domain.model.DebtStatus;
+import com.negocore.domain.model.OrderStatus;
 import com.negocore.domain.model.PayableStatus;
 import com.negocore.domain.model.PayeeType;
 import com.negocore.domain.model.PurchaseStatus;
@@ -39,6 +40,7 @@ public class BusinessController {
     private final IPurchaseHandler purchaseHandler;
     private final IPayableHandler payableHandler;
     private final IQuoteHandler quoteHandler;
+    private final IOrderHandler orderHandler;
 
     @PostMapping()
     public ResponseEntity<BusinessResponseDTO> createBusiness(@Valid @RequestBody BusinessCreateDTO businessCreateDTO) {
@@ -423,6 +425,66 @@ public class BusinessController {
         return ResponseEntity.ok(
                 purchaseHandler.findPurchaseById(businessId, purchaseId)
         );
+    }
+
+    @PostMapping("/{businessId}/orders")
+    public ResponseEntity<OrderResponseDTO> createOrder(@PathVariable Long businessId) {
+        OrderResponseDTO orderResponseDTO = orderHandler.createOrder(businessId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderResponseDTO);
+    }
+
+    @GetMapping("/{businessId}/orders")
+    public ResponseEntity<List<OrderListResponseDTO>> findOrders(
+            @PathVariable Long businessId,
+            @RequestParam(required = false) OrderStatus status
+    ) {
+        return ResponseEntity.ok(orderHandler.findOrders(businessId, status));
+    }
+
+    @GetMapping("/{businessId}/orders/{orderId}")
+    public ResponseEntity<OrderResponseDTO> findOrderById(
+            @PathVariable Long businessId,
+            @PathVariable Long orderId
+    ) {
+        return ResponseEntity.ok(orderHandler.findOrderById(businessId, orderId));
+    }
+
+    @PostMapping("/{businessId}/orders/{orderId}/items")
+    public ResponseEntity<OrderResponseDTO> addOrderItem(
+            @PathVariable Long businessId,
+            @PathVariable Long orderId,
+            @Valid @RequestBody OrderItemRequestDTO orderItemRequestDTO
+    ) {
+        OrderResponseDTO orderResponseDTO = orderHandler.addItem(businessId, orderId, orderItemRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderResponseDTO);
+    }
+
+    @DeleteMapping("/{businessId}/orders/{orderId}/items/{itemId}")
+    public ResponseEntity<OrderResponseDTO> removeOrderItem(
+            @PathVariable Long businessId,
+            @PathVariable Long orderId,
+            @PathVariable Long itemId
+    ) {
+        return ResponseEntity.ok(orderHandler.removeItem(businessId, orderId, itemId));
+    }
+
+    @PatchMapping("/{businessId}/orders/{orderId}/cancel")
+    public ResponseEntity<OrderResponseDTO> cancelOrder(
+            @PathVariable Long businessId,
+            @PathVariable Long orderId
+    ) {
+        return ResponseEntity.ok(orderHandler.cancelOrder(businessId, orderId));
+    }
+
+    @PostMapping("/{businessId}/orders/{orderId}/convert")
+    public ResponseEntity<PurchaseResponseDTO> convertOrderToPurchase(
+            @PathVariable Long businessId,
+            @PathVariable Long orderId,
+            @Valid @RequestBody OrderConversionRequestDTO orderConversionRequestDTO
+    ) {
+        PurchaseResponseDTO purchaseResponseDTO =
+                orderHandler.convertToPurchase(businessId, orderId, orderConversionRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(purchaseResponseDTO);
     }
 
     @PostMapping("/{businessId}/payables/{payableId}/payments")

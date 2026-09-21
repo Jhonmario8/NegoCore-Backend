@@ -32,6 +32,8 @@ public class BeanConfiguration {
     private final IPayablePersistencePort payablePersistencePort;
     private final IPayablePaymentPersistencePort payablePaymentPersistencePort;
     private final IImageStoragePort imageStoragePort;
+    private final IOrderPersistencePort orderPersistencePort;
+    private final IOrderItemsPersistencePort orderItemsPersistencePort;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -122,6 +124,20 @@ public class BeanConfiguration {
                 payablePaymentPersistencePort,
                 authenticationServicePort,
                 businessPersistencePort,
+                auditLogsPersistencePort
+        );
+    }
+
+    @Bean
+    public IOrderServicePort orderServicePort() {
+        return new OrderService(
+                orderPersistencePort,
+                orderItemsPersistencePort,
+                authenticationServicePort,
+                businessPersistencePort,
+                productPersistencePort,
+                clientPersistencePort,
+                purchaseServicePort(),
                 auditLogsPersistencePort
         );
     }

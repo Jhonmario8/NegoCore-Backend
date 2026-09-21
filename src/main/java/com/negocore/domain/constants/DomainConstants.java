@@ -89,4 +89,14 @@ public class DomainConstants {
     public static final String USER_NOT_FOUND = "User not found";
     public static final String QUOTE_ITEMS_REQUIRED = "Quote items are required";
     public static final int DEFAULT_QUOTE_VALIDITY_DAYS = 15;
+
+    public static final String ORDER_NOT_FOUND = "Order not found";
+    public static final String ORDER_ITEM_NOT_FOUND = "Order item not found";
+    public static final String ORDER_NOT_OPEN = "Order is not open";
+    public static final String ORDER_CREATED = "ORDER_CREATED";
+    public static final String ORDER_ENTITY = "ORDER";
+    public static final String ORDER_CREATED_DETAILS = "A new order has been created with ID: ";
+    public static final String ORDER_CONVERTED = "ORDER_CONVERTED";
+    public static final String ORDER_CONVERTED_DETAILS = "Order converted to purchase with ID: ";
+    public static final String ORDER_MISSING_UNIT_COST = "A unit cost is required for every product in the order";
 }
