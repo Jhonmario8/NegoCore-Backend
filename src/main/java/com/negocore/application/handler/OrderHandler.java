@@ -2,11 +2,14 @@ package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.OrderConversionRequestDTO;
 import com.negocore.application.dto.request.OrderItemRequestDTO;
+import com.negocore.application.dto.request.OrderItemSaleRequestDTO;
 import com.negocore.application.dto.response.OrderListResponseDTO;
 import com.negocore.application.dto.response.OrderResponseDTO;
 import com.negocore.application.dto.response.PurchaseResponseDTO;
+import com.negocore.application.dto.response.SaleResponseDTO;
 import com.negocore.application.mapper.IOrderMapper;
 import com.negocore.application.mapper.IPurchaseMapper;
+import com.negocore.application.mapper.ISaleMapper;
 import com.negocore.domain.api.IOrderServicePort;
 import com.negocore.domain.model.Order;
 import com.negocore.domain.model.OrderResponse;
@@ -23,6 +26,7 @@ public class OrderHandler implements IOrderHandler {
     private final IOrderServicePort orderServicePort;
     private final IOrderMapper orderMapper;
     private final IPurchaseMapper purchaseMapper;
+    private final ISaleMapper saleMapper;
 
     @Override
     public OrderResponseDTO createOrder(Long businessId) {
@@ -78,6 +82,18 @@ public class OrderHandler implements IOrderHandler {
                         businessId,
                         orderId,
                         orderMapper.toDomain(orderConversionRequestDTO)
+                )
+        );
+    }
+
+    @Override
+    public SaleResponseDTO convertItemToSale(Long businessId, Long orderId, Long itemId, OrderItemSaleRequestDTO orderItemSaleRequestDTO) {
+        return saleMapper.toResponseDto(
+                orderServicePort.convertItemToSale(
+                        businessId,
+                        orderId,
+                        itemId,
+                        orderMapper.toDomain(orderItemSaleRequestDTO)
                 )
         );
     }

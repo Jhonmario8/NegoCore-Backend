@@ -2,9 +2,11 @@ package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.OrderConversionRequestDTO;
 import com.negocore.application.dto.request.OrderItemRequestDTO;
+import com.negocore.application.dto.request.OrderItemSaleRequestDTO;
 import com.negocore.application.dto.response.OrderListResponseDTO;
 import com.negocore.application.dto.response.OrderResponseDTO;
 import com.negocore.application.dto.response.PurchaseResponseDTO;
+import com.negocore.application.dto.response.SaleResponseDTO;
 import com.negocore.domain.model.OrderStatus;
 
 import java.util.List;
@@ -24,4 +26,6 @@ public interface IOrderHandler {
     OrderResponseDTO cancelOrder(Long businessId, Long orderId);
 
     PurchaseResponseDTO convertToPurchase(Long businessId, Long orderId, OrderConversionRequestDTO orderConversionRequestDTO);
+
+    SaleResponseDTO convertItemToSale(Long businessId, Long orderId, Long itemId, OrderItemSaleRequestDTO orderItemSaleRequestDTO);
 }

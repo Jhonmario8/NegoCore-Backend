@@ -39,6 +39,8 @@ public class OrderItemEntity {
     private BigDecimal unitCost;
     @Column(name = "sale_price")
     private BigDecimal salePrice;
+    @Column(name = "converted_sale_id")
+    private Long convertedSaleId;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 }

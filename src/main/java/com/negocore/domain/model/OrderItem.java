@@ -22,6 +22,7 @@ public class OrderItem {
     private String requesterName;
     private BigDecimal unitCost;
     private BigDecimal salePrice;
+    private Long convertedSaleId;
     private LocalDateTime createdAt;
 
 }

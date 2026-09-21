@@ -99,4 +99,8 @@ public class DomainConstants {
     public static final String ORDER_CONVERTED = "ORDER_CONVERTED";
     public static final String ORDER_CONVERTED_DETAILS = "Order converted to purchase with ID: ";
     public static final String ORDER_MISSING_UNIT_COST = "A unit cost is required for every product in the order";
+    public static final String ORDER_ITEM_NO_CLIENT = "This order item has no client to sell to";
+    public static final String ORDER_ITEM_ALREADY_SOLD = "This order item has already been converted to a sale";
+    public static final String ORDER_ITEM_SOLD = "ORDER_ITEM_SOLD";
+    public static final String ORDER_ITEM_SOLD_DETAILS = "Order item converted to sale with ID: ";
 }

@@ -138,6 +138,7 @@ public class BeanConfiguration {
                 productPersistencePort,
                 clientPersistencePort,
                 purchaseServicePort(),
+                saleServicePort(),
                 auditLogsPersistencePort
         );
     }

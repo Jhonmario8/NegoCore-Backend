@@ -487,6 +487,18 @@ public class BusinessController {
         return ResponseEntity.status(HttpStatus.CREATED).body(purchaseResponseDTO);
     }
 
+    @PostMapping("/{businessId}/orders/{orderId}/items/{itemId}/convert-to-sale")
+    public ResponseEntity<SaleResponseDTO> convertOrderItemToSale(
+            @PathVariable Long businessId,
+            @PathVariable Long orderId,
+            @PathVariable Long itemId,
+            @Valid @RequestBody OrderItemSaleRequestDTO orderItemSaleRequestDTO
+    ) {
+        SaleResponseDTO saleResponseDTO =
+                orderHandler.convertItemToSale(businessId, orderId, itemId, orderItemSaleRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saleResponseDTO);
+    }
+
     @PostMapping("/{businessId}/payables/{payableId}/payments")
     public ResponseEntity<PayablePaymentResponseDTO> createPayablePayment(
             @PathVariable Long businessId,

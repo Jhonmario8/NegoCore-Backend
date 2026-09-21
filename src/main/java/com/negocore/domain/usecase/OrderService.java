@@ -3,6 +3,7 @@ package com.negocore.domain.usecase;
 import com.negocore.domain.api.IAuthenticationServicePort;
 import com.negocore.domain.api.IOrderServicePort;
 import com.negocore.domain.api.IPurchaseServicePort;
+import com.negocore.domain.api.ISaleServicePort;
 import com.negocore.domain.constants.DomainConstants;
 import com.negocore.domain.exception.BadRequestException;
 import com.negocore.domain.exception.NotFoundException;
@@ -13,12 +14,16 @@ import com.negocore.domain.model.OrderConversionItemRequest;
 import com.negocore.domain.model.OrderConversionRequest;
 import com.negocore.domain.model.OrderItem;
 import com.negocore.domain.model.OrderItemRequest;
+import com.negocore.domain.model.OrderItemSaleRequest;
 import com.negocore.domain.model.OrderResponse;
 import com.negocore.domain.model.OrderStatus;
 import com.negocore.domain.model.Product;
 import com.negocore.domain.model.PurchaseItemRequest;
 import com.negocore.domain.model.PurchaseRequest;
 import com.negocore.domain.model.PurchaseResponse;
+import com.negocore.domain.model.SaleItemRequest;
+import com.negocore.domain.model.SaleRequest;
+import com.negocore.domain.model.SaleResponse;
 import com.negocore.domain.spi.IAuditLogsPersistencePort;
 import com.negocore.domain.spi.IBusinessPersistencePort;
 import com.negocore.domain.spi.IClientPersistencePort;
@@ -44,6 +49,7 @@ public class OrderService implements IOrderServicePort {
     private final IProductPersistencePort productPersistencePort;
     private final IClientPersistencePort clientPersistencePort;
     private final IPurchaseServicePort purchaseServicePort;
+    private final ISaleServicePort saleServicePort;
     private final IAuditLogsPersistencePort auditLogsPersistencePort;
 
     @Override
@@ -267,5 +273,62 @@ public class OrderService implements IOrderServicePort {
         auditLogsPersistencePort.save(auditLog);
 
         return purchaseResponse;
+    }
+
+    @Override
+    @Transactional
+    public SaleResponse convertItemToSale(Long businessId, Long orderId, Long itemId, OrderItemSaleRequest saleRequest) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        orderPersistencePort.findByIdAndBusinessId(orderId, businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.ORDER_NOT_FOUND));
+
+        OrderItem item = orderItemsPersistencePort.findByIdAndOrderId(itemId, orderId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.ORDER_ITEM_NOT_FOUND));
+
+        if (item.getClientId() == null) {
+            throw new BadRequestException(DomainConstants.ORDER_ITEM_NO_CLIENT);
+        }
+
+        if (item.getConvertedSaleId() != null) {
+            throw new BadRequestException(DomainConstants.ORDER_ITEM_ALREADY_SOLD);
+        }
+
+        Product product = productPersistencePort.findByIdAndBusinessId(item.getProductId(), businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND));
+
+        BigDecimal unitPrice = item.getSalePrice() != null ? item.getSalePrice() : product.getSalePrice();
+
+        SaleItemRequest saleItemRequest = new SaleItemRequest(item.getProductId(), item.getQuantity(), unitPrice);
+        SaleRequest saleRequestDomain = new SaleRequest(
+                List.of(saleItemRequest),
+                saleRequest.paymentMethod(),
+                saleRequest.paidAmount(),
+                item.getClientId(),
+                null
+        );
+
+        SaleResponse saleResponse = saleServicePort.registerSale(businessId, saleRequestDomain);
+
+        item.setConvertedSaleId(saleResponse.getSale().getId());
+        orderItemsPersistencePort.save(item);
+
+        AuditLog auditLog = new AuditLog();
+        auditLog.setBusinessId(businessId);
+        auditLog.setUserId(userId);
+        auditLog.setAction(DomainConstants.ORDER_ITEM_SOLD);
+        auditLog.setEntity(DomainConstants.ORDER_ENTITY);
+        auditLog.setEntityId(orderId);
+        auditLog.setDetails(DomainConstants.ORDER_ITEM_SOLD_DETAILS + saleResponse.getSale().getId());
+        auditLog.setCreatedAt(LocalDateTime.now());
+        auditLogsPersistencePort.save(auditLog);
+
+        return saleResponse;
     }
 }

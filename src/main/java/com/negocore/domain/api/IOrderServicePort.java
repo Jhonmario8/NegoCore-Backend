@@ -3,9 +3,11 @@ package com.negocore.domain.api;
 import com.negocore.domain.model.Order;
 import com.negocore.domain.model.OrderConversionRequest;
 import com.negocore.domain.model.OrderItemRequest;
+import com.negocore.domain.model.OrderItemSaleRequest;
 import com.negocore.domain.model.OrderResponse;
 import com.negocore.domain.model.OrderStatus;
 import com.negocore.domain.model.PurchaseResponse;
+import com.negocore.domain.model.SaleResponse;
 
 import java.util.List;
 
@@ -24,4 +26,6 @@ public interface IOrderServicePort {
     Order cancelOrder(Long businessId, Long orderId);
 
     PurchaseResponse convertToPurchase(Long businessId, Long orderId, OrderConversionRequest conversionRequest);
+
+    SaleResponse convertItemToSale(Long businessId, Long orderId, Long itemId, OrderItemSaleRequest saleRequest);
 }
