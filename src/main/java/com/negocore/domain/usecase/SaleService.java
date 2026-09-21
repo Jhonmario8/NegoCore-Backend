@@ -135,7 +135,7 @@ public class SaleService implements ISaleServicePort {
         sale.setStatus(status);
         sale.setPaidAmount(saleRequest.paidAmount());
         sale.setPaymentMethod(saleRequest.paymentMethod());
-        sale.setCreatedAt(LocalDateTime.now());
+        sale.setCreatedAt(saleRequest.createdAt() != null ? saleRequest.createdAt() : LocalDateTime.now());
 
         Sale savedSale = salePersistencePort.saveSale(sale);
 
@@ -188,6 +188,34 @@ public class SaleService implements ISaleServicePort {
                 saleItems
         );
 
+    }
+
+    @Override
+    @Transactional
+    public SaleResponse updateSaleDate(Long businessId, Long saleId, LocalDateTime createdAt) {
+
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        Sale sale = salePersistencePort.findById(saleId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.SALE_NOT_FOUND));
+
+        if (!sale.getBusinessId().equals(businessId)) {
+            throw new NotFoundException(DomainConstants.SALE_NOT_FOUND);
+        }
+
+        sale.setCreatedAt(createdAt);
+        Sale savedSale = salePersistencePort.saveSale(sale);
+
+        List<SaleItem> saleItems = saleItemsPersistencePort.findAllBySaleId(saleId);
+
+        return new SaleResponse(savedSale, saleItems);
     }
 
     @Override

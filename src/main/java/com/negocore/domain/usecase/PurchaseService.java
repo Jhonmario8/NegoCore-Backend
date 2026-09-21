@@ -105,7 +105,7 @@ public class PurchaseService implements IPurchaseServicePort {
         purchase.setPaidAmount(purchaseRequest.paidAmount());
         purchase.setStatus(status);
         purchase.setPaymentMethod(purchaseRequest.paymentMethod());
-        purchase.setCreatedAt(LocalDateTime.now());
+        purchase.setCreatedAt(purchaseRequest.createdAt() != null ? purchaseRequest.createdAt() : LocalDateTime.now());
 
         Purchase savedPurchase = purchasePersistencePort.savePurchase(purchase);
 
@@ -149,6 +149,29 @@ public class PurchaseService implements IPurchaseServicePort {
         auditLog.setDetails(DomainConstants.PURCHASE_CREATED_DETAILS + savedPurchase.getId());
         auditLog.setCreatedAt(LocalDateTime.now());
         auditLogsPersistencePort.save(auditLog);
+
+        return new PurchaseResponse(savedPurchase, purchaseItems);
+    }
+
+    @Override
+    @Transactional
+    public PurchaseResponse updatePurchaseDate(Long businessId, Long purchaseId, LocalDateTime createdAt) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        Purchase purchase = purchasePersistencePort.findByIdAndBusinessId(purchaseId, businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.PURCHASE_NOT_FOUND));
+
+        purchase.setCreatedAt(createdAt);
+        Purchase savedPurchase = purchasePersistencePort.savePurchase(purchase);
+
+        List<PurchaseItem> purchaseItems = purchaseItemsPersistencePort.findAllByPurchaseId(purchaseId);
 
         return new PurchaseResponse(savedPurchase, purchaseItems);
     }

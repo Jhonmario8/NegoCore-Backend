@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -36,4 +37,6 @@ public class PurchaseRequestDTO {
 
     @PositiveOrZero(message = ApplicationConstants.SHIPPING_COST_MUST_BE_POSITIVE)
     private BigDecimal shippingCost;
+
+    private LocalDateTime createdAt;
 }

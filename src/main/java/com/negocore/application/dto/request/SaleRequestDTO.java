@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -31,5 +32,6 @@ public class SaleRequestDTO {
     @PositiveOrZero(message = ApplicationConstants.PAID_AMOUNT_MUST_BE_POSITIVE)
     private BigDecimal paidAmount;
     private Long clientId;
+    private LocalDateTime createdAt;
 
 }

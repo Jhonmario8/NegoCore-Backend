@@ -107,6 +107,12 @@ public class BusinessController {
         return ResponseEntity.ok(saleResponseDTO);
     }
 
+    @PatchMapping("/{businessId}/sales/{saleId}/date")
+    public ResponseEntity<SaleResponseDTO> updateSaleDate(@PathVariable Long businessId, @PathVariable Long saleId, @Valid @RequestBody DateUpdateDTO dateUpdateDTO) {
+        SaleResponseDTO saleResponseDTO = saleHandler.updateSaleDate(businessId, saleId, dateUpdateDTO);
+        return ResponseEntity.ok(saleResponseDTO);
+    }
+
     @PostMapping("/{businessId}/expenses")
     public ResponseEntity<ExpenseResponseDTO> registerExpense(@PathVariable Long businessId, @Valid @RequestBody ExpenseRequestDTO expenseRequestDTO) {
         ExpenseResponseDTO expenseResponseDTO = expenseHandler.registerExpense(businessId, expenseRequestDTO);
@@ -368,6 +374,16 @@ public class BusinessController {
     ) {
         PurchaseResponseDTO purchaseResponseDTO = purchaseHandler.registerPurchase(businessId, purchaseRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(purchaseResponseDTO);
+    }
+
+    @PatchMapping("/{businessId}/purchases/{purchaseId}/date")
+    public ResponseEntity<PurchaseResponseDTO> updatePurchaseDate(
+            @PathVariable Long businessId,
+            @PathVariable Long purchaseId,
+            @Valid @RequestBody DateUpdateDTO dateUpdateDTO
+    ) {
+        PurchaseResponseDTO purchaseResponseDTO = purchaseHandler.updatePurchaseDate(businessId, purchaseId, dateUpdateDTO);
+        return ResponseEntity.ok(purchaseResponseDTO);
     }
 
     @GetMapping("/{businessId}/purchases")

@@ -1,5 +1,6 @@
 package com.negocore.application.handler;
 
+import com.negocore.application.dto.request.DateUpdateDTO;
 import com.negocore.application.dto.request.PurchaseRequestDTO;
 import com.negocore.application.dto.response.PurchaseListResponseDTO;
 import com.negocore.application.dto.response.PurchaseResponseDTO;
@@ -29,6 +30,21 @@ public class PurchaseHandler implements IPurchaseHandler {
                 purchaseServicePort.registerPurchase(
                         businessId,
                         purchaseMapper.toDomain(purchaseRequestDTO)
+                )
+        );
+    }
+
+    @Override
+    public PurchaseResponseDTO updatePurchaseDate(
+            Long businessId,
+            Long purchaseId,
+            DateUpdateDTO dateUpdateDTO
+    ) {
+        return purchaseMapper.toResponseDto(
+                purchaseServicePort.updatePurchaseDate(
+                        businessId,
+                        purchaseId,
+                        dateUpdateDTO.getCreatedAt()
                 )
         );
     }

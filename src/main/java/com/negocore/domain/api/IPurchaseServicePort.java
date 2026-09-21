@@ -12,6 +12,8 @@ public interface IPurchaseServicePort {
 
     PurchaseResponse registerPurchase(Long businessId, PurchaseRequest purchaseRequest);
 
+    PurchaseResponse updatePurchaseDate(Long businessId, Long purchaseId, LocalDateTime createdAt);
+
     List<Purchase> findPurchases(
             Long businessId,
             Long providerId,

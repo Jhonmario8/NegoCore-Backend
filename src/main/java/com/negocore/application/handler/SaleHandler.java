@@ -1,5 +1,6 @@
 package com.negocore.application.handler;
 
+import com.negocore.application.dto.request.DateUpdateDTO;
 import com.negocore.application.dto.request.SaleRequestDTO;
 import com.negocore.application.dto.response.SaleListResponseDTO;
 import com.negocore.application.dto.response.SaleResponseDTO;
@@ -42,6 +43,21 @@ public class SaleHandler implements ISaleHandler {
                 saleServicePort.cancelSale(
                         businessId,
                         saleId
+                )
+        );
+    }
+
+    @Override
+    public SaleResponseDTO updateSaleDate(
+            Long businessId,
+            Long saleId,
+            DateUpdateDTO dateUpdateDTO
+    ) {
+        return saleMapper.toResponseDto(
+                saleServicePort.updateSaleDate(
+                        businessId,
+                        saleId,
+                        dateUpdateDTO.getCreatedAt()
                 )
         );
     }

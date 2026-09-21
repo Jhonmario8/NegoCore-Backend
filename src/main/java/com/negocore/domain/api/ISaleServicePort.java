@@ -12,6 +12,7 @@ public interface ISaleServicePort {
 
     SaleResponse registerSale(Long businessId , SaleRequest saleRequest);
     SaleResponse cancelSale(Long businessId, Long saleId);
+    SaleResponse updateSaleDate(Long businessId, Long saleId, LocalDateTime createdAt);
     List<Sale> findSales(
             Long businessId,
             SaleStatus status,

@@ -1,5 +1,6 @@
 package com.negocore.application.handler;
 
+import com.negocore.application.dto.request.DateUpdateDTO;
 import com.negocore.application.dto.request.SaleRequestDTO;
 import com.negocore.application.dto.response.SaleListResponseDTO;
 import com.negocore.application.dto.response.SaleResponseDTO;
@@ -18,6 +19,12 @@ public interface ISaleHandler {
     SaleResponseDTO cancelSale(
             Long businessId,
             Long saleId
+    );
+
+    SaleResponseDTO updateSaleDate(
+            Long businessId,
+            Long saleId,
+            DateUpdateDTO dateUpdateDTO
     );
 
     List<SaleListResponseDTO> findSales(
