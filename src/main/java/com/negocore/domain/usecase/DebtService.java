@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class DebtService implements IDebtServicePort {
@@ -75,7 +74,6 @@ public class DebtService implements IDebtServicePort {
             debt.setStatus(DebtStatus.PARTIAL);
         }
         debtPersistencePort.save(debt);
-       
 
         AuditLog auditLog = new AuditLog();
         auditLog.setBusinessId(businessId);

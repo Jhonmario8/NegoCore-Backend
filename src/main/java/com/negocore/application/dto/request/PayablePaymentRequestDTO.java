@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 public class PayablePaymentRequestDTO {
 
     @NotNull(message = ApplicationConstants.AMOUNT_NOT_NULL)
-    @Positive(message = ApplicationConstants.VALIDATION_AMOUNT_POSITIVE)
+    @Positive(message = ApplicationConstants.AMOUNT_POSITIVE)
     private BigDecimal amount;
 
     @NotNull(message = ApplicationConstants.PAYMENT_METHOD_REQUIRED)

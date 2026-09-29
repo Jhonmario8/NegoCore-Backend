@@ -48,7 +48,6 @@ public class ApplicationConstants {
     public static final String CLIENT_PHONE_INVALID = "client phone must be a valid 10-digit number";
     public static final String CLIENT_EMAIL_INVALID = "client email must be a valid email address";
     public static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-    public static final String VALIDATION_AMOUNT_POSITIVE = "amount must be greater than zero";
 
     public static final String PROVIDER_ID_REQUIRED = "providerId is required";
     public static final String PURCHASE_ITEMS_REQUIRED = "purchaseItems is required";

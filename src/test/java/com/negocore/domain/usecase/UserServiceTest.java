@@ -203,7 +203,7 @@ class UserServiceTest {
     void login_userNotFoundAndWrongPassword_giveIdenticalMessage() {
         when(userPersistencePort.findByEmail("nadie@example.com")).thenReturn(Optional.empty());
         String userNotFoundMessage = catchThrowableOfType(
-                () -> userService.login("nadie@example.com", "Password1"), UnauthorizedException.class
+                UnauthorizedException.class, () -> userService.login("nadie@example.com", "Password1")
         ).getMessage();
 
         User user = aValidUser();
@@ -211,7 +211,7 @@ class UserServiceTest {
         when(userPersistencePort.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(passwordServicePort.matches("wrong", "hashed-password")).thenReturn(false);
         String wrongPasswordMessage = catchThrowableOfType(
-                () -> userService.login(user.getEmail(), "wrong"), UnauthorizedException.class
+                UnauthorizedException.class, () -> userService.login(user.getEmail(), "wrong")
         ).getMessage();
 
         assertThat(userNotFoundMessage).isEqualTo(wrongPasswordMessage);

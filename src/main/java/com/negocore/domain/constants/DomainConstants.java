@@ -38,7 +38,6 @@ public class DomainConstants {
     public static final String CASH_MOVEMENT_DEBT_PAYMENT = "Debt payment received";
     public static final String DEFAULT_CURRENCY = "COP";
     public static final String REPORT_DATES_REQUIRED = "Both 'from' and 'to' dates are required for the report";
-    public static final String REPORT_FROM_AFTER_TO = "The 'from' date cannot be after the 'to' date";
     public static final String SALE_CREATED = "SALE_CREATED";
     public static final String SALE_ENTITY = "SALE";
     public static final String SALE_CREATED_DETAILS = "A new sale has been created with ID: ";
@@ -56,7 +55,6 @@ public class DomainConstants {
     public static final String DEBT_CREATED = "DEBT_CREATED";
     public static final String DEBT_CREATED_DETAILS = "A new debt has been created with ID: ";
     public static final String DEBTOR_NAME_REQUIRED_FOR_NO_CLIENT = "debtorName is required when no clientId is provided";
-    public static final String AUDIT_FROM_AFTER_TO = "The 'from' date cannot be after the 'to' date";
     public static final String AUDIT_INVALID_PAGE = "Page number must be greater than or equal to 0";
     public static final String AUDIT_INVALID_SIZE = "Size must be greater than 0 and less than or equal to 100";
     public static final String INVALID_DATE_RANGE = "The 'from' date cannot be after the 'to' date";
