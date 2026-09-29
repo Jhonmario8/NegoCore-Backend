@@ -9,6 +9,7 @@ import com.negocore.domain.api.ISaleServicePort;
 import com.negocore.domain.model.SaleStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class SaleHandler implements ISaleHandler {
     private final ISaleMapper saleMapper;
 
     @Override
+    @Transactional
     public SaleResponseDTO registerSale(
             Long businessId,
             SaleRequestDTO saleRequestDTO
@@ -35,6 +37,7 @@ public class SaleHandler implements ISaleHandler {
     }
 
     @Override
+    @Transactional
     public SaleResponseDTO cancelSale(
             Long businessId,
             Long saleId
@@ -48,6 +51,7 @@ public class SaleHandler implements ISaleHandler {
     }
 
     @Override
+    @Transactional
     public SaleResponseDTO updateSaleDate(
             Long businessId,
             Long saleId,

@@ -8,7 +8,6 @@ import com.negocore.domain.exception.ConflictException;
 import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.*;
 import com.negocore.domain.spi.*;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
@@ -25,7 +24,6 @@ public class PayableService implements IPayableServicePort {
     private final IAuditLogsPersistencePort auditLogsPersistencePort;
 
     @Override
-    @Transactional
     public PayablePaymentResponse createPayablePayment(
             Long businessId,
             Long payableId,

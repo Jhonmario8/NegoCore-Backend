@@ -8,16 +8,13 @@ import com.negocore.domain.exception.ConflictException;
 import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.*;
 import com.negocore.domain.spi.*;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Service
 @RequiredArgsConstructor
 public class DebtService implements IDebtServicePort {
 
@@ -29,7 +26,6 @@ public class DebtService implements IDebtServicePort {
     private final IClientPersistencePort clientPersistencePort;
 
     @Override
-    @Transactional
     public DebtPaymentResponse createDebt(Long businessId, Long debtId, DebtCreateRequest debtCreateRequest) {
         Long userId = authenticationServicePort.getCurrentUserId();
         Business business = businessPersistencePort.findById(businessId)

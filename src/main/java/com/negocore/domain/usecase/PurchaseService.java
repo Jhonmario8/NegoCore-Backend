@@ -7,7 +7,6 @@ import com.negocore.domain.exception.BadRequestException;
 import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.*;
 import com.negocore.domain.spi.*;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
@@ -32,7 +31,6 @@ public class PurchaseService implements IPurchaseServicePort {
     private final IAuditLogsPersistencePort auditLogsPersistencePort;
 
     @Override
-    @Transactional
     public PurchaseResponse registerPurchase(Long businessId, PurchaseRequest purchaseRequest) {
 
         Long userId = authenticationServicePort.getCurrentUserId();
@@ -154,7 +152,6 @@ public class PurchaseService implements IPurchaseServicePort {
     }
 
     @Override
-    @Transactional
     public PurchaseResponse updatePurchaseDate(Long businessId, Long purchaseId, LocalDateTime createdAt) {
         Long userId = authenticationServicePort.getCurrentUserId();
 

@@ -30,7 +30,6 @@ import com.negocore.domain.spi.IClientPersistencePort;
 import com.negocore.domain.spi.IOrderItemsPersistencePort;
 import com.negocore.domain.spi.IOrderPersistencePort;
 import com.negocore.domain.spi.IProductPersistencePort;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
@@ -53,7 +52,6 @@ public class OrderService implements IOrderServicePort {
     private final IAuditLogsPersistencePort auditLogsPersistencePort;
 
     @Override
-    @Transactional
     public Order createOrder(Long businessId) {
         Long userId = authenticationServicePort.getCurrentUserId();
         Business business = businessPersistencePort.findById(businessId)
@@ -118,7 +116,6 @@ public class OrderService implements IOrderServicePort {
     }
 
     @Override
-    @Transactional
     public OrderResponse addItem(Long businessId, Long orderId, OrderItemRequest itemRequest) {
         Long userId = authenticationServicePort.getCurrentUserId();
         Business business = businessPersistencePort.findById(businessId)
@@ -159,7 +156,6 @@ public class OrderService implements IOrderServicePort {
     }
 
     @Override
-    @Transactional
     public OrderResponse removeItem(Long businessId, Long orderId, Long itemId) {
         Long userId = authenticationServicePort.getCurrentUserId();
         Business business = businessPersistencePort.findById(businessId)
@@ -185,7 +181,6 @@ public class OrderService implements IOrderServicePort {
     }
 
     @Override
-    @Transactional
     public Order cancelOrder(Long businessId, Long orderId) {
         Long userId = authenticationServicePort.getCurrentUserId();
         Business business = businessPersistencePort.findById(businessId)
@@ -207,7 +202,6 @@ public class OrderService implements IOrderServicePort {
     }
 
     @Override
-    @Transactional
     public PurchaseResponse convertToPurchase(Long businessId, Long orderId, OrderConversionRequest conversionRequest) {
         Long userId = authenticationServicePort.getCurrentUserId();
         Business business = businessPersistencePort.findById(businessId)
@@ -276,7 +270,6 @@ public class OrderService implements IOrderServicePort {
     }
 
     @Override
-    @Transactional
     public SaleResponse convertItemToSale(Long businessId, Long orderId, Long itemId, OrderItemSaleRequest saleRequest) {
         Long userId = authenticationServicePort.getCurrentUserId();
         Business business = businessPersistencePort.findById(businessId)

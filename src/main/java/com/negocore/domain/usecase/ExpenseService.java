@@ -7,7 +7,6 @@ import com.negocore.domain.exception.BadRequestException;
 import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.*;
 import com.negocore.domain.spi.*;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
@@ -25,7 +24,6 @@ public class ExpenseService implements IExpenseServicePort {
     private final IAuditLogsPersistencePort auditLogsPersistencePort;
 
     @Override
-    @Transactional
     public Expense registerExpense(Long businessId, ExpenseCreateRequest expenseCreateRequest) {
         Long userId = authenticationServicePort.getCurrentUserId();
         Business business = businessPersistencePort.findById(businessId)
