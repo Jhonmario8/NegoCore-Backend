@@ -20,7 +20,7 @@ balance report. Built with Spring Boot 3 / Java 21 following a hexagonal
 |---|---|
 | Language / runtime | Java 21 |
 | Framework | Spring Boot 3.5.4 (Web, Security, Validation, Data JPA) |
-| Database | PostgreSQL, via Hibernate with `ddl-auto: update` (no migration tool) |
+| Database | PostgreSQL, via Hibernate with `ddl-auto: validate` (no migration tool — see "Known limitations") |
 | Auth | JWT (`jjwt` 0.12.7), stateless, custom filter — no Spring Security `UserDetails` |
 | API docs | springdoc-openapi (Swagger UI) |
 | Image storage | Cloudinary (product images) |
@@ -168,9 +168,13 @@ limitations.
 
 Written honestly, not as a to-do list to impress — these are real gaps:
 
-- **No migration tool.** Flyway was removed; the schema evolves via
-  Hibernate's `ddl-auto: update`, which is fine for a portfolio project but
-  not how a production schema should be managed.
+- **No migration tool.** Flyway was removed; the schema was originally built
+  up via Hibernate's `ddl-auto: update`, and is now pinned with
+  `ddl-auto: validate` — Hibernate checks the entity mappings against the
+  live schema at startup and refuses to boot on a mismatch, but it doesn't
+  apply anything. In practice this means adding a field or table to an
+  entity requires manually altering the database first, or the app won't
+  start; there's no automated way to apply that change yet.
 - **No integration tests.** Unit tests cover `domain/usecase` in isolation;
   there's no test hitting a real (or Testcontainers) database through the
   JPA adapters, and no `@WebMvcTest`/`@SpringBootTest` coverage of the
