@@ -148,6 +148,54 @@ class PayableServiceTest {
     }
 
     @Test
+    @DisplayName("Un abono con monto cero lanza BadRequestException")
+    void createPayablePayment_zeroAmount_throwsBadRequest() {
+        when(businessPersistencePort.findById(BUSINESS_ID)).thenReturn(Optional.of(ownedBusiness()));
+        Payable payable = aPayable(PayableStatus.PENDING, BigDecimal.valueOf(1000), BigDecimal.ZERO);
+        when(payablePersistencePort.findById(PAYABLE_ID)).thenReturn(Optional.of(payable));
+
+        assertThatThrownBy(() -> payableService.createPayablePayment(
+                BUSINESS_ID, PAYABLE_ID, new PayablePaymentRequest(BigDecimal.ZERO, PayablePaymentMethod.CASH)
+        ))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(DomainConstants.PAYMENT_AMOUNT_INVALID);
+
+        verify(payablePaymentPersistencePort, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Un abono con monto negativo lanza BadRequestException")
+    void createPayablePayment_negativeAmount_throwsBadRequest() {
+        when(businessPersistencePort.findById(BUSINESS_ID)).thenReturn(Optional.of(ownedBusiness()));
+        Payable payable = aPayable(PayableStatus.PENDING, BigDecimal.valueOf(1000), BigDecimal.ZERO);
+        when(payablePersistencePort.findById(PAYABLE_ID)).thenReturn(Optional.of(payable));
+
+        assertThatThrownBy(() -> payableService.createPayablePayment(
+                BUSINESS_ID, PAYABLE_ID, new PayablePaymentRequest(BigDecimal.valueOf(-50), PayablePaymentMethod.CASH)
+        ))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(DomainConstants.PAYMENT_AMOUNT_INVALID);
+
+        verify(payablePaymentPersistencePort, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Un abono con monto nulo lanza BadRequestException")
+    void createPayablePayment_nullAmount_throwsBadRequest() {
+        when(businessPersistencePort.findById(BUSINESS_ID)).thenReturn(Optional.of(ownedBusiness()));
+        Payable payable = aPayable(PayableStatus.PENDING, BigDecimal.valueOf(1000), BigDecimal.ZERO);
+        when(payablePersistencePort.findById(PAYABLE_ID)).thenReturn(Optional.of(payable));
+
+        assertThatThrownBy(() -> payableService.createPayablePayment(
+                BUSINESS_ID, PAYABLE_ID, new PayablePaymentRequest(null, PayablePaymentMethod.CASH)
+        ))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(DomainConstants.PAYMENT_AMOUNT_INVALID);
+
+        verify(payablePaymentPersistencePort, never()).save(any());
+    }
+
+    @Test
     @DisplayName("Un usuario que no es dueño del negocio no puede pagar sus cuentas por pagar")
     void createPayablePayment_nonOwner_throwsNotFound() {
         Business business = ownedBusiness();

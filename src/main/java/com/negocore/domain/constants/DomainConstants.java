@@ -60,6 +60,7 @@ public class DomainConstants {
     public static final String INVALID_DATE_RANGE = "The 'from' date cannot be after the 'to' date";
     public static final String DEBT_ALREADY_PAID =  "Debt is already paid";
     public static final String DEBT_CANCELLED = "Debt is cancelled";
+    public static final String PAYMENT_AMOUNT_INVALID = "Payment amount must be greater than zero";
     public static String Category_NOT_FOUND = "Category not found";
 
     public static final String PROVIDER_NOT_FOUND = "Provider not found";

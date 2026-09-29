@@ -53,6 +53,10 @@ public class PayableService implements IPayableServicePort {
             throw new ConflictException(DomainConstants.PAYABLE_CANCELLED);
         }
 
+        if (payablePaymentRequest.amount() == null || payablePaymentRequest.amount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BadRequestException(DomainConstants.PAYMENT_AMOUNT_INVALID);
+        }
+
         BigDecimal pendingAmount = payable.getTotalAmount().subtract(payable.getPaidAmount());
 
         if (payablePaymentRequest.amount().compareTo(pendingAmount) > 0) {

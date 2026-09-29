@@ -51,6 +51,10 @@ public class DebtService implements IDebtServicePort {
             throw new ConflictException(DomainConstants.DEBT_CANCELLED);
         }
 
+        if (debtCreateRequest.amount() == null || debtCreateRequest.amount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BadRequestException(DomainConstants.PAYMENT_AMOUNT_INVALID);
+        }
+
         BigDecimal pendingAmount = debt.getTotalAmount()
                 .subtract(debt.getPaidAmount());
 

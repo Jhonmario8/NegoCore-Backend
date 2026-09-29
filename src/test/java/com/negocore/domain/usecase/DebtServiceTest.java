@@ -153,6 +153,54 @@ class DebtServiceTest {
     }
 
     @Test
+    @DisplayName("Un abono con monto cero lanza BadRequestException")
+    void createDebt_zeroAmount_throwsBadRequest() {
+        when(businessPersistencePort.findById(BUSINESS_ID)).thenReturn(Optional.of(ownedBusiness()));
+        Debt debt = aDebt(DebtStatus.PENDING, BigDecimal.valueOf(1000), BigDecimal.ZERO);
+        when(debtPersistencePort.findById(DEBT_ID)).thenReturn(Optional.of(debt));
+
+        assertThatThrownBy(() -> debtService.createDebt(
+                BUSINESS_ID, DEBT_ID, new DebtCreateRequest(BigDecimal.ZERO, DebtPaymentMethod.CASH)
+        ))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(DomainConstants.PAYMENT_AMOUNT_INVALID);
+
+        verify(debtPaymentPersistencePort, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Un abono con monto negativo lanza BadRequestException")
+    void createDebt_negativeAmount_throwsBadRequest() {
+        when(businessPersistencePort.findById(BUSINESS_ID)).thenReturn(Optional.of(ownedBusiness()));
+        Debt debt = aDebt(DebtStatus.PENDING, BigDecimal.valueOf(1000), BigDecimal.ZERO);
+        when(debtPersistencePort.findById(DEBT_ID)).thenReturn(Optional.of(debt));
+
+        assertThatThrownBy(() -> debtService.createDebt(
+                BUSINESS_ID, DEBT_ID, new DebtCreateRequest(BigDecimal.valueOf(-50), DebtPaymentMethod.CASH)
+        ))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(DomainConstants.PAYMENT_AMOUNT_INVALID);
+
+        verify(debtPaymentPersistencePort, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Un abono con monto nulo lanza BadRequestException")
+    void createDebt_nullAmount_throwsBadRequest() {
+        when(businessPersistencePort.findById(BUSINESS_ID)).thenReturn(Optional.of(ownedBusiness()));
+        Debt debt = aDebt(DebtStatus.PENDING, BigDecimal.valueOf(1000), BigDecimal.ZERO);
+        when(debtPersistencePort.findById(DEBT_ID)).thenReturn(Optional.of(debt));
+
+        assertThatThrownBy(() -> debtService.createDebt(
+                BUSINESS_ID, DEBT_ID, new DebtCreateRequest(null, DebtPaymentMethod.CASH)
+        ))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(DomainConstants.PAYMENT_AMOUNT_INVALID);
+
+        verify(debtPaymentPersistencePort, never()).save(any());
+    }
+
+    @Test
     @DisplayName("registerLoan con clientId limpia el debtorName")
     void registerLoan_withClient_clearsDebtorName() {
         when(businessPersistencePort.findById(BUSINESS_ID)).thenReturn(Optional.of(ownedBusiness()));
