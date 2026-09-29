@@ -164,6 +164,14 @@ debts, payables, orders, a quote) using only the public HTTP API. See
 [`scripts/README-seed-demo.md`](scripts/README-seed-demo.md) for usage and
 limitations.
 
+## Schema reference
+
+[`docs/schema/`](docs/schema/README.md) has one generated `.sql` file per
+table, produced directly from the JPA entities (no database connection
+involved) — handy as a readable reference without opening every entity
+class. Regenerate with `./gradlew generateSchemaDocs` after changing an
+entity; see that folder's README for the caveats.
+
 ## Known limitations / possible next steps
 
 Written honestly, not as a to-do list to impress — these are real gaps:

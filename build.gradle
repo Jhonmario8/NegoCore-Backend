@@ -75,3 +75,11 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.register('generateSchemaDocs', JavaExec) {
+    description = 'Regenerates docs/schema/*.sql from the JPA entities (no database connection needed).'
+    group = 'documentation'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.negocore.tools.SchemaDocGenerator'
+}
