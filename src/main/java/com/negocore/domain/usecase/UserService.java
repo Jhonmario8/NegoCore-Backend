@@ -6,6 +6,7 @@ import com.negocore.domain.api.IUserServicePort;
 import com.negocore.domain.constants.DomainConstants;
 import com.negocore.domain.exception.ConflictException;
 import com.negocore.domain.exception.ForbiddenException;
+import com.negocore.domain.exception.UnauthorizedException;
 import com.negocore.domain.model.LoginResponse;
 import com.negocore.domain.model.User;
 import com.negocore.domain.spi.IUserPersistencePort;
@@ -33,10 +34,10 @@ public class UserService implements IUserServicePort {
     @Override
     public LoginResponse login(String email, String password) {
         User user = userPersistencePort.findByEmail(email)
-                .orElseThrow(() -> new ConflictException(DomainConstants.INVALID_CREDENTIALS));
+                .orElseThrow(() -> new UnauthorizedException(DomainConstants.INVALID_CREDENTIALS));
 
         if (!passwordServicePort.matches(password, user.getPassword())) {
-            throw new ConflictException(DomainConstants.INVALID_CREDENTIALS);
+            throw new UnauthorizedException(DomainConstants.INVALID_CREDENTIALS);
         }
         if (!user.isActive()){
             throw new ForbiddenException(DomainConstants.USER_INACTIVE);

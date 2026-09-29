@@ -6,6 +6,7 @@ import com.negocore.domain.constants.DomainConstants;
 import com.negocore.domain.exception.BadRequestException;
 import com.negocore.domain.exception.ConflictException;
 import com.negocore.domain.exception.ForbiddenException;
+import com.negocore.domain.exception.UnauthorizedException;
 import com.negocore.domain.model.LoginResponse;
 import com.negocore.domain.model.User;
 import com.negocore.domain.spi.IUserPersistencePort;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -172,17 +174,17 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Login con un usuario inexistente lanza ConflictException por credenciales inválidas")
+    @DisplayName("Login con un usuario inexistente lanza UnauthorizedException por credenciales inválidas")
     void login_userNotFound_throwsInvalidCredentials() {
         when(userPersistencePort.findByEmail("nadie@example.com")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.login("nadie@example.com", "Password1"))
-                .isInstanceOf(ConflictException.class)
+                .isInstanceOf(UnauthorizedException.class)
                 .hasMessage(DomainConstants.INVALID_CREDENTIALS);
     }
 
     @Test
-    @DisplayName("Login con contraseña incorrecta lanza ConflictException por credenciales inválidas")
+    @DisplayName("Login con contraseña incorrecta lanza UnauthorizedException por credenciales inválidas")
     void login_wrongPassword_throwsInvalidCredentials() {
         User user = aValidUser();
         user.setPassword("hashed-password");
@@ -190,10 +192,29 @@ class UserServiceTest {
         when(passwordServicePort.matches("wrong", "hashed-password")).thenReturn(false);
 
         assertThatThrownBy(() -> userService.login(user.getEmail(), "wrong"))
-                .isInstanceOf(ConflictException.class)
+                .isInstanceOf(UnauthorizedException.class)
                 .hasMessage(DomainConstants.INVALID_CREDENTIALS);
 
         verify(tokenServicePort, never()).generateToken(any());
+    }
+
+    @Test
+    @DisplayName("Usuario inexistente y contraseña incorrecta dan exactamente el mismo mensaje, para no permitir enumerar usuarios")
+    void login_userNotFoundAndWrongPassword_giveIdenticalMessage() {
+        when(userPersistencePort.findByEmail("nadie@example.com")).thenReturn(Optional.empty());
+        String userNotFoundMessage = catchThrowableOfType(
+                () -> userService.login("nadie@example.com", "Password1"), UnauthorizedException.class
+        ).getMessage();
+
+        User user = aValidUser();
+        user.setPassword("hashed-password");
+        when(userPersistencePort.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(passwordServicePort.matches("wrong", "hashed-password")).thenReturn(false);
+        String wrongPasswordMessage = catchThrowableOfType(
+                () -> userService.login(user.getEmail(), "wrong"), UnauthorizedException.class
+        ).getMessage();
+
+        assertThat(userNotFoundMessage).isEqualTo(wrongPasswordMessage);
     }
 
     @Test
