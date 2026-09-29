@@ -106,6 +106,56 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Registrar con password nulo lanza BadRequestException")
+    void createUser_nullPassword_throwsBadRequest() {
+        User user = aValidUser();
+        user.setPassword(null);
+
+        assertThatThrownBy(() -> userService.createUser(user))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(DomainConstants.PASSWORD_NULL_OR_EMPTY);
+
+        verify(userPersistencePort, never()).saveUser(any());
+    }
+
+    @Test
+    @DisplayName("Registrar con password vacío lanza BadRequestException")
+    void createUser_blankPassword_throwsBadRequest() {
+        User user = aValidUser();
+        user.setPassword("   ");
+
+        assertThatThrownBy(() -> userService.createUser(user))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(DomainConstants.PASSWORD_NULL_OR_EMPTY);
+    }
+
+    @Test
+    @DisplayName("Registrar con email nulo lanza BadRequestException")
+    void createUser_nullEmail_throwsBadRequest() {
+        User user = aValidUser();
+        user.setEmail(null);
+
+        assertThatThrownBy(() -> userService.createUser(user))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(DomainConstants.EMAIL_NULL_OR_EMPTY);
+
+        verify(userPersistencePort, never()).saveUser(any());
+    }
+
+    @Test
+    @DisplayName("Registrar con teléfono nulo lanza BadRequestException, porque el teléfono es obligatorio")
+    void createUser_nullPhoneNumber_throwsBadRequest() {
+        User user = aValidUser();
+        user.setPhoneNumber(null);
+
+        assertThatThrownBy(() -> userService.createUser(user))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(DomainConstants.PHONE_NUMBER_NULL_OR_EMPTY);
+
+        verify(userPersistencePort, never()).saveUser(any());
+    }
+
+    @Test
     @DisplayName("Un registro válido codifica la contraseña y guarda al usuario activo")
     void createUser_valid_encodesPasswordAndSaves() {
         User user = aValidUser();

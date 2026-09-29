@@ -51,17 +51,12 @@ public class UserService implements IUserServicePort {
     }
 
     private void validateUniqueness(User user) {
+        if (userPersistencePort.findByEmail(user.getEmail()).isPresent()) {
+            throw new ConflictException(DomainConstants.EMAIL_ALREADY_EXISTS);
+        }
 
-        if (user.getEmail() != null && user.getPhoneNumber() != null) {
-            if (userPersistencePort.findByEmail(user.getEmail()).isPresent()) {
-                throw new ConflictException(DomainConstants.EMAIL_ALREADY_EXISTS);
-            }
-
-            if (userPersistencePort.existsByPhoneNumber(user.getPhoneNumber())) {
-                throw new ConflictException(DomainConstants.PHONE_NUMBER_ALREADY_EXISTS);
-            }
-
-
+        if (userPersistencePort.existsByPhoneNumber(user.getPhoneNumber())) {
+            throw new ConflictException(DomainConstants.PHONE_NUMBER_ALREADY_EXISTS);
         }
     }
 }
