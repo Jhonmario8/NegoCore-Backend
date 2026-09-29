@@ -45,7 +45,7 @@ public class AuditLogService implements IAuditLogServicePort {
 
         if (from != null && to != null && from.isAfter(to)) {
             throw new BadRequestException(
-                    DomainConstants.AUDIT_FROM_AFTER_TO
+                    DomainConstants.INVALID_DATE_RANGE
             );
         }
 

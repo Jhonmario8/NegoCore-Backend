@@ -43,7 +43,7 @@ public class BalanceReportService implements IBalanceReportServicePort {
         }
 
         if (from.isAfter(to)) {
-            throw new BadRequestException(DomainConstants.REPORT_FROM_AFTER_TO);
+            throw new BadRequestException(DomainConstants.INVALID_DATE_RANGE);
         }
 
         LocalDateTime fromDateTime = from.atStartOfDay();

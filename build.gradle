@@ -46,12 +46,6 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
 
     // ==========================
-    // Flyway
-    // ==========================
-    implementation 'org.flywaydb:flyway-core'
-    implementation 'org.flywaydb:flyway-database-postgresql'
-
-    // ==========================
     // Cloudinary
     // ==========================
     implementation 'com.cloudinary:cloudinary-http5:2.3.0'
@@ -80,4 +74,12 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.register('generateSchemaDocs', JavaExec) {
+    description = 'Regenerates docs/schema/*.sql from the JPA entities (no database connection needed).'
+    group = 'documentation'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.negocore.tools.SchemaDocGenerator'
 }

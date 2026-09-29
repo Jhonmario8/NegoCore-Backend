@@ -8,16 +8,12 @@ import com.negocore.domain.exception.ConflictException;
 import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.*;
 import com.negocore.domain.spi.*;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-@Service
 @RequiredArgsConstructor
 public class DebtService implements IDebtServicePort {
 
@@ -29,7 +25,6 @@ public class DebtService implements IDebtServicePort {
     private final IClientPersistencePort clientPersistencePort;
 
     @Override
-    @Transactional
     public DebtPaymentResponse createDebt(Long businessId, Long debtId, DebtCreateRequest debtCreateRequest) {
         Long userId = authenticationServicePort.getCurrentUserId();
         Business business = businessPersistencePort.findById(businessId)
@@ -49,6 +44,10 @@ public class DebtService implements IDebtServicePort {
         }
         if (debt.getStatus() == DebtStatus.CANCELLED) {
             throw new ConflictException(DomainConstants.DEBT_CANCELLED);
+        }
+
+        if (debtCreateRequest.amount() == null || debtCreateRequest.amount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BadRequestException(DomainConstants.PAYMENT_AMOUNT_INVALID);
         }
 
         BigDecimal pendingAmount = debt.getTotalAmount()
@@ -75,7 +74,6 @@ public class DebtService implements IDebtServicePort {
             debt.setStatus(DebtStatus.PARTIAL);
         }
         debtPersistencePort.save(debt);
-       
 
         AuditLog auditLog = new AuditLog();
         auditLog.setBusinessId(businessId);

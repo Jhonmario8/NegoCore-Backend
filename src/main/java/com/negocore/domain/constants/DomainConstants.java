@@ -2,6 +2,8 @@ package com.negocore.domain.constants;
 
 public class DomainConstants {
     public static final String PASSWORD_NULL_OR_EMPTY = "Password cannot be null or empty";
+    public static final String EMAIL_NULL_OR_EMPTY = "Email cannot be null or empty";
+    public static final String PHONE_NUMBER_NULL_OR_EMPTY = "Phone number cannot be null or empty";
     public static final String INVALID_PASSWORD_MESSAGE = "Password must be at least 8 characters long, contain at least one uppercase letter and one number.";
     public static final String INVALID_EMAIL_MESSAGE = "Email must be a valid email address.";
     public static final String KEY_USER_ID = "user_id";
@@ -36,7 +38,6 @@ public class DomainConstants {
     public static final String CASH_MOVEMENT_DEBT_PAYMENT = "Debt payment received";
     public static final String DEFAULT_CURRENCY = "COP";
     public static final String REPORT_DATES_REQUIRED = "Both 'from' and 'to' dates are required for the report";
-    public static final String REPORT_FROM_AFTER_TO = "The 'from' date cannot be after the 'to' date";
     public static final String SALE_CREATED = "SALE_CREATED";
     public static final String SALE_ENTITY = "SALE";
     public static final String SALE_CREATED_DETAILS = "A new sale has been created with ID: ";
@@ -54,12 +55,12 @@ public class DomainConstants {
     public static final String DEBT_CREATED = "DEBT_CREATED";
     public static final String DEBT_CREATED_DETAILS = "A new debt has been created with ID: ";
     public static final String DEBTOR_NAME_REQUIRED_FOR_NO_CLIENT = "debtorName is required when no clientId is provided";
-    public static final String AUDIT_FROM_AFTER_TO = "The 'from' date cannot be after the 'to' date";
     public static final String AUDIT_INVALID_PAGE = "Page number must be greater than or equal to 0";
     public static final String AUDIT_INVALID_SIZE = "Size must be greater than 0 and less than or equal to 100";
     public static final String INVALID_DATE_RANGE = "The 'from' date cannot be after the 'to' date";
     public static final String DEBT_ALREADY_PAID =  "Debt is already paid";
     public static final String DEBT_CANCELLED = "Debt is cancelled";
+    public static final String PAYMENT_AMOUNT_INVALID = "Payment amount must be greater than zero";
     public static String Category_NOT_FOUND = "Category not found";
 
     public static final String PROVIDER_NOT_FOUND = "Provider not found";
@@ -103,4 +104,5 @@ public class DomainConstants {
     public static final String ORDER_ITEM_ALREADY_SOLD = "This order item has already been converted to a sale";
     public static final String ORDER_ITEM_SOLD = "ORDER_ITEM_SOLD";
     public static final String ORDER_ITEM_SOLD_DETAILS = "Order item converted to sale with ID: ";
+    public static final String ORDER_CANCELLED_CANNOT_SELL_ITEM = "Cannot sell an item from a cancelled order";
 }

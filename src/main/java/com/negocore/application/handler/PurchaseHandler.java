@@ -9,6 +9,7 @@ import com.negocore.domain.api.IPurchaseServicePort;
 import com.negocore.domain.model.PurchaseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class PurchaseHandler implements IPurchaseHandler {
     private final IPurchaseMapper purchaseMapper;
 
     @Override
+    @Transactional
     public PurchaseResponseDTO registerPurchase(
             Long businessId,
             PurchaseRequestDTO purchaseRequestDTO
@@ -35,6 +37,7 @@ public class PurchaseHandler implements IPurchaseHandler {
     }
 
     @Override
+    @Transactional
     public PurchaseResponseDTO updatePurchaseDate(
             Long businessId,
             Long purchaseId,

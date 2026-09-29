@@ -16,6 +16,7 @@ import com.negocore.domain.model.OrderResponse;
 import com.negocore.domain.model.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class OrderHandler implements IOrderHandler {
     private final ISaleMapper saleMapper;
 
     @Override
+    @Transactional
     public OrderResponseDTO createOrder(Long businessId) {
         Order order = orderServicePort.createOrder(businessId);
         return orderMapper.toResponseDto(new OrderResponse(order, List.of()));
@@ -50,6 +52,7 @@ public class OrderHandler implements IOrderHandler {
     }
 
     @Override
+    @Transactional
     public OrderResponseDTO addItem(Long businessId, Long orderId, OrderItemRequestDTO orderItemRequestDTO) {
         return orderMapper.toResponseDto(
                 orderServicePort.addItem(
@@ -61,6 +64,7 @@ public class OrderHandler implements IOrderHandler {
     }
 
     @Override
+    @Transactional
     public OrderResponseDTO removeItem(Long businessId, Long orderId, Long itemId) {
         return orderMapper.toResponseDto(
                 orderServicePort.removeItem(businessId, orderId, itemId)
@@ -68,6 +72,7 @@ public class OrderHandler implements IOrderHandler {
     }
 
     @Override
+    @Transactional
     public OrderResponseDTO cancelOrder(Long businessId, Long orderId) {
         orderServicePort.cancelOrder(businessId, orderId);
         return orderMapper.toResponseDto(
@@ -76,6 +81,7 @@ public class OrderHandler implements IOrderHandler {
     }
 
     @Override
+    @Transactional
     public PurchaseResponseDTO convertToPurchase(Long businessId, Long orderId, OrderConversionRequestDTO orderConversionRequestDTO) {
         return purchaseMapper.toResponseDto(
                 orderServicePort.convertToPurchase(
@@ -87,6 +93,7 @@ public class OrderHandler implements IOrderHandler {
     }
 
     @Override
+    @Transactional
     public SaleResponseDTO convertItemToSale(Long businessId, Long orderId, Long itemId, OrderItemSaleRequestDTO orderItemSaleRequestDTO) {
         return saleMapper.toResponseDto(
                 orderServicePort.convertItemToSale(

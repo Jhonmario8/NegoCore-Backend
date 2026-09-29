@@ -9,7 +9,6 @@ import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.*;
 import com.negocore.domain.spi.*;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
@@ -35,7 +34,6 @@ public class SaleService implements ISaleServicePort {
     private final IAuditLogsPersistencePort auditLogsPersistencePort;
 
     @Override
-    @Transactional
     public SaleResponse registerSale(Long businessId, SaleRequest saleRequest) {
 
         BigDecimal totalAmount = BigDecimal.ZERO;
@@ -191,7 +189,6 @@ public class SaleService implements ISaleServicePort {
     }
 
     @Override
-    @Transactional
     public SaleResponse updateSaleDate(Long businessId, Long saleId, LocalDateTime createdAt) {
 
         Long userId = authenticationServicePort.getCurrentUserId();
@@ -219,7 +216,6 @@ public class SaleService implements ISaleServicePort {
     }
 
     @Override
-    @Transactional
     public SaleResponse cancelSale(Long businessId, Long saleId) {
 
         Long userId = authenticationServicePort.getCurrentUserId();

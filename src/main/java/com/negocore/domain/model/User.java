@@ -33,11 +33,20 @@ public class User {
     }
 
     public void validate() {
+        if (password == null || password.isBlank()) {
+            throw new BadRequestException(DomainConstants.PASSWORD_NULL_OR_EMPTY);
+        }
         if (!password.matches(PASSWORD_PATTERN)) {
             throw new BadRequestException(DomainConstants.INVALID_PASSWORD_MESSAGE);
         }
+        if (email == null || email.isBlank()) {
+            throw new BadRequestException(DomainConstants.EMAIL_NULL_OR_EMPTY);
+        }
         if (!email.matches(EMAIL_PATTERN)) {
             throw new BadRequestException(DomainConstants.INVALID_EMAIL_MESSAGE);
+        }
+        if (phoneNumber == null || phoneNumber.isBlank()) {
+            throw new BadRequestException(DomainConstants.PHONE_NUMBER_NULL_OR_EMPTY);
         }
         if (!phoneNumber.matches(PHONE_NUMBER_PATTERN)) {
             throw new BadRequestException(DomainConstants.INVALID_PHONE_NUMBER_MESSAGE);

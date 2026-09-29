@@ -9,6 +9,7 @@ import com.negocore.domain.model.PayableStatus;
 import com.negocore.domain.model.PayeeType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class PayableHandler implements IPayableHandler {
     private final IPayableServicePort payableService;
 
     @Override
+    @Transactional
     public PayablePaymentResponseDTO createPayablePayment(
             Long businessId,
             Long payableId,

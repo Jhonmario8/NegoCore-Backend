@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginDTO loginDTO) {
         LoginResponse userResponseDTO = iUserHandler.loginUser(loginDTO);
         return ResponseEntity.ok(userResponseDTO);
     }

@@ -10,6 +10,7 @@ import com.negocore.domain.model.Debt;
 import com.negocore.domain.model.DebtStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class DebtHandler implements IDebtHandler {
     private final IDebtServicePort debtService;
 
     @Override
+    @Transactional
     public DebtResponseDTO createDebt(Long businessId, Long debtId, DebtCreateRequestDTO debtCreateRequestDTO) {
         return debtMapper.toResponseDTO(debtService.createDebt(businessId, debtId, debtMapper.toCreateRequest(debtCreateRequestDTO)));
     }

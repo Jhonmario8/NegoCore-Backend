@@ -7,6 +7,7 @@ import com.negocore.domain.api.IExpenseServicePort;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class ExpenseHandler implements IExpenseHandler{
     private final IExpenseMapper mapper;
 
     @Override
+    @Transactional
     public ExpenseResponseDTO registerExpense(Long businessId, ExpenseRequestDTO expenseRequestDTO) {
         return mapper.toResponseDTO(
                 expenseServicePort.registerExpense(businessId, mapper.toDomain(expenseRequestDTO))
