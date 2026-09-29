@@ -1,139 +1,143 @@
 # NegoCore — Backend
 
-A REST API for small-business management: products and stock, clients and
-providers, sales and purchases (with partial payments), receivables and
-payables, expenses, quotes, pre-sale/pre-purchase orders, an audit log and a
-balance report. Built with Spring Boot 3 / Java 21 following a hexagonal
-(ports & adapters) architecture.
+Una API REST para gestión de pequeños negocios: productos e inventario,
+clientes y proveedores, ventas y compras (con pagos parciales), cuentas por
+cobrar y por pagar, gastos, cotizaciones, pedidos previos a venta/compra, un
+registro de auditoría y un reporte de balance. Construida con Spring Boot 3 /
+Java 21 siguiendo una arquitectura hexagonal (puertos y adaptadores).
 
-- **Live API**: https://negocore-backend.onrender.com (Swagger UI at `/swagger-ui/index.html`)
-- **Frontend**: https://nego-core-frontend.vercel.app — see the [NegoCore-Frontend](https://github.com/Jhonmario8/NegoCore-Frontend) repo
+- **API en vivo**: https://negocore-backend.onrender.com (Swagger UI en `/swagger-ui/index.html`)
+- **Frontend**: https://nego-core-frontend.vercel.app — ver el repo [NegoCore-Frontend](https://github.com/Jhonmario8/NegoCore-Frontend)
 
-> The API runs on Render's free tier, which spins the instance down after
-> inactivity. The first request after a while can take up to ~1 minute; a
-> scheduled GitHub Action pings it every 10 minutes to reduce how often that
-> happens (see [`.github/workflows/keep-alive.yml`](.github/workflows/keep-alive.yml)).
+> La API corre en el plan gratuito de Render, que apaga la instancia tras un
+> rato de inactividad. La primera petición después de eso puede tardar hasta
+> ~1 minuto; una GitHub Action programada la "pinguea" cada 10 minutos para
+> que esto pase con menos frecuencia (ver
+> [`.github/workflows/keep-alive.yml`](.github/workflows/keep-alive.yml)).
 
-## Tech stack
+## Stack tecnológico
 
-| Concern | Choice |
+| Aspecto | Elección |
 |---|---|
-| Language / runtime | Java 21 |
+| Lenguaje / runtime | Java 21 |
 | Framework | Spring Boot 3.5.4 (Web, Security, Validation, Data JPA) |
-| Database | PostgreSQL, via Hibernate with `ddl-auto: validate` (no migration tool — see "Known limitations") |
-| Auth | JWT (`jjwt` 0.12.7), stateless, custom filter — no Spring Security `UserDetails` |
-| API docs | springdoc-openapi (Swagger UI) |
-| Image storage | Cloudinary (product images) |
-| Mapping | MapStruct |
-| Build | Gradle 9.5 (wrapper included) |
+| Base de datos | PostgreSQL, vía Hibernate con `ddl-auto: validate` (sin herramienta de migración) |
+| Autenticación | JWT (`jjwt` 0.12.7), stateless, filtro propio — sin `UserDetails` de Spring Security |
+| Documentación de API | springdoc-openapi (Swagger UI) |
+| Almacenamiento de imágenes | Cloudinary (imágenes de productos) |
+| Mapeo | MapStruct |
+| Build | Gradle 9.5 (wrapper incluido) |
 | Tests | JUnit 5 + Mockito |
 | CI | GitHub Actions |
 
-## Architecture
+## Arquitectura
 
-The domain layer has **zero Spring or Jakarta imports** — it's plain Java,
-independently testable and framework-agnostic. Every use case
-(`domain/usecase/*Service.java`) is manually wired into a Spring bean in
+La capa de dominio tiene **cero imports de Spring o Jakarta** — es Java plano,
+testeable de forma independiente y agnóstico de framework. Cada caso de uso
+(`domain/usecase/*Service.java`) se conecta manualmente como bean de Spring en
 [`BeanConfiguration`](src/main/java/com/negocore/infrastructure/config/BeanConfiguration.java);
-none of them carry a `@Service` annotation themselves.
+ninguno lleva anotación `@Service` propia.
 
 ```mermaid
 flowchart TB
-    Client["HTTP client"]
+    Client["Cliente HTTP"]
 
     subgraph Infra["infrastructure"]
-        Controller["input/controller<br/>(15 REST controllers)"]
+        Controller["input/controller<br/>(15 controladores REST)"]
         JwtFilter["output/security<br/>CustomAuthenticationFilter"]
-        JpaAdapter["output/jpa<br/>adapters + entities + repositories"]
-        Cloudinary["output/cloudinary<br/>image upload adapter"]
+        JpaAdapter["output/jpa<br/>adaptadores + entidades + repositorios"]
+        Cloudinary["output/cloudinary<br/>adaptador de subida de imágenes"]
     end
 
     subgraph App["application"]
-        Handler["handler<br/>(@Transactional boundary)"]
-        Mapper["mapper (MapStruct)<br/>DTO to/from domain model"]
+        Handler["handler<br/>(límite @Transactional)"]
+        Mapper["mapper (MapStruct)<br/>DTO hacia/desde modelo de dominio"]
     end
 
-    subgraph Domain["domain (framework-free)"]
-        UseCase["usecase<br/>(business rules)"]
-        Ports["api (inbound ports)<br/>spi (outbound ports)"]
-        Model["model<br/>(plain Java objects)"]
+    subgraph Domain["domain (sin framework)"]
+        UseCase["usecase<br/>(reglas de negocio)"]
+        Ports["api (puertos de entrada)<br/>spi (puertos de salida)"]
+        Model["model<br/>(objetos Java planos)"]
     end
 
     DB[(PostgreSQL)]
 
-    Client -->|Bearer token| JwtFilter --> Controller
+    Client -->|token Bearer| JwtFilter --> Controller
     Controller --> Handler --> Mapper --> UseCase
-    UseCase -->|implements| Ports
+    UseCase -->|implementa| Ports
     UseCase --> Model
-    UseCase -->|through spi ports| JpaAdapter --> DB
-    Controller -.image upload.-> Cloudinary
+    UseCase -->|vía puertos spi| JpaAdapter --> DB
+    Controller -.subida de imagen.-> Cloudinary
 ```
 
-Request flow: a controller receives the HTTP request and delegates to an
-`application/handler`, which owns the `@Transactional` boundary, maps the
-request DTO to a domain model via MapStruct, and calls the matching
-`domain/usecase` implementation. The use case enforces business rules and
-talks to persistence only through `domain/spi` ports — it never sees an
-entity, a repository, or an HTTP concept.
+Flujo de una petición: un controlador recibe la petición HTTP y delega en un
+`application/handler`, que es dueño del límite `@Transactional`, mapea el DTO
+de entrada a un modelo de dominio vía MapStruct, y llama a la implementación
+correspondiente en `domain/usecase`. El caso de uso aplica las reglas de
+negocio y solo habla con la persistencia a través de los puertos de
+`domain/spi` — nunca ve una entidad, un repositorio, ni un concepto de HTTP.
 
-## Features
+## Funcionalidades
 
-- **Auth**: register/login, BCrypt-hashed passwords, JWT bearer tokens (10h
-  expiration), no refresh tokens.
-- **Businesses**: a user can own several; every other resource is scoped to
-  a business the requesting user owns.
-- **Catalog**: categories, products (stock, low-stock alert threshold,
-  optional Cloudinary image).
-- **Clients & providers**.
-- **Sales**: full or partial payment; a partial sale requires a client and
-  automatically opens a `Debt` for the pending balance; cancelling a paid or
-  partially-paid sale restores stock (blocked once the linked debt has
-  received a payment).
-- **Purchases**: full or partial payment; a partial purchase automatically
-  opens a `Payable` for the pending balance; increases stock on registration.
-- **Debts & payables**: manual payments against the pending balance, plus a
-  standalone loan (a `Debt` with no associated sale).
-- **Orders**: a pre-sale/pre-purchase draft — add/remove line items, then
-  either convert the whole order into a purchase or convert a single item
-  into a sale.
-- **Expenses**.
-- **Quotes**: generated server-side, rendered/exported as an image client-side.
-- **Audit log**: a paginated, filterable activity trail per business.
-- **Balance report**: income vs. expenses over a date range.
+- **Autenticación**: registro/login, contraseñas hasheadas con BCrypt, tokens
+  JWT (expiración de 10h), sin refresh tokens.
+- **Negocios**: un usuario puede tener varios; todo otro recurso está
+  acotado a un negocio que el usuario que hace la petición posee.
+- **Catálogo**: categorías, productos (stock, umbral de alerta de stock bajo,
+  imagen opcional en Cloudinary).
+- **Clientes y proveedores**.
+- **Ventas**: pago completo o parcial; una venta parcial requiere un cliente
+  y abre automáticamente una `Debt` por el saldo pendiente; cancelar una
+  venta pagada o parcialmente pagada repone el stock (bloqueado una vez que
+  la deuda vinculada recibió algún pago).
+- **Compras**: pago completo o parcial; una compra parcial abre
+  automáticamente un `Payable` por el saldo pendiente; aumenta el stock al
+  registrarse.
+- **Deudas y cuentas por pagar**: pagos manuales contra el saldo pendiente,
+  más un préstamo independiente (una `Debt` sin venta asociada).
+- **Pedidos**: un borrador previo a venta/compra — agregar/quitar ítems, y
+  luego convertir todo el pedido en una compra o convertir un ítem individual
+  en una venta.
+- **Gastos**.
+- **Cotizaciones**: generadas en el servidor, renderizadas/exportadas como
+  imagen del lado del cliente.
+- **Registro de auditoría**: un historial de actividad paginado y filtrable
+  por negocio.
+- **Reporte de balance**: ingresos vs. gastos en un rango de fechas.
 
-## Getting started
+## Primeros pasos
 
-### Prerequisites
+### Requisitos previos
 
 - JDK 21
-- A PostgreSQL database (local, Docker, or a hosted instance like Neon)
+- Una base de datos PostgreSQL (local, Docker, o una instancia alojada como Neon)
 
-### Configuration
+### Configuración
 
-All configuration is via environment variables — nothing is hardcoded, and
-no `.env` file is read directly (Spring reads them from the process
-environment). None of these have defaults except where noted, so the app
-will fail to start without them:
+Toda la configuración es vía variables de entorno — nada está hardcodeado, y
+no se lee ningún archivo `.env` directamente (Spring las lee del entorno del
+proceso). Ninguna de estas tiene valor por defecto salvo donde se indica, así
+que la app fallará al iniciar sin ellas:
 
-| Variable | Required | Description |
+| Variable | Requerida | Descripción |
 |---|---|---|
-| `NC_DB_URL` | yes | JDBC URL, e.g. `jdbc:postgresql://localhost:5432/negocore` |
-| `NC_DB_USERNAME` | yes | Database user |
-| `NC_DB_PASSWORD` | yes | Database password |
-| `NEGOCORE_JWT_KEY` | yes | HMAC signing key for JWTs |
-| `NC_CLOUDINARY_CLOUD_NAME` | yes | Cloudinary cloud name |
-| `NC_CLOUDINARY_API_KEY` | yes | Cloudinary API key |
-| `NC_CLOUDINARY_API_SECRET` | yes | Cloudinary API secret |
-| `CORS_ALLOWED_ORIGINS` | no | Comma-separated allowed origins; defaults to the local Vite dev ports |
-| `PORT` | no | Server port; defaults to `8080` |
+| `NC_DB_URL` | sí | URL JDBC, p. ej. `jdbc:postgresql://localhost:5432/negocore` |
+| `NC_DB_USERNAME` | sí | Usuario de la base de datos |
+| `NC_DB_PASSWORD` | sí | Contraseña de la base de datos |
+| `NEGOCORE_JWT_KEY` | sí | Clave HMAC para firmar los JWT |
+| `NC_CLOUDINARY_CLOUD_NAME` | sí | Cloud name de Cloudinary |
+| `NC_CLOUDINARY_API_KEY` | sí | API key de Cloudinary |
+| `NC_CLOUDINARY_API_SECRET` | sí | API secret de Cloudinary |
+| `CORS_ALLOWED_ORIGINS` | no | Orígenes permitidos separados por coma; por defecto usa los puertos locales de Vite |
+| `PORT` | no | Puerto del servidor; por defecto `8080` |
 
-### Run locally
+### Correr localmente
 
 ```bash
 ./gradlew bootRun
 ```
 
-### Test and build
+### Testear y compilar
 
 ```bash
 ./gradlew build
@@ -141,65 +145,38 @@ will fail to start without them:
 
 ## Testing
 
-78 JUnit 5 + Mockito unit tests cover every `domain/usecase` class — pure
-business-logic tests with mocked ports, no Spring context and no database.
-`NegoCoreApplicationTests.contextLoads()` is disabled at the class level
-because it would otherwise boot the full Spring context and require a real
-database connection; this keeps `./gradlew build` runnable in CI and on a
-laptop with no database configured at all.
+78 tests unitarios con JUnit 5 + Mockito cubren cada clase de
+`domain/usecase` — tests de lógica de negocio pura, con puertos mockeados,
+sin contexto de Spring y sin base de datos.
+`NegoCoreApplicationTests.contextLoads()` está deshabilitado a nivel de
+clase porque de lo contrario levantaría todo el contexto de Spring y
+requeriría una conexión real a la base de datos; esto mantiene
+`./gradlew build` ejecutable en CI y en una laptop sin ninguna base de datos
+configurada.
 
-There are currently **no integration tests** against the JPA adapters,
-repositories, or controllers — see "Known limitations" below.
+Actualmente **no hay tests de integración** contra los adaptadores JPA, los
+repositorios, ni los controladores.
 
 ## CI
 
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs `./gradlew build`
-(compile + unit tests) on every push and pull request to `main`.
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) corre
+`./gradlew build` (compilación + tests unitarios) en cada push y pull
+request a `main`.
 
-## Demo data
+## Datos de demo
 
-[`scripts/seed-demo.sh`](scripts/seed-demo.sh) populates a running instance
-with a realistic dataset (business, products, clients, sales, purchases,
-debts, payables, orders, a quote) using only the public HTTP API. See
-[`scripts/README-seed-demo.md`](scripts/README-seed-demo.md) for usage and
-limitations.
+[`scripts/seed-demo.sh`](scripts/seed-demo.sh) llena una instancia en
+ejecución con un dataset realista (negocio, productos, clientes, ventas,
+compras, deudas, cuentas por pagar, pedidos, una cotización) usando
+únicamente la API HTTP pública. Ver
+[`scripts/README-seed-demo.md`](scripts/README-seed-demo.md) para su uso y
+limitaciones.
 
-## Schema reference
+## Referencia del esquema
 
-[`docs/schema/`](docs/schema/README.md) has one generated `.sql` file per
-table, produced directly from the JPA entities (no database connection
-involved) — handy as a readable reference without opening every entity
-class. Regenerate with `./gradlew generateSchemaDocs` after changing an
-entity; see that folder's README for the caveats.
-
-## Known limitations / possible next steps
-
-Written honestly, not as a to-do list to impress — these are real gaps:
-
-- **No migration tool.** Flyway was removed; the schema was originally built
-  up via Hibernate's `ddl-auto: update`, and is now pinned with
-  `ddl-auto: validate` — Hibernate checks the entity mappings against the
-  live schema at startup and refuses to boot on a mismatch, but it doesn't
-  apply anything. In practice this means adding a field or table to an
-  entity requires manually altering the database first, or the app won't
-  start; there's no automated way to apply that change yet.
-- **No integration tests.** Unit tests cover `domain/usecase` in isolation;
-  there's no test hitting a real (or Testcontainers) database through the
-  JPA adapters, and no `@WebMvcTest`/`@SpringBootTest` coverage of the
-  controllers or the security filter.
-- **Ownership checks return 404, not 403.** Referencing another owner's
-  business (or a resource under it) returns `NotFoundException` rather than
-  a distinguishable "forbidden" response, to avoid confirming the resource
-  exists. That's a deliberate tradeoff, but it means a legitimate
-  authorization error and a genuine "not found" look identical to the client.
-- **No refresh tokens or revocation.** A JWT is valid for its full 10-hour
-  window with no server-side blacklist or refresh flow; logout is
-  client-side only (the frontend discards the token).
-- **No pagination on most list endpoints.** Only `/audit-logs` is paginated;
-  products, sales, purchases, clients, etc. return the full list for the
-  business, which won't scale past a small catalog.
-- **The audit log has no frontend page yet** — the endpoint and its filters
-  (date range, action, entity, pagination) exist and work, but nothing in the
-  UI surfaces them, and there's no test covering the handler or controller
-  layer for it (see "No integration tests" above).
-- **No rate limiting** on `/auth/login` or `/auth/register`.
+[`docs/schema/`](docs/schema/README.md) tiene un archivo `.sql` generado por
+cada tabla, producido directamente desde las entidades JPA (sin ninguna
+conexión a base de datos de por medio) — útil como referencia legible sin
+tener que abrir cada clase de entidad. Regenerar con
+`./gradlew generateSchemaDocs` tras cambiar una entidad; ver el README de esa
+carpeta para las advertencias.
