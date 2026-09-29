@@ -357,6 +357,45 @@ class OrderServiceTest {
     // ---- convertItemToSale ----
 
     @Test
+    @DisplayName("convertItemToSale sobre un pedido CANCELLED lanza BadRequestException")
+    void convertItemToSale_cancelledOrder_throwsBadRequest() {
+        stubOwnedBusiness();
+        when(orderPersistencePort.findByIdAndBusinessId(ORDER_ID, BUSINESS_ID))
+                .thenReturn(Optional.of(anOrder(OrderStatus.CANCELLED)));
+
+        OrderItemSaleRequest saleRequest = new OrderItemSaleRequest(PaymentMethod.CASH, BigDecimal.TEN);
+
+        assertThatThrownBy(() -> orderService.convertItemToSale(BUSINESS_ID, ORDER_ID, 1L, saleRequest))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(DomainConstants.ORDER_CANCELLED_CANNOT_SELL_ITEM);
+
+        verify(saleServicePort, never()).registerSale(any(), any());
+        verify(orderItemsPersistencePort, never()).findByIdAndOrderId(any(), any());
+    }
+
+    @Test
+    @DisplayName("convertItemToSale sí funciona sobre un pedido CONVERTED (flujo esperado: comprar y luego vender)")
+    void convertItemToSale_convertedOrder_succeeds() {
+        stubOwnedBusiness();
+        when(orderPersistencePort.findByIdAndBusinessId(ORDER_ID, BUSINESS_ID))
+                .thenReturn(Optional.of(anOrder(OrderStatus.CONVERTED)));
+        OrderItem item = anItem(1L, CLIENT_ID, null, BigDecimal.valueOf(500));
+        when(orderItemsPersistencePort.findByIdAndOrderId(1L, ORDER_ID)).thenReturn(Optional.of(item));
+        when(productPersistencePort.findByIdAndBusinessId(PRODUCT_ID, BUSINESS_ID))
+                .thenReturn(Optional.of(aProduct(BigDecimal.valueOf(999))));
+
+        Sale sale = new Sale();
+        sale.setId(88L);
+        when(saleServicePort.registerSale(any(), any())).thenReturn(new SaleResponse(sale, List.of()));
+
+        OrderItemSaleRequest saleRequest = new OrderItemSaleRequest(PaymentMethod.CASH, BigDecimal.valueOf(1000));
+
+        orderService.convertItemToSale(BUSINESS_ID, ORDER_ID, 1L, saleRequest);
+
+        assertThat(item.getConvertedSaleId()).isEqualTo(88L);
+    }
+
+    @Test
     @DisplayName("convertItemToSale sin cliente en el item lanza BadRequestException")
     void convertItemToSale_noClient_throwsBadRequest() {
         stubOwnedBusiness();

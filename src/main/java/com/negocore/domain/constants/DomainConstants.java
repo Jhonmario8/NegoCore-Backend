@@ -106,4 +106,5 @@ public class DomainConstants {
     public static final String ORDER_ITEM_ALREADY_SOLD = "This order item has already been converted to a sale";
     public static final String ORDER_ITEM_SOLD = "ORDER_ITEM_SOLD";
     public static final String ORDER_ITEM_SOLD_DETAILS = "Order item converted to sale with ID: ";
+    public static final String ORDER_CANCELLED_CANNOT_SELL_ITEM = "Cannot sell an item from a cancelled order";
 }

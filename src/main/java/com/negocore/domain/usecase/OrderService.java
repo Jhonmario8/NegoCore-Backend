@@ -286,8 +286,12 @@ public class OrderService implements IOrderServicePort {
             throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
         }
 
-        orderPersistencePort.findByIdAndBusinessId(orderId, businessId)
+        Order order = orderPersistencePort.findByIdAndBusinessId(orderId, businessId)
                 .orElseThrow(() -> new NotFoundException(DomainConstants.ORDER_NOT_FOUND));
+
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            throw new BadRequestException(DomainConstants.ORDER_CANCELLED_CANNOT_SELL_ITEM);
+        }
 
         OrderItem item = orderItemsPersistencePort.findByIdAndOrderId(itemId, orderId)
                 .orElseThrow(() -> new NotFoundException(DomainConstants.ORDER_ITEM_NOT_FOUND));
