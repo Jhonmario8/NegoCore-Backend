@@ -61,6 +61,12 @@ public class DomainConstants {
     public static final String DEBT_ALREADY_PAID =  "Debt is already paid";
     public static final String DEBT_CANCELLED = "Debt is cancelled";
     public static final String PAYMENT_AMOUNT_INVALID = "Payment amount must be greater than zero";
+    public static final String DEBT_PAYMENT_NOT_FOUND = "Debt payment not found";
+    public static final String DEBT_PAYMENT_UPDATED = "DEBT_PAYMENT_UPDATED";
+    public static final String DEBT_PAYMENT_UPDATED_DETAILS = "Debt payment updated with ID: ";
+    public static final String PAYABLE_PAYMENT_NOT_FOUND = "Payable payment not found";
+    public static final String PAYABLE_PAYMENT_UPDATED = "PAYABLE_PAYMENT_UPDATED";
+    public static final String PAYABLE_PAYMENT_UPDATED_DETAILS = "Payable payment updated with ID: ";
     public static String Category_NOT_FOUND = "Category not found";
 
     public static final String PROVIDER_NOT_FOUND = "Provider not found";
@@ -70,6 +76,12 @@ public class DomainConstants {
     public static final String PURCHASE_CREATED = "PURCHASE_CREATED";
     public static final String PURCHASE_ENTITY = "PURCHASE";
     public static final String PURCHASE_CREATED_DETAILS = "A new purchase has been created with ID: ";
+    public static final String PURCHASE_UPDATED = "PURCHASE_UPDATED";
+    public static final String PURCHASE_UPDATED_DETAILS = "Purchase updated with ID: ";
+    public static final String PURCHASE_TOTAL_BELOW_PAID = "The new total cannot be less than the amount already paid to the provider";
+    public static final String SALE_UPDATED = "SALE_UPDATED";
+    public static final String SALE_UPDATED_DETAILS = "Sale updated with ID: ";
+    public static final String SALE_TOTAL_BELOW_PAID = "The new total cannot be less than the amount the client has already paid";
 
     public static final String PAYABLE_NOT_FOUND = "Payable not found";
     public static final String PAYABLE_ALREADY_PAID = "Payable is already paid";

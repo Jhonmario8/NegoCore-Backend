@@ -16,6 +16,12 @@ public interface ISaleHandler {
             SaleRequestDTO saleRequestDTO
     );
 
+    SaleResponseDTO updateSale(
+            Long businessId,
+            Long saleId,
+            SaleRequestDTO saleRequestDTO
+    );
+
     SaleResponseDTO cancelSale(
             Long businessId,
             Long saleId

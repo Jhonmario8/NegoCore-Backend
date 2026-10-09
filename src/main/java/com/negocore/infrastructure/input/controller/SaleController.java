@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +35,12 @@ public class SaleController {
     public ResponseEntity<SaleResponseDTO> registerSale(@PathVariable Long businessId, @Valid @RequestBody SaleRequestDTO saleRequestDTO) {
         SaleResponseDTO saleResponseDTO = saleHandler.registerSale(businessId, saleRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(saleResponseDTO);
+    }
+
+    @PutMapping("/{businessId}/sales/{saleId}")
+    public ResponseEntity<SaleResponseDTO> updateSale(@PathVariable Long businessId, @PathVariable Long saleId, @Valid @RequestBody SaleRequestDTO saleRequestDTO) {
+        SaleResponseDTO saleResponseDTO = saleHandler.updateSale(businessId, saleId, saleRequestDTO);
+        return ResponseEntity.ok(saleResponseDTO);
     }
 
     @PostMapping("/{businessId}/sales/{saleId}/cancel")

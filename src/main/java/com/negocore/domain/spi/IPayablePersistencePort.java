@@ -1,6 +1,7 @@
 package com.negocore.domain.spi;
 
 import com.negocore.domain.model.Payable;
+import com.negocore.domain.model.PayableSource;
 import com.negocore.domain.model.PayableStatus;
 import com.negocore.domain.model.PayeeType;
 
@@ -19,4 +20,6 @@ public interface IPayablePersistencePort {
             PayeeType payeeType,
             Long providerId
     );
+
+    Optional<Payable> findBySourceAndSourceId(PayableSource source, Long sourceId);
 }

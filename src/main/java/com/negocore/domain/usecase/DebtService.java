@@ -157,4 +157,90 @@ public class DebtService implements IDebtServicePort {
         return savedLoan;
     }
 
+    @Override
+    public List<DebtPayment> findPaymentsByDebt(Long businessId, Long debtId) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        Debt debt = debtPersistencePort.findById(debtId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.DEBT_NOT_FOUND));
+        if (!debt.getBusinessId().equals(businessId)) {
+            throw new NotFoundException(DomainConstants.DEBT_NOT_FOUND);
+        }
+
+        return debtPaymentPersistencePort.findAllByDebtId(debtId);
+    }
+
+    @Override
+    public DebtPaymentResponse updateDebtPayment(
+            Long businessId,
+            Long debtId,
+            Long paymentId,
+            DebtCreateRequest updateRequest
+    ) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        Debt debt = debtPersistencePort.findById(debtId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.DEBT_NOT_FOUND));
+        if (!debt.getBusinessId().equals(businessId)) {
+            throw new NotFoundException(DomainConstants.DEBT_NOT_FOUND);
+        }
+        if (debt.getStatus() == DebtStatus.CANCELLED) {
+            throw new ConflictException(DomainConstants.DEBT_CANCELLED);
+        }
+
+        if (updateRequest.amount() == null || updateRequest.amount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BadRequestException(DomainConstants.PAYMENT_AMOUNT_INVALID);
+        }
+
+        List<DebtPayment> payments = debtPaymentPersistencePort.findAllByDebtId(debtId);
+        DebtPayment target = payments.stream()
+                .filter(p -> p.getId().equals(paymentId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(DomainConstants.DEBT_PAYMENT_NOT_FOUND));
+
+        BigDecimal newPaidAmount = payments.stream()
+                .map(p -> p.getId().equals(paymentId) ? updateRequest.amount() : p.getAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        if (newPaidAmount.compareTo(debt.getTotalAmount()) > 0) {
+            throw new BadRequestException(DomainConstants.DEBT_AMOUNT_EXCEEDS_TOTAL);
+        }
+
+        target.setAmount(updateRequest.amount());
+        target.setPaymentMethod(updateRequest.paymentMethod());
+        DebtPayment savedPayment = debtPaymentPersistencePort.save(target);
+
+        debt.setPaidAmount(newPaidAmount);
+        if (newPaidAmount.compareTo(BigDecimal.ZERO) == 0) {
+            debt.setStatus(DebtStatus.PENDING);
+        } else if (newPaidAmount.compareTo(debt.getTotalAmount()) >= 0) {
+            debt.setStatus(DebtStatus.PAID);
+        } else {
+            debt.setStatus(DebtStatus.PARTIAL);
+        }
+        debtPersistencePort.save(debt);
+
+        AuditLog auditLog = new AuditLog();
+        auditLog.setBusinessId(businessId);
+        auditLog.setUserId(userId);
+        auditLog.setAction(DomainConstants.DEBT_PAYMENT_UPDATED);
+        auditLog.setEntity(DomainConstants.DEBT_ENTITY);
+        auditLog.setEntityId(debtId);
+        auditLog.setDetails(DomainConstants.DEBT_PAYMENT_UPDATED_DETAILS + savedPayment.getId());
+        auditLog.setCreatedAt(LocalDateTime.now());
+        auditLogsPersistencePort.save(auditLog);
+
+        return new DebtPaymentResponse(savedPayment, debt.getStatus());
+    }
+
 }

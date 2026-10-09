@@ -15,6 +15,7 @@ public class BalanceReport {
 
     private BigDecimal totalSales;
     private BigDecimal totalExpenses;
+    private BigDecimal totalPurchases;
     private BigDecimal profit;
     private Long salesCount;
 

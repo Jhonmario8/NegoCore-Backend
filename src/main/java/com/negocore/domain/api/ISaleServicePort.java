@@ -11,6 +11,7 @@ import java.util.List;
 public interface ISaleServicePort {
 
     SaleResponse registerSale(Long businessId , SaleRequest saleRequest);
+    SaleResponse updateSale(Long businessId, Long saleId, SaleRequest saleRequest);
     SaleResponse cancelSale(Long businessId, Long saleId);
     SaleResponse updateSaleDate(Long businessId, Long saleId, LocalDateTime createdAt);
     List<Sale> findSales(

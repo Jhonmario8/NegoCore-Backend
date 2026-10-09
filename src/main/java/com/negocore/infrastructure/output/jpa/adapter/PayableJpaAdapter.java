@@ -1,6 +1,7 @@
 package com.negocore.infrastructure.output.jpa.adapter;
 
 import com.negocore.domain.model.Payable;
+import com.negocore.domain.model.PayableSource;
 import com.negocore.domain.model.PayableStatus;
 import com.negocore.domain.model.PayeeType;
 import com.negocore.domain.spi.IPayablePersistencePort;
@@ -51,5 +52,10 @@ public class PayableJpaAdapter implements IPayablePersistencePort {
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Optional<Payable> findBySourceAndSourceId(PayableSource source, Long sourceId) {
+        return repository.findBySourceAndSourceId(source, sourceId).map(mapper::toDomain);
     }
 }

@@ -38,6 +38,22 @@ public class PurchaseHandler implements IPurchaseHandler {
 
     @Override
     @Transactional
+    public PurchaseResponseDTO updatePurchase(
+            Long businessId,
+            Long purchaseId,
+            PurchaseRequestDTO purchaseRequestDTO
+    ) {
+        return purchaseMapper.toResponseDto(
+                purchaseServicePort.updatePurchase(
+                        businessId,
+                        purchaseId,
+                        purchaseMapper.toDomain(purchaseRequestDTO)
+                )
+        );
+    }
+
+    @Override
+    @Transactional
     public PurchaseResponseDTO updatePurchaseDate(
             Long businessId,
             Long purchaseId,

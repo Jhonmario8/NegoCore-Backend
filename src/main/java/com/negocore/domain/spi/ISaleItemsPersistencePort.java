@@ -8,4 +8,5 @@ public interface ISaleItemsPersistencePort {
 
     void saveAll(List<SaleItem> saleItems);
     List<SaleItem> findAllBySaleId(Long saleId);
+    void deleteAllBySaleId(Long saleId);
 }

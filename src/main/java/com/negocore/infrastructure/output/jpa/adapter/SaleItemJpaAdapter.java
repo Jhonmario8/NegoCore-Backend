@@ -26,5 +26,9 @@ public class SaleItemJpaAdapter implements ISaleItemsPersistencePort {
         return repository.findAllBySaleId(saleId).stream().map(mapper::toDomain).toList();
     }
 
+    @Override
+    public void deleteAllBySaleId(Long saleId) {
+        repository.deleteAllBySaleId(saleId);
+    }
 
 }

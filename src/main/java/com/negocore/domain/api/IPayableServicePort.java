@@ -1,6 +1,7 @@
 package com.negocore.domain.api;
 
 import com.negocore.domain.model.Payable;
+import com.negocore.domain.model.PayablePayment;
 import com.negocore.domain.model.PayablePaymentRequest;
 import com.negocore.domain.model.PayablePaymentResponse;
 import com.negocore.domain.model.PayableStatus;
@@ -22,4 +23,8 @@ public interface IPayableServicePort {
             PayeeType payeeType,
             Long providerId
     );
+
+    List<PayablePayment> findPaymentsByPayable(Long businessId, Long payableId);
+
+    PayablePaymentResponse updatePayablePayment(Long businessId, Long payableId, Long paymentId, PayablePaymentRequest updateRequest);
 }

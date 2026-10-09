@@ -82,7 +82,7 @@ public class BeanConfiguration {
 
     @Bean
     public IBalanceReportServicePort balanceReportServicePort() {
-        return new BalanceReportService(authenticationServicePort, businessPersistencePort, salePersistencePort, expensePersistencePort);
+        return new BalanceReportService(authenticationServicePort, businessPersistencePort, salePersistencePort, expensePersistencePort, purchasePersistencePort);
     }
 
     @Bean IAuditLogServicePort auditLogServicePort() {

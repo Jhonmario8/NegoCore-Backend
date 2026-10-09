@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +38,16 @@ public class PurchaseController {
     ) {
         PurchaseResponseDTO purchaseResponseDTO = purchaseHandler.registerPurchase(businessId, purchaseRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(purchaseResponseDTO);
+    }
+
+    @PutMapping("/{businessId}/purchases/{purchaseId}")
+    public ResponseEntity<PurchaseResponseDTO> updatePurchase(
+            @PathVariable Long businessId,
+            @PathVariable Long purchaseId,
+            @Valid @RequestBody PurchaseRequestDTO purchaseRequestDTO
+    ) {
+        PurchaseResponseDTO purchaseResponseDTO = purchaseHandler.updatePurchase(businessId, purchaseId, purchaseRequestDTO);
+        return ResponseEntity.ok(purchaseResponseDTO);
     }
 
     @PatchMapping("/{businessId}/purchases/{purchaseId}/date")

@@ -3,6 +3,7 @@ package com.negocore.infrastructure.input.controller;
 import com.negocore.application.dto.request.DebtCreateRequestDTO;
 import com.negocore.application.dto.request.LoanRequestDTO;
 import com.negocore.application.dto.response.DebtListResponseDTO;
+import com.negocore.application.dto.response.DebtPaymentDTO;
 import com.negocore.application.dto.response.DebtResponseDTO;
 import com.negocore.application.handler.IDebtHandler;
 import com.negocore.domain.model.DebtStatus;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,5 +61,23 @@ public class DebtController {
                         clientId
                 )
         );
+    }
+
+    @GetMapping("/{businessId}/debts/{debtId}/payments")
+    public ResponseEntity<List<DebtPaymentDTO>> findPaymentsByDebt(
+            @PathVariable Long businessId,
+            @PathVariable Long debtId
+    ) {
+        return ResponseEntity.ok(debtHandler.findPaymentsByDebt(businessId, debtId));
+    }
+
+    @PatchMapping("/{businessId}/debts/{debtId}/payments/{paymentId}")
+    public ResponseEntity<DebtResponseDTO> updateDebtPayment(
+            @PathVariable Long businessId,
+            @PathVariable Long debtId,
+            @PathVariable Long paymentId,
+            @Valid @RequestBody DebtCreateRequestDTO debtCreateRequestDTO
+    ) {
+        return ResponseEntity.ok(debtHandler.updateDebtPayment(businessId, debtId, paymentId, debtCreateRequestDTO));
     }
 }

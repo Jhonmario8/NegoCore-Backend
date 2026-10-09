@@ -2,6 +2,7 @@ package com.negocore.infrastructure.input.controller;
 
 import com.negocore.application.dto.request.PayablePaymentRequestDTO;
 import com.negocore.application.dto.response.PayableListResponseDTO;
+import com.negocore.application.dto.response.PayablePaymentDTO;
 import com.negocore.application.dto.response.PayablePaymentResponseDTO;
 import com.negocore.application.handler.IPayableHandler;
 import com.negocore.domain.model.PayableStatus;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,5 +61,23 @@ public class PayableController {
                         providerId
                 )
         );
+    }
+
+    @GetMapping("/{businessId}/payables/{payableId}/payments")
+    public ResponseEntity<List<PayablePaymentDTO>> findPaymentsByPayable(
+            @PathVariable Long businessId,
+            @PathVariable Long payableId
+    ) {
+        return ResponseEntity.ok(payableHandler.findPaymentsByPayable(businessId, payableId));
+    }
+
+    @PatchMapping("/{businessId}/payables/{payableId}/payments/{paymentId}")
+    public ResponseEntity<PayablePaymentResponseDTO> updatePayablePayment(
+            @PathVariable Long businessId,
+            @PathVariable Long payableId,
+            @PathVariable Long paymentId,
+            @Valid @RequestBody PayablePaymentRequestDTO payablePaymentRequestDTO
+    ) {
+        return ResponseEntity.ok(payableHandler.updatePayablePayment(businessId, payableId, paymentId, payablePaymentRequestDTO));
     }
 }

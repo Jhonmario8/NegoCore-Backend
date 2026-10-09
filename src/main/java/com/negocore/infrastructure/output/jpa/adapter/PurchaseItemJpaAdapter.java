@@ -25,4 +25,9 @@ public class PurchaseItemJpaAdapter implements IPurchaseItemsPersistencePort {
     public List<PurchaseItem> findAllByPurchaseId(Long purchaseId) {
         return repository.findAllByPurchaseId(purchaseId).stream().map(mapper::toDomain).toList();
     }
+
+    @Override
+    public void deleteAllByPurchaseId(Long purchaseId) {
+        repository.deleteAllByPurchaseId(purchaseId);
+    }
 }

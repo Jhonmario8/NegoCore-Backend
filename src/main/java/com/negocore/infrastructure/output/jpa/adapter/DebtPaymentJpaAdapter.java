@@ -7,6 +7,8 @@ import com.negocore.infrastructure.output.jpa.repository.IDebtPaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,5 +25,18 @@ public class DebtPaymentJpaAdapter implements IDebtPaymentPersistencePort {
     @Override
     public DebtPayment save(DebtPayment debtPayment) {
         return mapper.toDomain(debtPaymentRepository.save(mapper.toEntity(debtPayment)));
+    }
+
+    @Override
+    public List<DebtPayment> findAllByDebtId(Long debtId) {
+        return debtPaymentRepository.findAllByDebtId(debtId)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public Optional<DebtPayment> findById(Long id) {
+        return debtPaymentRepository.findById(id).map(mapper::toDomain);
     }
 }

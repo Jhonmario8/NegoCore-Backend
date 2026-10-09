@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ISaleItemRepository extends JpaRepository<SaleItemEntity, Long> {
     List<SaleItemEntity> findAllBySaleId(Long saleId);
+    void deleteAllBySaleId(Long saleId);
 }

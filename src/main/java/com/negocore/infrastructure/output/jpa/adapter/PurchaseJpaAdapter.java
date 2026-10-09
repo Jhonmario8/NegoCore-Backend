@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -54,5 +55,15 @@ public class PurchaseJpaAdapter implements IPurchasePersistencePort {
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public BigDecimal sumTotalByBusinessIdAndCreatedAtBetweenAndStatusNot(
+            Long businessId,
+            LocalDateTime from,
+            LocalDateTime to,
+            PurchaseStatus status
+    ) {
+        return repository.sumTotalByBusinessIdAndCreatedAtRange(businessId, from, to, status);
     }
 }

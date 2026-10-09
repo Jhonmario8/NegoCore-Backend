@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface IPurchaseItemRepository extends JpaRepository<PurchaseItemEntity, Long> {
     List<PurchaseItemEntity> findAllByPurchaseId(Long purchaseId);
+    void deleteAllByPurchaseId(Long purchaseId);
 }

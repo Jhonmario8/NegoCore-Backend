@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -186,6 +187,170 @@ public class SaleService implements ISaleServicePort {
                 saleItems
         );
 
+    }
+
+    @Override
+    public SaleResponse updateSale(Long businessId, Long saleId, SaleRequest saleRequest) {
+        Long userId = authenticationServicePort.getCurrentUserId();
+        Business business = businessPersistencePort.findById(businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND));
+        if (!business.getOwnerId().equals(userId)) {
+            throw new NotFoundException(DomainConstants.BUSINESS_NOT_FOUND);
+        }
+
+        Sale sale = salePersistencePort.findByIdAndBusinessId(saleId, businessId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.SALE_NOT_FOUND));
+
+        if (sale.getStatus() == SaleStatus.CANCELLED) {
+            throw new ConflictException(DomainConstants.SALE_ALREADY_CANCELED);
+        }
+
+        if (saleRequest.saleItems() == null || saleRequest.saleItems().isEmpty()) {
+            throw new BadRequestException(DomainConstants.SALE_ITEMS_REQUIRED);
+        }
+
+        List<Long> newProductIds = saleRequest.saleItems().stream()
+                .map(SaleItemRequest::productId)
+                .toList();
+        Set<Long> uniqueNewProductIds = new HashSet<>(newProductIds);
+        if (uniqueNewProductIds.size() != newProductIds.size()) {
+            throw new BadRequestException(DomainConstants.DUPLICATE_PRODUCT);
+        }
+
+        List<SaleItem> oldItems = saleItemsPersistencePort.findAllBySaleId(saleId);
+
+        Set<Long> allProductIds = new HashSet<>(uniqueNewProductIds);
+        oldItems.forEach(item -> allProductIds.add(item.getProductId()));
+
+        List<Product> products = productPersistencePort.findAllByIdsAndBusinessId(new ArrayList<>(allProductIds), businessId);
+        Map<Long, Product> productsById = products.stream()
+                .collect(Collectors.toMap(Product::getId, Function.identity()));
+
+        if (!productsById.keySet().containsAll(uniqueNewProductIds)) {
+            throw new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND);
+        }
+
+        Map<Long, Integer> oldQtyByProduct = oldItems.stream()
+                .collect(Collectors.toMap(SaleItem::getProductId, SaleItem::getQuantity));
+        Map<Long, Integer> newQtyByProduct = saleRequest.saleItems().stream()
+                .collect(Collectors.toMap(SaleItemRequest::productId, SaleItemRequest::quantity));
+
+        for (Long productId : allProductIds) {
+            int delta = newQtyByProduct.getOrDefault(productId, 0) - oldQtyByProduct.getOrDefault(productId, 0);
+            if (delta <= 0) continue;
+            Product product = productsById.get(productId);
+            if (product.getStock() < delta) {
+                throw new ConflictException(DomainConstants.INSUFFICIENT_STOCK);
+            }
+        }
+
+        for (Long productId : allProductIds) {
+            int delta = newQtyByProduct.getOrDefault(productId, 0) - oldQtyByProduct.getOrDefault(productId, 0);
+            if (delta == 0) continue;
+            Product product = productsById.get(productId);
+            product.setStock(product.getStock() - delta);
+            productPersistencePort.saveProduct(product);
+        }
+
+        BigDecimal newTotal = BigDecimal.ZERO;
+        for (SaleItemRequest item : saleRequest.saleItems()) {
+            Product product = productsById.get(item.productId());
+            BigDecimal unitPrice = item.unitPrice() != null ? item.unitPrice() : product.getSalePrice();
+            newTotal = newTotal.add(unitPrice.multiply(BigDecimal.valueOf(item.quantity())));
+        }
+
+        if (saleRequest.paidAmount() == null
+                || saleRequest.paidAmount().compareTo(BigDecimal.ZERO) < 0
+                || saleRequest.paidAmount().compareTo(newTotal) > 0) {
+            throw new BadRequestException(DomainConstants.INVALID_PAID_AMOUNT);
+        }
+
+        SaleStatus newStatus = saleRequest.paidAmount().compareTo(newTotal) >= 0
+                ? SaleStatus.PAID
+                : SaleStatus.PARTIAL;
+
+        if (newStatus == SaleStatus.PARTIAL && saleRequest.clientId() == null) {
+            throw new BadRequestException(DomainConstants.CLIENT_REQUIRED_FOR_PARTIAL_PAYMENT);
+        }
+
+        BigDecimal oldSalePaidAmount = sale.getPaidAmount();
+        Debt existingDebt = debtPersistencePort.findBySaleId(saleId).orElse(null);
+        BigDecimal abonosSoFar = existingDebt != null
+                ? existingDebt.getPaidAmount().subtract(oldSalePaidAmount)
+                : BigDecimal.ZERO;
+        if (abonosSoFar.compareTo(BigDecimal.ZERO) < 0) {
+            abonosSoFar = BigDecimal.ZERO;
+        }
+
+        BigDecimal newDebtPaidAmount = saleRequest.paidAmount().add(abonosSoFar);
+        if (newDebtPaidAmount.compareTo(newTotal) > 0) {
+            throw new BadRequestException(DomainConstants.SALE_TOTAL_BELOW_PAID);
+        }
+
+        if (existingDebt == null && newStatus == SaleStatus.PARTIAL) {
+            Debt debt = new Debt();
+            debt.setBusinessId(businessId);
+            debt.setClientId(saleRequest.clientId());
+            debt.setSaleId(saleId);
+            debt.setTotalAmount(newTotal);
+            debt.setPaidAmount(saleRequest.paidAmount());
+            debt.setStatus(DebtStatus.PARTIAL);
+            debt.setDueDate(LocalDateTime.now().plusDays(30).toLocalDate());
+            debt.setCreatedAt(LocalDateTime.now());
+            debtPersistencePort.save(debt);
+        } else if (existingDebt != null) {
+            existingDebt.setClientId(saleRequest.clientId());
+            existingDebt.setTotalAmount(newTotal);
+            existingDebt.setPaidAmount(newDebtPaidAmount);
+            if (newDebtPaidAmount.compareTo(newTotal) >= 0) {
+                existingDebt.setStatus(
+                        abonosSoFar.compareTo(BigDecimal.ZERO) > 0
+                                ? DebtStatus.PAID
+                                : DebtStatus.CANCELLED
+                );
+            } else if (newDebtPaidAmount.compareTo(BigDecimal.ZERO) > 0) {
+                existingDebt.setStatus(DebtStatus.PARTIAL);
+            } else {
+                existingDebt.setStatus(DebtStatus.PENDING);
+            }
+            debtPersistencePort.save(existingDebt);
+        }
+
+        sale.setClientId(saleRequest.clientId());
+        sale.setTotal(newTotal);
+        sale.setPaidAmount(saleRequest.paidAmount());
+        sale.setStatus(newStatus);
+        sale.setPaymentMethod(saleRequest.paymentMethod());
+        Sale savedSale = salePersistencePort.saveSale(sale);
+
+        saleItemsPersistencePort.deleteAllBySaleId(saleId);
+        List<SaleItem> newItems = saleRequest.saleItems().stream()
+                .map(item -> {
+                    Product product = productsById.get(item.productId());
+                    BigDecimal unitPrice = item.unitPrice() != null ? item.unitPrice() : product.getSalePrice();
+
+                    SaleItem saleItem = new SaleItem();
+                    saleItem.setSaleId(savedSale.getId());
+                    saleItem.setProductId(product.getId());
+                    saleItem.setQuantity(item.quantity());
+                    saleItem.setUnitPrice(unitPrice);
+                    saleItem.setSubtotal(unitPrice.multiply(BigDecimal.valueOf(item.quantity())));
+                    return saleItem;
+                })
+                .toList();
+        saleItemsPersistencePort.saveAll(newItems);
+
+        AuditLog auditLog = new AuditLog();
+        auditLog.setBusinessId(businessId);
+        auditLog.setUserId(userId);
+        auditLog.setAction(DomainConstants.SALE_UPDATED);
+        auditLog.setEntity(DomainConstants.SALE_ENTITY);
+        auditLog.setEntityId(savedSale.getId());
+        auditLog.setDetails(DomainConstants.SALE_UPDATED_DETAILS + savedSale.getId());
+        auditLog.setCreatedAt(LocalDateTime.now());
+        auditLogsPersistencePort.save(auditLog);
+
+        return new SaleResponse(savedSale, newItems);
     }
 
     @Override

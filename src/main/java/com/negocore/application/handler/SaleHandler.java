@@ -38,6 +38,22 @@ public class SaleHandler implements ISaleHandler {
 
     @Override
     @Transactional
+    public SaleResponseDTO updateSale(
+            Long businessId,
+            Long saleId,
+            SaleRequestDTO saleRequestDTO
+    ) {
+        return saleMapper.toResponseDto(
+                saleServicePort.updateSale(
+                        businessId,
+                        saleId,
+                        saleMapper.toDomain(saleRequestDTO)
+                )
+        );
+    }
+
+    @Override
+    @Transactional
     public SaleResponseDTO cancelSale(
             Long businessId,
             Long saleId

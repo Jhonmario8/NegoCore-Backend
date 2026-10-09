@@ -8,8 +8,10 @@ import com.negocore.domain.exception.NotFoundException;
 import com.negocore.domain.model.BalanceReport;
 import com.negocore.domain.model.Business;
 import com.negocore.domain.model.SaleStatus;
+import com.negocore.domain.model.PurchaseStatus;
 import com.negocore.domain.spi.IBusinessPersistencePort;
 import com.negocore.domain.spi.IExpensePersistencePort;
+import com.negocore.domain.spi.IPurchasePersistencePort;
 import com.negocore.domain.spi.ISalePersistencePort;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +26,7 @@ public class BalanceReportService implements IBalanceReportServicePort {
     private final IBusinessPersistencePort businessPersistencePort;
     private final ISalePersistencePort salePersistencePort;
     private final IExpensePersistencePort expensePersistencePort;
+    private final IPurchasePersistencePort purchasePersistencePort;
 
     @Override
     public BalanceReport getBalanceReport(Long businessId, LocalDate from, LocalDate to) {
@@ -72,11 +75,20 @@ public class BalanceReportService implements IBalanceReportServicePort {
                         SaleStatus.CANCELLED
                 );
 
-        BigDecimal profit = totalSales.subtract(totalExpenses);
+        BigDecimal totalPurchases = purchasePersistencePort
+                .sumTotalByBusinessIdAndCreatedAtBetweenAndStatusNot(
+                        businessId,
+                        fromDateTime,
+                        toDateTime,
+                        PurchaseStatus.CANCELLED
+                );
+
+        BigDecimal profit = totalSales.subtract(totalExpenses).subtract(totalPurchases);
 
         return new BalanceReport(
                 totalSales,
                 totalExpenses,
+                totalPurchases,
                 profit,
                 salesCount
         );

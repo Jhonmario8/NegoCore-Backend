@@ -8,4 +8,5 @@ public interface IPurchaseItemsPersistencePort {
 
     void saveAll(List<PurchaseItem> purchaseItems);
     List<PurchaseItem> findAllByPurchaseId(Long purchaseId);
+    void deleteAllByPurchaseId(Long purchaseId);
 }

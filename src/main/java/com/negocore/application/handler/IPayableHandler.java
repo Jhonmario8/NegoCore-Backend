@@ -2,6 +2,7 @@ package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.PayablePaymentRequestDTO;
 import com.negocore.application.dto.response.PayableListResponseDTO;
+import com.negocore.application.dto.response.PayablePaymentDTO;
 import com.negocore.application.dto.response.PayablePaymentResponseDTO;
 import com.negocore.domain.model.PayableStatus;
 import com.negocore.domain.model.PayeeType;
@@ -22,4 +23,8 @@ public interface IPayableHandler {
             PayeeType payeeType,
             Long providerId
     );
+
+    List<PayablePaymentDTO> findPaymentsByPayable(Long businessId, Long payableId);
+
+    PayablePaymentResponseDTO updatePayablePayment(Long businessId, Long payableId, Long paymentId, PayablePaymentRequestDTO payablePaymentRequestDTO);
 }

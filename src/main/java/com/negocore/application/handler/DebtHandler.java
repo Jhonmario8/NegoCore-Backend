@@ -3,6 +3,7 @@ package com.negocore.application.handler;
 import com.negocore.application.dto.request.DebtCreateRequestDTO;
 import com.negocore.application.dto.request.LoanRequestDTO;
 import com.negocore.application.dto.response.DebtListResponseDTO;
+import com.negocore.application.dto.response.DebtPaymentDTO;
 import com.negocore.application.dto.response.DebtResponseDTO;
 import com.negocore.application.mapper.IDebtMapper;
 import com.negocore.domain.api.IDebtServicePort;
@@ -52,5 +53,21 @@ public class DebtHandler implements IDebtHandler {
         loan.setTotalAmount(loanRequestDTO.getAmount());
         loan.setDueDate(loanRequestDTO.getDueDate());
         return debtMapper.toListResponseDTO(debtService.registerLoan(businessId, loan));
+    }
+
+    @Override
+    public List<DebtPaymentDTO> findPaymentsByDebt(Long businessId, Long debtId) {
+        return debtService.findPaymentsByDebt(businessId, debtId)
+                .stream()
+                .map(debtMapper::toPaymentDTO)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public DebtResponseDTO updateDebtPayment(Long businessId, Long debtId, Long paymentId, DebtCreateRequestDTO debtCreateRequestDTO) {
+        return debtMapper.toResponseDTO(
+                debtService.updateDebtPayment(businessId, debtId, paymentId, debtMapper.toCreateRequest(debtCreateRequestDTO))
+        );
     }
 }

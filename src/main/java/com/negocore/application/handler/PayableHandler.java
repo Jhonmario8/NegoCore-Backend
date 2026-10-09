@@ -2,6 +2,7 @@ package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.PayablePaymentRequestDTO;
 import com.negocore.application.dto.response.PayableListResponseDTO;
+import com.negocore.application.dto.response.PayablePaymentDTO;
 import com.negocore.application.dto.response.PayablePaymentResponseDTO;
 import com.negocore.application.mapper.IPayableMapper;
 import com.negocore.domain.api.IPayableServicePort;
@@ -52,5 +53,26 @@ public class PayableHandler implements IPayableHandler {
                 .stream()
                 .map(payableMapper::toListResponseDTO)
                 .toList();
+    }
+
+    @Override
+    public List<PayablePaymentDTO> findPaymentsByPayable(Long businessId, Long payableId) {
+        return payableService.findPaymentsByPayable(businessId, payableId)
+                .stream()
+                .map(payableMapper::toPaymentDTO)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public PayablePaymentResponseDTO updatePayablePayment(Long businessId, Long payableId, Long paymentId, PayablePaymentRequestDTO payablePaymentRequestDTO) {
+        return payableMapper.toResponseDTO(
+                payableService.updatePayablePayment(
+                        businessId,
+                        payableId,
+                        paymentId,
+                        payableMapper.toDomain(payablePaymentRequestDTO)
+                )
+        );
     }
 }

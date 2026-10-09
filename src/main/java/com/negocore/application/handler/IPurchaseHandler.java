@@ -13,6 +13,8 @@ public interface IPurchaseHandler {
 
     PurchaseResponseDTO registerPurchase(Long businessId, PurchaseRequestDTO purchaseRequestDTO);
 
+    PurchaseResponseDTO updatePurchase(Long businessId, Long purchaseId, PurchaseRequestDTO purchaseRequestDTO);
+
     PurchaseResponseDTO updatePurchaseDate(Long businessId, Long purchaseId, DateUpdateDTO dateUpdateDTO);
 
     List<PurchaseListResponseDTO> findPurchases(
