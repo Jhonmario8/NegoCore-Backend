@@ -24,7 +24,15 @@ public interface IPayableHandler {
             Long providerId
     );
 
+    List<PayableListResponseDTO> findGroupedPayables(Long businessId, PayableStatus status, Long providerId);
+
     List<PayablePaymentDTO> findPaymentsByPayable(Long businessId, Long payableId);
 
     PayablePaymentResponseDTO updatePayablePayment(Long businessId, Long payableId, Long paymentId, PayablePaymentRequestDTO payablePaymentRequestDTO);
+
+    List<PayablePaymentResponseDTO> payProviderPayable(Long businessId, Long providerId, PayablePaymentRequestDTO payablePaymentRequestDTO);
+
+    List<PayablePaymentDTO> findProviderPayablePayments(Long businessId, Long providerId);
+
+    PayablePaymentResponseDTO updateProviderPayablePayment(Long businessId, Long providerId, Long paymentId, PayablePaymentRequestDTO payablePaymentRequestDTO);
 }

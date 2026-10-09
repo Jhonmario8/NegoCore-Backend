@@ -67,6 +67,8 @@ public class DomainConstants {
     public static final String PAYABLE_PAYMENT_NOT_FOUND = "Payable payment not found";
     public static final String PAYABLE_PAYMENT_UPDATED = "PAYABLE_PAYMENT_UPDATED";
     public static final String PAYABLE_PAYMENT_UPDATED_DETAILS = "Payable payment updated with ID: ";
+    public static final String CLIENT_HAS_NO_DEBT = "This client has no pending debt";
+    public static final String PROVIDER_HAS_NO_PAYABLE = "This provider has no pending payable";
     public static String Category_NOT_FOUND = "Category not found";
 
     public static final String PROVIDER_NOT_FOUND = "Provider not found";

@@ -17,7 +17,15 @@ public interface IDebtHandler {
             DebtStatus status,
             Long clientId
     );
+    List<DebtListResponseDTO> findGroupedDebts(
+            Long businessId,
+            DebtStatus status,
+            Long clientId
+    );
     DebtListResponseDTO registerLoan(Long businessId, LoanRequestDTO loanRequestDTO);
     List<DebtPaymentDTO> findPaymentsByDebt(Long businessId, Long debtId);
     DebtResponseDTO updateDebtPayment(Long businessId, Long debtId, Long paymentId, DebtCreateRequestDTO debtCreateRequestDTO);
+    List<DebtResponseDTO> payClientDebt(Long businessId, Long clientId, DebtCreateRequestDTO debtCreateRequestDTO);
+    List<DebtPaymentDTO> findClientDebtPayments(Long businessId, Long clientId);
+    DebtResponseDTO updateClientDebtPayment(Long businessId, Long clientId, Long paymentId, DebtCreateRequestDTO debtCreateRequestDTO);
 }

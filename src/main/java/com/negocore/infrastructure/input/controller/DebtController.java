@@ -63,6 +63,50 @@ public class DebtController {
         );
     }
 
+    @GetMapping("/{businessId}/debts/grouped")
+    public ResponseEntity<List<DebtListResponseDTO>> findGroupedDebts(
+            @PathVariable Long businessId,
+            @RequestParam(required = false) DebtStatus status,
+            @RequestParam(required = false) Long clientId
+    ) {
+
+        return ResponseEntity.ok(
+                debtHandler.findGroupedDebts(
+                        businessId,
+                        status,
+                        clientId
+                )
+        );
+    }
+
+    @PostMapping("/{businessId}/debts/clients/{clientId}/payments")
+    public ResponseEntity<List<DebtResponseDTO>> payClientDebt(
+            @PathVariable Long businessId,
+            @PathVariable Long clientId,
+            @Valid @RequestBody DebtCreateRequestDTO debtCreateRequestDTO
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(debtHandler.payClientDebt(businessId, clientId, debtCreateRequestDTO));
+    }
+
+    @GetMapping("/{businessId}/debts/clients/{clientId}/payments")
+    public ResponseEntity<List<DebtPaymentDTO>> findClientDebtPayments(
+            @PathVariable Long businessId,
+            @PathVariable Long clientId
+    ) {
+        return ResponseEntity.ok(debtHandler.findClientDebtPayments(businessId, clientId));
+    }
+
+    @PatchMapping("/{businessId}/debts/clients/{clientId}/payments/{paymentId}")
+    public ResponseEntity<DebtResponseDTO> updateClientDebtPayment(
+            @PathVariable Long businessId,
+            @PathVariable Long clientId,
+            @PathVariable Long paymentId,
+            @Valid @RequestBody DebtCreateRequestDTO debtCreateRequestDTO
+    ) {
+        return ResponseEntity.ok(debtHandler.updateClientDebtPayment(businessId, clientId, paymentId, debtCreateRequestDTO));
+    }
+
     @GetMapping("/{businessId}/debts/{debtId}/payments")
     public ResponseEntity<List<DebtPaymentDTO>> findPaymentsByDebt(
             @PathVariable Long businessId,

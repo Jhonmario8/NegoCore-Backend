@@ -56,6 +56,14 @@ public class PayableHandler implements IPayableHandler {
     }
 
     @Override
+    public List<PayableListResponseDTO> findGroupedPayables(Long businessId, PayableStatus status, Long providerId) {
+        return payableService.findGroupedPayables(businessId, status, providerId)
+                .stream()
+                .map(payableMapper::toListResponseDTO)
+                .toList();
+    }
+
+    @Override
     public List<PayablePaymentDTO> findPaymentsByPayable(Long businessId, Long payableId) {
         return payableService.findPaymentsByPayable(businessId, payableId)
                 .stream()
@@ -70,6 +78,36 @@ public class PayableHandler implements IPayableHandler {
                 payableService.updatePayablePayment(
                         businessId,
                         payableId,
+                        paymentId,
+                        payableMapper.toDomain(payablePaymentRequestDTO)
+                )
+        );
+    }
+
+    @Override
+    @Transactional
+    public List<PayablePaymentResponseDTO> payProviderPayable(Long businessId, Long providerId, PayablePaymentRequestDTO payablePaymentRequestDTO) {
+        return payableService.payProviderPayable(businessId, providerId, payableMapper.toDomain(payablePaymentRequestDTO))
+                .stream()
+                .map(payableMapper::toResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public List<PayablePaymentDTO> findProviderPayablePayments(Long businessId, Long providerId) {
+        return payableService.findProviderPayablePayments(businessId, providerId)
+                .stream()
+                .map(payableMapper::toPaymentDTO)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public PayablePaymentResponseDTO updateProviderPayablePayment(Long businessId, Long providerId, Long paymentId, PayablePaymentRequestDTO payablePaymentRequestDTO) {
+        return payableMapper.toResponseDTO(
+                payableService.updateProviderPayablePayment(
+                        businessId,
+                        providerId,
                         paymentId,
                         payableMapper.toDomain(payablePaymentRequestDTO)
                 )

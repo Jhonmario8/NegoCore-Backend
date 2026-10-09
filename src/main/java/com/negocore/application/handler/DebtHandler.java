@@ -46,6 +46,23 @@ public class DebtHandler implements IDebtHandler {
     }
 
     @Override
+    public List<DebtListResponseDTO> findGroupedDebts(
+            Long businessId,
+            DebtStatus status,
+            Long clientId
+    ) {
+
+        return debtService.findGroupedDebts(
+                        businessId,
+                        status,
+                        clientId
+                )
+                .stream()
+                .map(debtMapper::toListResponseDTO)
+                .toList();
+    }
+
+    @Override
     public DebtListResponseDTO registerLoan(Long businessId, LoanRequestDTO loanRequestDTO) {
         Debt loan = new Debt();
         loan.setClientId(loanRequestDTO.getClientId());
@@ -68,6 +85,31 @@ public class DebtHandler implements IDebtHandler {
     public DebtResponseDTO updateDebtPayment(Long businessId, Long debtId, Long paymentId, DebtCreateRequestDTO debtCreateRequestDTO) {
         return debtMapper.toResponseDTO(
                 debtService.updateDebtPayment(businessId, debtId, paymentId, debtMapper.toCreateRequest(debtCreateRequestDTO))
+        );
+    }
+
+    @Override
+    @Transactional
+    public List<DebtResponseDTO> payClientDebt(Long businessId, Long clientId, DebtCreateRequestDTO debtCreateRequestDTO) {
+        return debtService.payClientDebt(businessId, clientId, debtMapper.toCreateRequest(debtCreateRequestDTO))
+                .stream()
+                .map(debtMapper::toResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public List<DebtPaymentDTO> findClientDebtPayments(Long businessId, Long clientId) {
+        return debtService.findClientDebtPayments(businessId, clientId)
+                .stream()
+                .map(debtMapper::toPaymentDTO)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public DebtResponseDTO updateClientDebtPayment(Long businessId, Long clientId, Long paymentId, DebtCreateRequestDTO debtCreateRequestDTO) {
+        return debtMapper.toResponseDTO(
+                debtService.updateClientDebtPayment(businessId, clientId, paymentId, debtMapper.toCreateRequest(debtCreateRequestDTO))
         );
     }
 }

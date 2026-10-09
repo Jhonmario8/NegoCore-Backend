@@ -24,7 +24,15 @@ public interface IPayableServicePort {
             Long providerId
     );
 
+    List<Payable> findGroupedPayables(Long businessId, PayableStatus status, Long providerId);
+
     List<PayablePayment> findPaymentsByPayable(Long businessId, Long payableId);
 
     PayablePaymentResponse updatePayablePayment(Long businessId, Long payableId, Long paymentId, PayablePaymentRequest updateRequest);
+
+    List<PayablePaymentResponse> payProviderPayable(Long businessId, Long providerId, PayablePaymentRequest request);
+
+    List<PayablePayment> findProviderPayablePayments(Long businessId, Long providerId);
+
+    PayablePaymentResponse updateProviderPayablePayment(Long businessId, Long providerId, Long paymentId, PayablePaymentRequest updateRequest);
 }

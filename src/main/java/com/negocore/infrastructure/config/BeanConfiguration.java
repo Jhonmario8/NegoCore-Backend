@@ -124,7 +124,8 @@ public class BeanConfiguration {
                 payablePaymentPersistencePort,
                 authenticationServicePort,
                 businessPersistencePort,
-                auditLogsPersistencePort
+                auditLogsPersistencePort,
+                providerPersistencePort
         );
     }
 
