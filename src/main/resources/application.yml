@@ -7,6 +7,12 @@ spring:
     username: ${NC_DB_USERNAME}
     password: ${NC_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 0          # no mantener conexiones abiertas sin uso
+      maximum-pool-size: 5     # suficiente para un proyecto de este tamaño
+      idle-timeout: 30000      # cerrar conexiones tras 30 s sin uso
+      conection-timeout: 30000    # esperar hasta 30 s para obtener una conexión
+
 
   jpa:
     hibernate:
