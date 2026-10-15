@@ -1,6 +1,7 @@
 package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.DebtCreateRequestDTO;
+import com.negocore.application.dto.request.DebtPaymentUpdateRequestDTO;
 import com.negocore.application.dto.request.LoanRequestDTO;
 import com.negocore.application.dto.response.DebtListResponseDTO;
 import com.negocore.application.dto.response.DebtPaymentDTO;
@@ -82,9 +83,9 @@ public class DebtHandler implements IDebtHandler {
 
     @Override
     @Transactional
-    public DebtResponseDTO updateDebtPayment(Long businessId, Long debtId, Long paymentId, DebtCreateRequestDTO debtCreateRequestDTO) {
+    public DebtResponseDTO updateDebtPayment(Long businessId, Long debtId, Long paymentId, DebtPaymentUpdateRequestDTO debtPaymentUpdateRequestDTO) {
         return debtMapper.toResponseDTO(
-                debtService.updateDebtPayment(businessId, debtId, paymentId, debtMapper.toCreateRequest(debtCreateRequestDTO))
+                debtService.updateDebtPayment(businessId, debtId, paymentId, debtMapper.toUpdateRequest(debtPaymentUpdateRequestDTO))
         );
     }
 
@@ -107,9 +108,9 @@ public class DebtHandler implements IDebtHandler {
 
     @Override
     @Transactional
-    public DebtResponseDTO updateClientDebtPayment(Long businessId, Long clientId, Long paymentId, DebtCreateRequestDTO debtCreateRequestDTO) {
+    public DebtResponseDTO updateClientDebtPayment(Long businessId, Long clientId, Long paymentId, DebtPaymentUpdateRequestDTO debtPaymentUpdateRequestDTO) {
         return debtMapper.toResponseDTO(
-                debtService.updateClientDebtPayment(businessId, clientId, paymentId, debtMapper.toCreateRequest(debtCreateRequestDTO))
+                debtService.updateClientDebtPayment(businessId, clientId, paymentId, debtMapper.toUpdateRequest(debtPaymentUpdateRequestDTO))
         );
     }
 }

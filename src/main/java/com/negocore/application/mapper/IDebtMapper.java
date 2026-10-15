@@ -1,6 +1,7 @@
 package com.negocore.application.mapper;
 
 import com.negocore.application.dto.request.DebtCreateRequestDTO;
+import com.negocore.application.dto.request.DebtPaymentUpdateRequestDTO;
 import com.negocore.application.dto.response.DebtListResponseDTO;
 import com.negocore.application.dto.response.DebtPaymentDTO;
 import com.negocore.application.dto.response.DebtResponseDTO;
@@ -17,6 +18,8 @@ import org.mapstruct.MappingConstants;
 public interface IDebtMapper {
 
     DebtCreateRequest toCreateRequest(DebtCreateRequestDTO debtCreateRequestDTO);
+
+    DebtCreateRequest toUpdateRequest(DebtPaymentUpdateRequestDTO debtPaymentUpdateRequestDTO);
 
     @Mapping(source = "debtPayment", target = "payment")
     DebtResponseDTO toResponseDTO(DebtPaymentResponse debtPaymentResponse);

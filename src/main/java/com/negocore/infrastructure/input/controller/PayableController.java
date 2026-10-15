@@ -1,6 +1,7 @@
 package com.negocore.infrastructure.input.controller;
 
 import com.negocore.application.dto.request.PayablePaymentRequestDTO;
+import com.negocore.application.dto.request.PayablePaymentUpdateRequestDTO;
 import com.negocore.application.dto.response.PayableListResponseDTO;
 import com.negocore.application.dto.response.PayablePaymentDTO;
 import com.negocore.application.dto.response.PayablePaymentResponseDTO;
@@ -76,9 +77,9 @@ public class PayableController {
             @PathVariable Long businessId,
             @PathVariable Long payableId,
             @PathVariable Long paymentId,
-            @Valid @RequestBody PayablePaymentRequestDTO payablePaymentRequestDTO
+            @Valid @RequestBody PayablePaymentUpdateRequestDTO payablePaymentUpdateRequestDTO
     ) {
-        return ResponseEntity.ok(payableHandler.updatePayablePayment(businessId, payableId, paymentId, payablePaymentRequestDTO));
+        return ResponseEntity.ok(payableHandler.updatePayablePayment(businessId, payableId, paymentId, payablePaymentUpdateRequestDTO));
     }
 
     @GetMapping("/{businessId}/payables/grouped")
@@ -117,8 +118,8 @@ public class PayableController {
             @PathVariable Long businessId,
             @PathVariable Long providerId,
             @PathVariable Long paymentId,
-            @Valid @RequestBody PayablePaymentRequestDTO payablePaymentRequestDTO
+            @Valid @RequestBody PayablePaymentUpdateRequestDTO payablePaymentUpdateRequestDTO
     ) {
-        return ResponseEntity.ok(payableHandler.updateProviderPayablePayment(businessId, providerId, paymentId, payablePaymentRequestDTO));
+        return ResponseEntity.ok(payableHandler.updateProviderPayablePayment(businessId, providerId, paymentId, payablePaymentUpdateRequestDTO));
     }
 }

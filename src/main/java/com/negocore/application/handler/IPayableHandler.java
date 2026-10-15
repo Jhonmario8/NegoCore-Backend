@@ -1,6 +1,7 @@
 package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.PayablePaymentRequestDTO;
+import com.negocore.application.dto.request.PayablePaymentUpdateRequestDTO;
 import com.negocore.application.dto.response.PayableListResponseDTO;
 import com.negocore.application.dto.response.PayablePaymentDTO;
 import com.negocore.application.dto.response.PayablePaymentResponseDTO;
@@ -28,11 +29,11 @@ public interface IPayableHandler {
 
     List<PayablePaymentDTO> findPaymentsByPayable(Long businessId, Long payableId);
 
-    PayablePaymentResponseDTO updatePayablePayment(Long businessId, Long payableId, Long paymentId, PayablePaymentRequestDTO payablePaymentRequestDTO);
+    PayablePaymentResponseDTO updatePayablePayment(Long businessId, Long payableId, Long paymentId, PayablePaymentUpdateRequestDTO payablePaymentUpdateRequestDTO);
 
     List<PayablePaymentResponseDTO> payProviderPayable(Long businessId, Long providerId, PayablePaymentRequestDTO payablePaymentRequestDTO);
 
     List<PayablePaymentDTO> findProviderPayablePayments(Long businessId, Long providerId);
 
-    PayablePaymentResponseDTO updateProviderPayablePayment(Long businessId, Long providerId, Long paymentId, PayablePaymentRequestDTO payablePaymentRequestDTO);
+    PayablePaymentResponseDTO updateProviderPayablePayment(Long businessId, Long providerId, Long paymentId, PayablePaymentUpdateRequestDTO payablePaymentUpdateRequestDTO);
 }

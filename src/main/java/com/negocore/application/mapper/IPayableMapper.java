@@ -1,6 +1,7 @@
 package com.negocore.application.mapper;
 
 import com.negocore.application.dto.request.PayablePaymentRequestDTO;
+import com.negocore.application.dto.request.PayablePaymentUpdateRequestDTO;
 import com.negocore.application.dto.response.PayableListResponseDTO;
 import com.negocore.application.dto.response.PayablePaymentDTO;
 import com.negocore.application.dto.response.PayablePaymentResponseDTO;
@@ -16,6 +17,8 @@ import org.mapstruct.MappingConstants;
 public interface IPayableMapper {
 
     PayablePaymentRequest toDomain(PayablePaymentRequestDTO payablePaymentRequestDTO);
+
+    PayablePaymentRequest toUpdateRequest(PayablePaymentUpdateRequestDTO payablePaymentUpdateRequestDTO);
 
     @Mapping(source = "payablePayment", target = "payment")
     PayablePaymentResponseDTO toResponseDTO(PayablePaymentResponse payablePaymentResponse);

@@ -390,8 +390,8 @@ public class DebtService implements IDebtServicePort {
             throw new ConflictException(DomainConstants.DEBT_CANCELLED);
         }
 
-        if (updateRequest.amount() == null || updateRequest.amount().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BadRequestException(DomainConstants.PAYMENT_AMOUNT_INVALID);
+        if (updateRequest.amount() == null || updateRequest.amount().compareTo(BigDecimal.ZERO) < 0) {
+            throw new BadRequestException(DomainConstants.PAYMENT_AMOUNT_NEGATIVE);
         }
 
         List<DebtPayment> payments = debtPaymentPersistencePort.findAllByDebtId(debt.getId());

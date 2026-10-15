@@ -1,6 +1,7 @@
 package com.negocore.infrastructure.input.controller;
 
 import com.negocore.application.dto.request.DebtCreateRequestDTO;
+import com.negocore.application.dto.request.DebtPaymentUpdateRequestDTO;
 import com.negocore.application.dto.request.LoanRequestDTO;
 import com.negocore.application.dto.response.DebtListResponseDTO;
 import com.negocore.application.dto.response.DebtPaymentDTO;
@@ -102,9 +103,9 @@ public class DebtController {
             @PathVariable Long businessId,
             @PathVariable Long clientId,
             @PathVariable Long paymentId,
-            @Valid @RequestBody DebtCreateRequestDTO debtCreateRequestDTO
+            @Valid @RequestBody DebtPaymentUpdateRequestDTO debtPaymentUpdateRequestDTO
     ) {
-        return ResponseEntity.ok(debtHandler.updateClientDebtPayment(businessId, clientId, paymentId, debtCreateRequestDTO));
+        return ResponseEntity.ok(debtHandler.updateClientDebtPayment(businessId, clientId, paymentId, debtPaymentUpdateRequestDTO));
     }
 
     @GetMapping("/{businessId}/debts/{debtId}/payments")
@@ -120,8 +121,8 @@ public class DebtController {
             @PathVariable Long businessId,
             @PathVariable Long debtId,
             @PathVariable Long paymentId,
-            @Valid @RequestBody DebtCreateRequestDTO debtCreateRequestDTO
+            @Valid @RequestBody DebtPaymentUpdateRequestDTO debtPaymentUpdateRequestDTO
     ) {
-        return ResponseEntity.ok(debtHandler.updateDebtPayment(businessId, debtId, paymentId, debtCreateRequestDTO));
+        return ResponseEntity.ok(debtHandler.updateDebtPayment(businessId, debtId, paymentId, debtPaymentUpdateRequestDTO));
     }
 }

@@ -350,8 +350,8 @@ public class PayableService implements IPayableServicePort {
             throw new ConflictException(DomainConstants.PAYABLE_CANCELLED);
         }
 
-        if (updateRequest.amount() == null || updateRequest.amount().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BadRequestException(DomainConstants.PAYMENT_AMOUNT_INVALID);
+        if (updateRequest.amount() == null || updateRequest.amount().compareTo(BigDecimal.ZERO) < 0) {
+            throw new BadRequestException(DomainConstants.PAYMENT_AMOUNT_NEGATIVE);
         }
 
         List<PayablePayment> payments = payablePaymentPersistencePort.findAllByPayableId(payable.getId());

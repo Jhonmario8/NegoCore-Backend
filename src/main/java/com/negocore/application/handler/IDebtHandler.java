@@ -1,6 +1,7 @@
 package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.DebtCreateRequestDTO;
+import com.negocore.application.dto.request.DebtPaymentUpdateRequestDTO;
 import com.negocore.application.dto.request.LoanRequestDTO;
 import com.negocore.application.dto.response.DebtListResponseDTO;
 import com.negocore.application.dto.response.DebtPaymentDTO;
@@ -24,8 +25,8 @@ public interface IDebtHandler {
     );
     DebtListResponseDTO registerLoan(Long businessId, LoanRequestDTO loanRequestDTO);
     List<DebtPaymentDTO> findPaymentsByDebt(Long businessId, Long debtId);
-    DebtResponseDTO updateDebtPayment(Long businessId, Long debtId, Long paymentId, DebtCreateRequestDTO debtCreateRequestDTO);
+    DebtResponseDTO updateDebtPayment(Long businessId, Long debtId, Long paymentId, DebtPaymentUpdateRequestDTO debtPaymentUpdateRequestDTO);
     List<DebtResponseDTO> payClientDebt(Long businessId, Long clientId, DebtCreateRequestDTO debtCreateRequestDTO);
     List<DebtPaymentDTO> findClientDebtPayments(Long businessId, Long clientId);
-    DebtResponseDTO updateClientDebtPayment(Long businessId, Long clientId, Long paymentId, DebtCreateRequestDTO debtCreateRequestDTO);
+    DebtResponseDTO updateClientDebtPayment(Long businessId, Long clientId, Long paymentId, DebtPaymentUpdateRequestDTO debtPaymentUpdateRequestDTO);
 }

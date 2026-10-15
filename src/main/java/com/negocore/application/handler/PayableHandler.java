@@ -1,6 +1,7 @@
 package com.negocore.application.handler;
 
 import com.negocore.application.dto.request.PayablePaymentRequestDTO;
+import com.negocore.application.dto.request.PayablePaymentUpdateRequestDTO;
 import com.negocore.application.dto.response.PayableListResponseDTO;
 import com.negocore.application.dto.response.PayablePaymentDTO;
 import com.negocore.application.dto.response.PayablePaymentResponseDTO;
@@ -73,13 +74,13 @@ public class PayableHandler implements IPayableHandler {
 
     @Override
     @Transactional
-    public PayablePaymentResponseDTO updatePayablePayment(Long businessId, Long payableId, Long paymentId, PayablePaymentRequestDTO payablePaymentRequestDTO) {
+    public PayablePaymentResponseDTO updatePayablePayment(Long businessId, Long payableId, Long paymentId, PayablePaymentUpdateRequestDTO payablePaymentUpdateRequestDTO) {
         return payableMapper.toResponseDTO(
                 payableService.updatePayablePayment(
                         businessId,
                         payableId,
                         paymentId,
-                        payableMapper.toDomain(payablePaymentRequestDTO)
+                        payableMapper.toUpdateRequest(payablePaymentUpdateRequestDTO)
                 )
         );
     }
@@ -103,13 +104,13 @@ public class PayableHandler implements IPayableHandler {
 
     @Override
     @Transactional
-    public PayablePaymentResponseDTO updateProviderPayablePayment(Long businessId, Long providerId, Long paymentId, PayablePaymentRequestDTO payablePaymentRequestDTO) {
+    public PayablePaymentResponseDTO updateProviderPayablePayment(Long businessId, Long providerId, Long paymentId, PayablePaymentUpdateRequestDTO payablePaymentUpdateRequestDTO) {
         return payableMapper.toResponseDTO(
                 payableService.updateProviderPayablePayment(
                         businessId,
                         providerId,
                         paymentId,
-                        payableMapper.toDomain(payablePaymentRequestDTO)
+                        payableMapper.toUpdateRequest(payablePaymentUpdateRequestDTO)
                 )
         );
     }
